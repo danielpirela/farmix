@@ -10,11 +10,7 @@ export function Menu({children} : {children : ReactNode}) {
 
   return (
     <div>
-      <SecondNavbar onClickToggle={() => {
-        setIsOpen(!isOpen)
-        console.log(isOpen)}
-      }
-      />
+      <SecondNavbar onClickToggle={() => setIsOpen(!isOpen)}/>
       <Aside state={isOpen}/>
       {children}
     </div>

@@ -6,7 +6,7 @@ import { Logo } from './Logo'
 import { useSession } from 'next-auth/react'
 
 export function Navbar() {
-  const {data : session} = useSession()
+  const {data : session , status} = useSession()
    return (
       <nav className="bg-white shadow-md min-w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +22,7 @@ export function Navbar() {
               </div>
             </div>
             <div className="flex items-center">
-              <AuthButton session={session?.user} className='text-black'>
+              <AuthButton session={session} status={status} className='text-black'>
                 Sing In
               </AuthButton>
             </div>
