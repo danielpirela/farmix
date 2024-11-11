@@ -8,7 +8,6 @@ export async function middleware(req: NextRequest) {
 
   // Verificar si el usuario está autenticado y si su perfil está completo
   if (token && !token.isProfileComplete) {
-    // Redirigir al usuario a la página de completar perfil
     return NextResponse.redirect(new URL("/employee/complete", req.url))
   }
 

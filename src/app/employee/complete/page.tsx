@@ -4,9 +4,9 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from "next/navigation"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { supabaseClient } from '@components/lib/supabase'
+import { supabaseClient } from '@lib/supabase'
 import { userSchema, USER_FORM_FIELDS } from '@utils/validations'
-import {InputField} from '@components/components/form/ImputFiled'
+import {InputField} from '@components/form/ImputFiled'
 
 export default function CompleteProfile() {
 
@@ -41,10 +41,11 @@ export default function CompleteProfile() {
         id_document: idDocument,
         phone : phone,
         address: address,
-        hire_date: hireDate
+        hire_date: hireDate,
+        salary: 0,
       }
 
-    const { data: Employee, error } = await supabase
+    const { error } = await supabase
       .from('employees')
       .update(finalData)
       .eq('email', session?.user?.email)
@@ -53,56 +54,53 @@ export default function CompleteProfile() {
       console.error("Error updating profile:", error)
       return
     }
-    console.log("respuesta del update" + Employee)
-
-    router.push('/')
+      router.push('/')
     }
 )
 
   return (
-    <div>
-      <h2>Complete Your Profile</h2>
-      <form onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit()
-        }}>
+    <div className='min-h-screen min-w-full flex justify-center items-center bg-white flex-col gap-3'>
+      <h2 className='text-2xl text-black font-semibold '>Completa tu perfil</h2>
+      <form
+        className='grid gap-6 mb-6 md:grid-cols-2'
+        onSubmit={() => onSubmit()}>
         <InputField
-          label="First Name"
+          label="Nombres"
           name={USER_FORM_FIELDS.firstName}
           register={register}
           errors={errors}
         />
 
         <InputField
-          label="Last Name"
+          label="Apellidos"
           name={USER_FORM_FIELDS.lastName}
           register={register}
           errors={errors}
         />
 
         <InputField
-          label="ID Document"
+          label="Cedula de Identidad"
           name={USER_FORM_FIELDS.idDocument}
           register={register}
           errors={errors}
         />
 
         <InputField
-          label="Phone"
+          label="Numero de Teléfono"
           name={USER_FORM_FIELDS.phone}
           register={register}
           errors={errors}
         />
 
         <InputField
-          label="Address"
+          label="Dirección"
           name={USER_FORM_FIELDS.address}
           register={register}
           errors={errors}
         />
 
         <InputField
-          label="Hire Date (dd/mm/yyyy)"
+          label="Fecha de contratación"
           name={USER_FORM_FIELDS.hireDate}
           register={register}
           errors={errors}

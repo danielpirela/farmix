@@ -22,7 +22,7 @@ export function UserMenu() {
                 </button>
               </div>
             </div>
-              { isDropdownOpen && <UserDetails />}
+              { isDropdownOpen && <UserDetails name={session?.user?.name} email={session?.user.email} />}
           </div>
   )
 }

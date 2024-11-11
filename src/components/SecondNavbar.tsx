@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { Logo } from './Logo'
 import { UserMenu } from './UserMenu'
+
 export function SecondNavbar({onClickToggle} : {onClickToggle : () => void}){
 
   return (
