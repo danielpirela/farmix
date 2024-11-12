@@ -8,10 +8,12 @@ export default function EmployeeLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <MyProvider>
+        <div className='min-w-full min-h-screen bg-white dark:bg-gray-800  overflow-y-hidden'>
+    <MyProvider>
         <Menu>
           {children}
         </Menu>
       </MyProvider>
+        </div>
   )
 }
