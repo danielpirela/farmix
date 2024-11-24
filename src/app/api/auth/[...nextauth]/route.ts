@@ -1,19 +1,21 @@
-import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { supabaseServer } from "@lib/supabaseServer"
+import NextAuth, { DefaultSession, NextAuthOptions } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import { supabaseServer } from '@lib/supabaseServer'
 
 // Extender el tipo `Session` para incluir `isProfileComplete`
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     user: {
-      isProfileComplete?: boolean
-    } & DefaultSession["user"]
+      isProfileComplete?: boolean;
+      id? : string;
+    } & DefaultSession['user'];
   }
 }
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   interface JWT {
-    isProfileComplete?: boolean
+    isProfileComplete?: boolean;
+    id?: string;
   }
 }
 
@@ -30,22 +32,22 @@ export const authOptions: NextAuthOptions = {
       const { email, name } = user
 
       const { data: existingEmployee } = await supabase
-        .from("employees")
-        .select("*")
-        .eq("email", email)
+        .from('employees')
+        .select('*')
+        .eq('email', email)
         .single()
 
       if (!existingEmployee) {
-        await supabase.from("employees").insert([
+        await supabase.from('employees').insert([
           {
-            id_document: "",
-            last_name: name?.split(" ")[1] || "",
-            first_name: name?.split(" ")[0] || "",
-            phone: "",
+            id_document: '',
+            last_name: name?.split(' ')[1] || '',
+            first_name: name?.split(' ')[0] || '',
+            phone: '',
             email: email,
-            address: "",
+            address: '',
             hire_date: null,
-            role_id: "5872e3a8-02bf-4ac4-b42e-188f70dacb35",
+            role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35',
           },
         ])
       }
@@ -54,6 +56,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       session.user.isProfileComplete = token.isProfileComplete
+      session.user.id = token.id // Agregar el id a la sesión
       return session
     },
 
@@ -61,15 +64,22 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         const supabase = await supabaseServer()
         const { data: existingEmployee } = await supabase
-          .from("employees")
-          .select("*")
-          .eq("email", user.email)
+          .from('employees')
+          .select('*')
+          .eq('email', user.email)
           .single()
 
         token.isProfileComplete =
           !!existingEmployee?.phone &&
           !!existingEmployee?.address &&
+          !!existingEmployee?.email &&
+          !!existingEmployee?.first_name &&
+          !!existingEmployee?.last_name &&
+          !!existingEmployee?.hire_date &&
+          !!existingEmployee?.role_id &&
           !!existingEmployee?.id_document
+
+        token.id = existingEmployee?.employee_id
       }
       return token
     },
