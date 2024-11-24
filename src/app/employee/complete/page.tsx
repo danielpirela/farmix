@@ -1,20 +1,25 @@
-"use client"
+'use client'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from "next/navigation"
 import { useForm } from 'react-hook-form'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { supabaseClient } from '@lib/supabase'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { userSchema, USER_FORM_FIELDS } from '@utils/validations'
-import {InputField} from '@components/form/ImputFiled'
+import { InputField } from '@components/form/ImputFiled'
+import { useUpdateProfile } from '@hooks/useUpdateProfile'
+import { AlertToast } from '@components/AlertToast'
+import { useSession } from 'next-auth/react'
+import { Button } from '@components/form/Buttom'
+import { Form } from '@components/form/Form'
 
 export default function CompleteProfile() {
-
   const { data: session } = useSession()
-  const router = useRouter()
 
-  // Usamos React Hook Form con Zod
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { employee, mutate, isPending, isError } = useUpdateProfile()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     resolver: zodResolver(userSchema),
     defaultValues: {
       firstName: '',
@@ -22,48 +27,47 @@ export default function CompleteProfile() {
       idDocument: '',
       phone: '',
       address: '',
-      hireDate: '20/01/2022',
-    }
+      hireDate: '20/01/2022'
+    },
+    mode: 'onBlur'
   })
 
-  const onSubmit =  handleSubmit( async (data) => {
-    if(!data) {
-      console.error("Error in form data:", data)
-      return
+  const onSubmit = (data: any) => {
+    const { address, firstName, hireDate, idDocument, lastName, phone } = data
+    const profileData = {
+      address: address,
+      first_name: firstName,
+      hire_date: hireDate,
+      id_document: idDocument,
+      last_name: lastName,
+      phone: phone,
+      salary: 0
     }
-      const supabase = await supabaseClient()
 
-    const { firstName, lastName,  idDocument,  phone, address, hireDate} = data
-
-    const finalData = {
-        first_name : firstName,
-        last_name: lastName,
-        id_document: idDocument,
-        phone : phone,
-        address: address,
-        hire_date: hireDate,
-        salary: 0,
+    mutate(
+      {
+        email: session?.user?.email ?? '',
+        profileData
+      },
+      {
+        onSuccess: () => {
+          if (session) {
+            session.user.isProfileComplete = true
+          }
+        },
+        onError: (error) => {
+          console.error('Error updating profile:', error.message)
+        }
       }
-
-    const { error } = await supabase
-      .from('employees')
-      .update(finalData)
-      .eq('email', session?.user?.email)
-
-    if (error) {
-      console.error("Error updating profile:", error)
-      return
-    }
-      router.push('/')
-    }
-)
+    )
+  }
 
   return (
-    <div className='min-h-screen min-w-full flex justify-center items-center bg-white flex-col gap-3'>
-      <h2 className='text-2xl text-black font-semibold '>Completa tu perfil</h2>
-      <form
-        className='grid gap-6 mb-6 md:grid-cols-2'
-        onSubmit={() => onSubmit()}>
+    <div className="min-h-screen min-w-full flex justify-center items-center bg-white dark:bg-gray-900 dark:text-white flex-col gap-3 mt-20">
+      <h2 className="text-2xl text-black  dark:text-white font-semibold ">
+        Completa tu perfil
+      </h2>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <InputField
           label="Nombres"
           name={USER_FORM_FIELDS.firstName}
@@ -106,8 +110,23 @@ export default function CompleteProfile() {
           errors={errors}
           type="text"
         />
-        <button type="submit">Save Profile</button>
-      </form>
+
+        <Button type="submit" disabled={isPending} loading={isPending}>
+          {isPending ? 'Actualizando' : 'Actualizar'}
+        </Button>
+      </Form>
+
+      {!isPending && employee && !isError && (
+        <AlertToast code="info" message=" Ir a pagina de inicio" href="/">
+          Se actualizo el perfil correctamente
+        </AlertToast>
+      )}
+      {isError && (
+        <AlertToast code="error">No se pudo crear el perfil</AlertToast>
+      )}
+      {session?.user.isProfileComplete === false && (
+        <AlertToast code="warning">Perfil sin completar</AlertToast>
+      )}
     </div>
-  );
+  )
 }
