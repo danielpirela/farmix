@@ -1,14 +1,14 @@
 import { Navbar } from '@components/Navbar'
 
 export default function EmployeeLayout({
-  children,
+  children
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <div>
-        <Navbar/>
-        {children}
+      <Navbar />
+      {children}
     </div>
   )
 }
