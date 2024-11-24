@@ -1,28 +1,21 @@
 import { ReactNode } from 'react'
-import { AuthButton } from './auth/AuthButton'
-import { DashboardIcon, LogOutIcon } from './icons/DashboardIcon'
 import Link from 'next/link'
 
-interface SessionProps {
-   email?: string | null | undefined
-   image?: string | null | undefined
-   name?: string | null | undefined
-}
-
-export function ItemMenu ({children , session , uri} : {children : ReactNode , session : SessionProps , uri? : string  }) {
-   return (
-      <li>
-      { children === 'Log Out' || children === 'Sing In' ? (
-         <AuthButton className="flex min-w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" session={session}>
-            {children}
-         </AuthButton>
-      )
-      : (
-         <Link href={uri ?? '/dashboard'} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-         {children}
-         </Link>
-      )
-      }
-      </li>
-   )
+export function ItemMenu({
+  children,
+  uri
+}: {
+  children: ReactNode
+  uri?: string
+}) {
+  return (
+    <li className=" hover:text-accent group-hover:fill-accent">
+      <Link
+        href={uri ?? '/dashboard'}
+        className="group-hover:fill-accent hover:fill-accent flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+      >
+        {children}
+      </Link>
+    </li>
+  )
 }
