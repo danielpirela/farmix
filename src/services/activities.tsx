@@ -18,9 +18,11 @@ export const getActivities = async (id: string | null) => {
 
 export interface ActivityData {
   employee_id: string
-  type: string
-  description: string
+  type?: string
+  description?: string
+  status?: string
 }
+
 export const createActivity = async (data: ActivityData) => {
   try {
     const { data: Activities, error } = await supabase
@@ -39,6 +41,31 @@ export const createActivity = async (data: ActivityData) => {
     return Activities
   } catch (err) {
     console.error('Error creating activity', err)
+    throw err
+  }
+}
+
+export const updateActivity = async (data: ActivityData, id: string) => {
+  try {
+    if (data && id) {
+      const { data: Activities, error } = await supabase
+        .from('activities')
+        .update(data)
+        .eq('activities_id', id)
+        .select('*')
+
+      if (error) {
+        throw new Error('Error al actualizar la actividad')
+      }
+
+      if (!Activities) {
+        throw new Error('No se pudo actualizar la actividad')
+      }
+
+      return Activities
+    }
+  } catch (err) {
+    console.error('Error updating activity', err)
     throw err
   }
 }

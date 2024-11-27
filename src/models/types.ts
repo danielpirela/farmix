@@ -44,6 +44,7 @@ export interface Role {
 export interface Activity {
   activities_id: string
   description: string
+  descriptionOpt?: string
   type: string
   employee_id: string
   status: string

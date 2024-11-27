@@ -2,9 +2,12 @@ import { ReactNode } from 'react'
 interface Props {
   children: ReactNode
 }
+interface CustomClasses {
+  [key: string]: boolean
+}
 
 export function StatusEmployee({ children }: Props) {
-  const customClassesFather = {
+  const customClassesFather: CustomClasses = {
     'bg-blue-100 text-blue-800 ': children === 'Trabajando',
     'dark:bg-blue-900 text-blue-300 ': children === 'Trabajando',
 
@@ -17,21 +20,21 @@ export function StatusEmployee({ children }: Props) {
     'bg-green-100 text-green-800': children === 'Disponible',
     'dark:bg-green-900 dark:text-green-300': children === 'Disponible',
 
-    'bg-green-100 text-green-800': children === 'Terminada',
-    'dark:bg-green-900 dark:text-green-300': children === 'Terminada',
+    'bg-green-100 text-green-800 ': children === 'Terminada',
+    'dark:bg-green-900 dark:text-green-300 ': children === 'Terminada',
 
     'bg-red-100 text-red-800': children === 'No disponible',
     'dark:bg-red-900 dark:text-red-300': children === 'No disponible'
   }
 
-  const customClassesSon = {
+  const customClassesSon: CustomClasses = {
     'bg-blue-500': children === 'Trabajando',
     'bg-blue-400': children === 'En progreso',
 
     'bg-yellow-500': children === 'Descansando',
 
     'bg-green-500': children === 'Disponible',
-    'bg-green-500': children === 'Terminada',
+    'bg-green-500 ': children === 'Terminada',
 
     'bg-red-500': children === 'No disponible'
   }

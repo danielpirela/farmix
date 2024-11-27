@@ -11,16 +11,18 @@ export const USER_FORM_FIELDS = {
 
 export const ACTIVITY_FORM_FIELDS = {
   type: 'type',
-  descrption: 'description'
+  description: 'description',
+  descrptionOpt: 'descriptionOpt'
 } as const
 
 const REGEX_DATE = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
 
 export const activitySchema = z.object({
-  [ACTIVITY_FORM_FIELDS.descrption]: z
+  [ACTIVITY_FORM_FIELDS.description]: z
     .string()
     .min(5, 'Escriba una descripcion'),
-  [ACTIVITY_FORM_FIELDS.type]: z.string().min(4, 'Seleccione un tipo de tarea')
+  [ACTIVITY_FORM_FIELDS.type]: z.string().min(4, 'Seleccione un tipo de tarea'),
+  [ACTIVITY_FORM_FIELDS.descrptionOpt]: z.string().optional()
 })
 export const userSchema = z.object({
   [USER_FORM_FIELDS.firstName]: z.string().min(1, 'Nombre es obligatorio'),

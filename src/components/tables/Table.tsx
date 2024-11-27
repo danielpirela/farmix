@@ -10,10 +10,13 @@ import {
 import type { ColumnDef } from '@tanstack/react-table'
 import { SortIcon } from '@components/ArrowsIcons'
 import { CustomCellRenderer } from './CustomCellRenderer'
-interface Props<T extends object> {
+import { updateActivity } from '@services/activities'
+import { Activity } from '@models/types'
+interface Props<T extends Activity | object> {
   data: T[]
   columns: ColumnDef<T, unknown>[]
   onViewDetails?: (data: T) => void
+  onRefresh: boolean
 }
 
 export default function Table<T extends object>({
@@ -21,11 +24,12 @@ export default function Table<T extends object>({
   columns,
   onViewDetails
 }: Props<T>) {
+  const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])
   const [filtering, setFiltering] = useState('')
 
   const table = useReactTable({
-    data,
+    data: finalData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -36,7 +40,38 @@ export default function Table<T extends object>({
       globalFilter: filtering
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setFiltering
+    onGlobalFilterChange: setFiltering,
+    meta: {
+      updateData: async (
+        rowIndex: number,
+        columnId: string,
+        value: string,
+        query: string
+      ) => {
+        const updatedData = finalData.map((row, index) =>
+          index === rowIndex
+            ? {
+                ...finalData[rowIndex],
+                [columnId]: value
+              }
+            : row
+        )
+        setData(updatedData)
+
+        // Recuperar solo el objeto de la fila actual
+        const currentRowData: T = updatedData[rowIndex]
+
+        if (query === 'EmployeeStatusUpdate') {
+          const { activities_id, employees, ...rest } = currentRowData
+          await updateActivity(rest, activities_id)
+        }
+      }
+    },
+    resetTableState: () => {
+      setData(data)
+      setSorting([])
+      setFiltering('')
+    }
   })
 
   return (
@@ -56,6 +91,10 @@ export default function Table<T extends object>({
                 placeholder="Search for items"
               />
             </div>
+            {/* <button
+              onClick={() => onRefresh && resetTableState()} // Llama a la función de reset
+              className="flex items-center px-3 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-ligth"
+            ></button> */}
           </div>
 
           {/* Table container */}
@@ -95,11 +134,10 @@ export default function Table<T extends object>({
                         key={cell.id}
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis dark:text-white"
                       >
-                        <button
-                          onClick={() => onViewDetails(cell?.row?.original)}
-                        >
-                          <CustomCellRenderer cell={cell} />
-                        </button>
+                        <CustomCellRenderer
+                          cell={cell}
+                          onViewDetails={onViewDetails}
+                        />
                       </td>
                     ))}
                   </tr>

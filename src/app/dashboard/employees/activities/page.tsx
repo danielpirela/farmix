@@ -6,15 +6,21 @@ import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Modal } from '@components/form/Modal'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
-import { PlusIcon } from '@components/icons/DashboardIcon'
+import { LoadingIcon, PlusIcon } from '@components/icons/DashboardIcon'
 import { Form } from '@components/form/Form'
 import { InputField } from '@components/form/ImputFiled'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { set, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { activitySchema } from '@utils/validations'
 import { Button } from '@components/form/Buttom'
 import { Activity } from '@models/types'
 import { CardDetailsActivity } from '@components/CardDeatailsActivity'
+import { Select } from '@components/form/Select'
+import { activitiesOptions } from '../../../../const/task'
+import { Option } from '@components/form/Option'
+import { useCreateActivity } from '@hooks/useCreateActivity'
+import { AlertToast } from '@components/AlertToast'
+import { EditableStatusEmployee } from '@components/tables/EditableStatusEmployee'
 
 const columns = [
   { header: 'Foto', accessorKey: 'employees.img' },
@@ -26,17 +32,24 @@ const columns = [
       row: { original: { employees: { last_name: string } } }
     }) => `${info.getValue()} ${info.row.original.employees.last_name}`
   },
-  { header: 'Tipo', accessorKey: 'type' },
+  { header: 'Tarea', accessorKey: 'type' },
   { header: 'Fecha', accessorKey: 'created_at' },
-  { header: 'Estado', accessorKey: 'status' }
+  {
+    header: 'Estado',
+    accessorKey: 'status',
+    cell: EditableStatusEmployee
+  }
 ]
 
 export default function Page() {
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isFormModalOpen, setFormModalOpen] = useState(false)
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false)
   const [activity, setActivity] = useState<Activity | null>(null)
+
   const { data: session } = useSession()
   const id = session?.user?.id ?? null
   const { activities, isPending } = useActivities(id)
+  const { mutate, created, isOnError, isLoading } = useCreateActivity()
 
   const {
     register,
@@ -47,71 +60,111 @@ export default function Page() {
     defaultValues: {
       type: '',
       description: '',
-      employee_id: id
+      descriptionOpt: '',
+      employee_id: ''
     }
   })
 
   const onViewDetails = (data: Activity) => {
-    if (!data) return setModalOpen(false)
-    setModalOpen(true)
+    if (!data) return setDetailsModalOpen(false)
     setActivity(data)
+    setDetailsModalOpen(true)
   }
 
-  const onSubmit: SubmitHandler<typeof activitySchema> = (data) => {
+  const onSubmit: SubmitHandler<Activity> = (data) => {
     if (!data) {
       console.error('Error in form data:', data)
       return
     }
-    console.log(data)
+    const { type, description, descriptionOpt } = data as Activity
+
+    mutate({
+      type,
+      description: descriptionOpt ?? description,
+      employee_id: id ?? ''
+    })
   }
 
   return (
     <div>
+      {/* Botón para abrir el formulario */}
       <ButtonAnimated
-        onClick={() => setModalOpen(true)}
+        onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
       >
         <PlusIcon />
       </ButtonAnimated>
+
+      {/* Tabla de actividades */}
       {isPending ? (
-        <p>Cargando...</p>
+        <LoadingIcon />
       ) : (
         <Table
           data={activities ?? []}
           columns={columns}
-          onViewDetails={onViewDetails}
+          onViewDetails={() => onViewDetails}
+          onRefresh={created}
         />
       )}
-      {/* Modal for Adding Activity */}
+
+      {/* Modal para detalles de actividad */}
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Actividades"
+        isOpen={isDetailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+        title="Detalles de Actividad"
       >
-        {activity ? (
-          <CardDetailsActivity data={activity} />
-        ) : (
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <InputField
-              name="type"
-              register={register}
-              label="Tipo"
-              errors={errors}
-              type="text"
-            />
-            <InputField
-              name="description"
-              register={register}
-              label="Descripcion"
-              errors={errors}
-              type="textarea"
-            />
-            <Button loading={isPending} disabled={isPending} type="submit">
-              Enviar
-            </Button>
-          </Form>
-        )}
+        {activity && <CardDetailsActivity data={activity} />}
       </Modal>
+
+      {/* Modal para formulario */}
+      <Modal
+        isOpen={isFormModalOpen}
+        onClose={() => setFormModalOpen(false)}
+        title="Nueva Actividad"
+      >
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Select name="type" register={register} label="Tipo" errors={errors}>
+            {activitiesOptions.map(({ type }) => (
+              <Option key={type} value={type} label={type} />
+            ))}
+          </Select>
+          <Select
+            name="description"
+            register={register}
+            label="Descripcion"
+            errors={errors}
+          >
+            {activitiesOptions.map(({ description }) => (
+              <Option
+                key={crypto.randomUUID().toString()}
+                value={description}
+                label={description}
+              />
+            ))}
+          </Select>
+          <InputField
+            name="descriptionOpt"
+            register={register}
+            label="Descripcion"
+            errors={errors}
+            type="textarea"
+          />
+          <Button
+            loading={isLoading}
+            disabled={isPending || isLoading}
+            type="submit"
+          >
+            Enviar
+          </Button>
+        </Form>
+      </Modal>
+
+      {!isLoading && !isOnError && created && (
+        <AlertToast code="success">Actividad creada</AlertToast>
+      )}
+      {isOnError && (
+        <AlertToast code="error">No se pudo crear la actividad</AlertToast>
+      )}
     </div>
   )
 }

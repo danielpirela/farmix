@@ -59,7 +59,8 @@ export function AlertToast({
             {` ${children}, ${message}`}
           </Link>
         )}
-        {children}
+
+        {!href && `${children}`}
       </div>
       <button
         onClick={() => {
