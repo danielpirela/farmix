@@ -1,6 +1,8 @@
+import { TableMeta } from '@tanstack/react-table'
+
 export interface Employee {
   employee_id: string
-  email: string
+  email?: string
   first_name: string
   last_name: string
   id_document: string
@@ -11,7 +13,7 @@ export interface Employee {
   status: string
   img: string
   role_id: string
-  roles : Role
+  roles? : Role
 }
 
 export interface Profile {
@@ -22,13 +24,14 @@ export interface Profile {
   address: string
   hire_date: string
   status: string
+  img: string
   salary: number
 }
 
 
 export interface UpdateParams {
-  email: string
-  profileData: Profile
+  email: string | null | undefined
+  profileData: Employee
 }
 
 
@@ -49,6 +52,18 @@ export interface Activity {
   employee_id: string
   status: string
   employees: Employee
+  created_at : string
+}
+
+export interface CustomTableMeta<T> extends TableMeta<T> {
+  updateData: (
+    rowIndex: number,
+    columnId: string,
+    value: string,
+    query: string
+  ) => Promise<void>
+  viewDetails: (data: T) => Promise<void>
+  resetTableState: () => void
 }
 
 export type Data<T> = T extends Activity ? Activity[] : Employee[] | []

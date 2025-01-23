@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import {
   useReactTable,
@@ -7,28 +9,39 @@ import {
   getSortedRowModel,
   getFilteredRowModel
 } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
+
+import type {
+  ColumnDef,
+  OnChangeFn,
+  SortingState,
+  TableMeta
+} from '@tanstack/react-table'
 import { SortIcon } from '@components/ArrowsIcons'
-import { CustomCellRenderer } from './CustomCellRenderer'
 import { updateActivity } from '@services/activities'
-import { Activity } from '@models/types'
-interface Props<T extends Activity | object> {
+import { Activity, Employee } from '@models/types'
+import { updateEmployee } from '@services/employee'
+import { RefeshButton } from './RefreshButton'
+import { Finance } from '@models/finances.model'
+import { Inventory } from '@models/inventory.model'
+import { Supplier } from '@models/suppliers.model'
+import { Animal } from '@models/animals.model'
+
+interface Props<
+  T extends Activity | Employee | Finance | Inventory | Supplier | Animal
+> {
   data: T[]
   columns: ColumnDef<T, unknown>[]
-  onViewDetails?: (data: T) => void
-  onRefresh: boolean
+  onViewDetails: (data: T) => void
 }
 
-export default function Table<T extends object>({
-  data,
-  columns,
-  onViewDetails
-}: Props<T>) {
+export default function Table<
+  T extends Activity | Employee | Finance | Inventory | Supplier | Animal
+>({ data, columns, onViewDetails }: Props<T>) {
   const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])
   const [filtering, setFiltering] = useState('')
 
-  const table = useReactTable({
+  const table = useReactTable<T>({
     data: finalData,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -39,7 +52,7 @@ export default function Table<T extends object>({
       sorting,
       globalFilter: filtering
     },
-    onSortingChange: setSorting,
+    onSortingChange: setSorting as OnChangeFn<SortingState>,
     onGlobalFilterChange: setFiltering,
     meta: {
       updateData: async (
@@ -61,17 +74,28 @@ export default function Table<T extends object>({
         // Recuperar solo el objeto de la fila actual
         const currentRowData: T = updatedData[rowIndex]
 
-        if (query === 'EmployeeStatusUpdate') {
-          const { activities_id, employees, ...rest } = currentRowData
+        if (query === 'ActivityStatusUpdate') {
+          const { activities_id, employees, ...rest } =
+            currentRowData as Activity
           await updateActivity(rest, activities_id)
         }
+
+        if (query === 'EmployeeStatusUpdate') {
+          const { email, roles, ...rest } = currentRowData as Employee
+          await updateEmployee({ email, profileData: rest })
+        }
+      },
+
+      viewDetails: async (data: T) => {
+        onViewDetails(data)
+      },
+
+      resetTableState: () => {
+        setData(data)
+        setSorting([])
+        setFiltering('')
       }
-    },
-    resetTableState: () => {
-      setData(data)
-      setSorting([])
-      setFiltering('')
-    }
+    } as TableMeta<T>
   })
 
   return (
@@ -79,7 +103,7 @@ export default function Table<T extends object>({
       {data.length > 0 && (
         <div className="flex flex-col min-h-screen animate-once animate-duration-300 animate-delay-300 animate-fade-left">
           {/* Search bar */}
-          <div className="pb-4">
+          <div className="mb-4 flex gap-2">
             <label className="sr-only">Search</label>
             <div className="relative mt-1">
               <input
@@ -91,14 +115,11 @@ export default function Table<T extends object>({
                 placeholder="Search for items"
               />
             </div>
-            {/* <button
-              onClick={() => onRefresh && resetTableState()} // Llama a la función de reset
-              className="flex items-center px-3 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-ligth"
-            ></button> */}
+            <RefeshButton table={table} />
           </div>
 
           {/* Table container */}
-          <div className="overflow-x-auto rounded-md shadow-md bg-white dark:bg-gray-800 max-w-full animate-once animate-duration-300 animate-delay-300">
+          <div className="overflow-x-auto rounded-md shadow-md bg-white dark:bg-gray-800 max-w-full animate-once animate-duration-300 animate-delay-300:">
             <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-md">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-t-md">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -127,17 +148,17 @@ export default function Table<T extends object>({
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 max-h-9"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis dark:text-white"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis dark:text-white "
                       >
-                        <CustomCellRenderer
-                          cell={cell}
-                          onViewDetails={onViewDetails}
-                        />
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     ))}
                   </tr>

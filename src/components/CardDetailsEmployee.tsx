@@ -2,6 +2,7 @@ import { Employee } from '@models/types'
 import { LoadingIcon } from './icons/DashboardIcon'
 import UserImage from './auth/UserImage'
 import { StatusEmployee } from './tables/StatusEmployee'
+import { formatDate } from '@utils/formatDate'
 
 export function CardDetailsEmployee({ data }: { data: Employee | null }) {
   return (
@@ -38,7 +39,9 @@ export function CardDetailsEmployee({ data }: { data: Employee | null }) {
               <strong className="text-black dark:text-white">
                 Fecha de contratación:{' '}
               </strong>
-              <span className="text-gray-700">{data.hire_date}</span>
+              <span className="text-gray-700">
+                {formatDate(data.hire_date)}
+              </span>
             </div>
             <div>
               <strong className="text-black dark:text-white">Salario: </strong>

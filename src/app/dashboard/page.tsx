@@ -5,16 +5,15 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 
 export default function Dashboard() {
-  const { profile, setProfile } = useMyContext()
   const { data: session } = useSession()
 
   useEffect(() => {
     const fetchEmployee = async () => {
       if (!session?.user?.email) return
-      const employee = await getEmployee(session.user.email)
-      if (employee) setProfile(employee)
+      /* const employee = await getEmployee(session.user.email)
+      if (employee) setProfile(employee) */
     }
     fetchEmployee()
-  }, [session, setProfile])
+  }, [session])
   return <p>a</p>
 }

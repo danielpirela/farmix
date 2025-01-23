@@ -14,9 +14,14 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'img.freepik.com',
+        hostname: 'lh3.google.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.freepik.com',
+        pathname: '/**',
+      }
     ],
   },
 }

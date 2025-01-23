@@ -1,5 +1,6 @@
 export type ActivityOptions = 'Alimentar' | 'Ordeñar' | 'Limpiar establos' | 'Revisar salud' | 'Registrar datos' | 'Organizar' | 'Otro'
 export type StatusAtivitiesOptions = 'En progreso' | 'Terminada'
+
 export type Activity = {
   type: ActivityOptions;
   description: string;

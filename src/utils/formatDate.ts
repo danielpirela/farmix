@@ -1,7 +1,5 @@
 export function formatDate(isoDate: string): string { // Tipado agregado
   const date = new Date(isoDate)
-
-  // Obtener componentes de la fecha
   const day = String(date.getDate()).padStart(2, '0')
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const year = String(date.getFullYear()).slice(-2)
@@ -12,3 +10,4 @@ export function formatDate(isoDate: string): string { // Tipado agregado
   // Formatear como dd/mm/yy h:m AM/PM
   return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`
 }
+

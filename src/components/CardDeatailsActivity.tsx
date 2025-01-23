@@ -2,6 +2,7 @@ import { Activity } from '@models/types'
 import { LoadingIcon } from './icons/DashboardIcon'
 import UserImage from './auth/UserImage'
 import { StatusEmployee } from './tables/StatusEmployee'
+import { formatDate } from '@utils/formatDate'
 
 export function CardDetailsActivity({ data }: { data: Activity | null }) {
   return (
@@ -52,7 +53,15 @@ export function CardDetailsActivity({ data }: { data: Activity | null }) {
             <div>
               <strong className="text-black dark:text-white">Rol: </strong>
               <span className="text-gray-700">
-                {data.employees.roles.role_name}
+                {data?.employees?.roles?.role_name}
+              </span>
+            </div>
+            <div>
+              <strong className="text-black dark:text-white">
+                Fecha de creacion:{' '}
+              </strong>
+              <span className="text-gray-700">
+                {formatDate(data.created_at)}
               </span>
             </div>
             <div>

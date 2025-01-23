@@ -9,11 +9,11 @@ import { Modal } from '@components/form/Modal'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 import { Form } from '@components/form/Form'
-import { InputField } from '@components/form/ImputFiled'
+import { InputField } from '@components/form/InputFiled'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { activitySchema } from '@utils/validations'
-import { Button } from '@components/form/Buttom'
+import { Button } from '@components/form/Button'
 
 const columns = [
   { header: 'Tipo', accessorKey: 'type' },

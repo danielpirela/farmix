@@ -8,11 +8,11 @@ import { Modal } from '@components/form/Modal'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { LoadingIcon, PlusIcon } from '@components/icons/DashboardIcon'
 import { Form } from '@components/form/Form'
-import { InputField } from '@components/form/ImputFiled'
-import { set, SubmitHandler, useForm } from 'react-hook-form'
+import { InputField } from '@components/form/InputFiled'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { activitySchema } from '@utils/validations'
-import { Button } from '@components/form/Buttom'
+import { Button } from '@components/form/Button'
 import { Activity } from '@models/types'
 import { CardDetailsActivity } from '@components/CardDeatailsActivity'
 import { Select } from '@components/form/Select'
@@ -21,25 +21,8 @@ import { Option } from '@components/form/Option'
 import { useCreateActivity } from '@hooks/useCreateActivity'
 import { AlertToast } from '@components/AlertToast'
 import { EditableStatusEmployee } from '@components/tables/EditableStatusEmployee'
-
-const columns = [
-  { header: 'Foto', accessorKey: 'employees.img' },
-  {
-    header: 'Nombre',
-    accessorKey: 'employees.first_name',
-    cell: (info: {
-      getValue: () => string
-      row: { original: { employees: { last_name: string } } }
-    }) => `${info.getValue()} ${info.row.original.employees.last_name}`
-  },
-  { header: 'Tarea', accessorKey: 'type' },
-  { header: 'Fecha', accessorKey: 'created_at' },
-  {
-    header: 'Estado',
-    accessorKey: 'status',
-    cell: EditableStatusEmployee
-  }
-]
+import { TableImage } from '@components/tables/TableImage'
+import { FormatData } from '@components/tables/FormatData'
 
 export default function Page() {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -51,11 +34,28 @@ export default function Page() {
   const { activities, isPending } = useActivities(id)
   const { mutate, created, isOnError, isLoading } = useCreateActivity()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
+  const columns = [
+    { header: 'Foto', accessorKey: 'employees.img', cell: TableImage },
+    {
+      header: 'Nombre',
+      accessorKey: 'employees.first_name',
+      cell: (info: {
+        row: {
+          original: { employees: { first_name: string; last_name: string } }
+        }
+      }) =>
+        `${info.row.original.employees.first_name} ${info.row.original.employees.last_name}`
+    },
+    { header: 'Tarea', accessorKey: 'type' },
+    { header: 'Fecha', accessorKey: 'created_at', cell: FormatData },
+    {
+      header: 'Estado',
+      accessorKey: 'status',
+      cell: EditableStatusEmployee
+    }
+  ]
+
+  const methods = useForm<Activity>({
     resolver: zodResolver(activitySchema),
     defaultValues: {
       type: '',
@@ -65,7 +65,15 @@ export default function Page() {
     }
   })
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = methods
+
   const onViewDetails = (data: Activity) => {
+    console.log(data)
+
     if (!data) return setDetailsModalOpen(false)
     setActivity(data)
     setDetailsModalOpen(true)
@@ -102,7 +110,7 @@ export default function Page() {
         <Table
           data={activities ?? []}
           columns={columns}
-          onViewDetails={() => onViewDetails}
+          onViewDetails={onViewDetails}
           onRefresh={created}
         />
       )}
@@ -122,7 +130,7 @@ export default function Page() {
         onClose={() => setFormModalOpen(false)}
         title="Nueva Actividad"
       >
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(onSubmit)} methods={methods}>
           <Select name="type" register={register} label="Tipo" errors={errors}>
             {activitiesOptions.map(({ type }) => (
               <Option key={type} value={type} label={type} />

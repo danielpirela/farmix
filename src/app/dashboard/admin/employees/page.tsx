@@ -17,11 +17,9 @@ export default function Page() {
     { header: 'Rol', accessorKey: 'roles.role_name' },
     { header: 'Contratado', accessorKey: 'hire_date' }
   ]
-
+  const finalemployees = employees ?? []
   if (isPending) return <p>Cargando...</p>
   if (isError) return <p>Hubo un error al cargar los empleados.</p>
 
-  const Finalemployees = employees ?? []
-
-  return <Table data={Finalemployees} columns={columns} />
+  return <Table data={finalemployees} columns={columns} />
 }

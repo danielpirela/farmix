@@ -16,6 +16,7 @@ type InputFieldProps<T extends FieldValues> = {
   type?: string
   placeholder?: string
   validation?: RegisterOptions<T>
+  defaultValue?: string
 }
 
 export const InputField = <T extends FieldValues>({
@@ -25,7 +26,8 @@ export const InputField = <T extends FieldValues>({
   errors,
   type = 'text',
   placeholder,
-  validation
+  validation,
+  defaultValue
 }: InputFieldProps<T>) => {
   return (
     <div>
@@ -39,6 +41,7 @@ export const InputField = <T extends FieldValues>({
           type={type}
           name={name}
           id={name}
+          defaultValue={defaultValue}
           placeholder={placeholder}
           className="bg-gray-50 border-2  border-accent/20 text-gray-900 text-sm rounded-lg  focus:border-accent block w-full p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white  dark:focus:border-accent"
         />

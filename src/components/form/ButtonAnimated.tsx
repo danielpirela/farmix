@@ -8,6 +8,7 @@ interface Props {
   type?: 'submit' | 'button'
   disabled?: boolean
   loading?: boolean
+  title?: string
 }
 
 export function ButtonAnimated({
@@ -16,6 +17,7 @@ export function ButtonAnimated({
   className,
   type,
   disabled,
+  title,
   ...props
 }: Props) {
   return (
@@ -24,7 +26,7 @@ export function ButtonAnimated({
     >
       <div className="animate-shake animate-infinite animate-duration-[2000ms] flex mr-4 gap-1">
         <span className="text-gray-700 dark:text-white animate-pulse">
-          Agregar Actividad
+          {title || 'a'}
         </span>
         <ArrowRigth className="animate-slide-in animate-pulse text-gray-700 dark:text-white" />
       </div>

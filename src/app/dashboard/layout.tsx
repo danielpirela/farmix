@@ -1,4 +1,4 @@
-import { MyProvider } from '@components/context/Provider'
+'use client'
 import { Menu } from '@components/Menu'
 
 export default function EmployeeLayout({
@@ -8,9 +8,7 @@ export default function EmployeeLayout({
 }>) {
   return (
     <div className="min-w-full min-h-screen bg-white dark:bg-gray-800 overflow-auto">
-      <MyProvider>
-        <Menu>{children}</Menu>
-      </MyProvider>
+      <Menu>{children}</Menu>
     </div>
   )
 }

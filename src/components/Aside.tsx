@@ -17,9 +17,11 @@ import { usePathname } from 'next/navigation'
 const URLS = {
   dashboard: '/dashboard',
   activities: '/dashboard/employees/activities',
-  inbox: '/inbox',
+  animals: '/dashboard/admin/animals',
+  finances: '/dashboard/admin/finances',
+  inventory: '/dashboard/admin/inventory',
   employees: '/dashboard/employees',
-  products: '/products',
+  suppliers: '/dashboard/admin/suppliers',
   logout: '/logout'
 }
 
@@ -49,18 +51,26 @@ export function Aside({ state }: { state: boolean }) {
               Trabajadores
             </span>
           </ItemMenu>
-          <ItemMenu uri={URLS.employees}>
+          <ItemMenu uri={URLS.animals}>
+            <EmployeesIcon />
+            <span
+              className={`${pathname === URLS.animals ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+            >
+              Animales
+            </span>
+          </ItemMenu>
+          <ItemMenu uri={URLS.finances}>
             <MoneyIcon />
             <span
-              className={`${pathname === URLS.employees ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.finances ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Finanzas
             </span>
           </ItemMenu>
-          <ItemMenu uri={URLS.employees}>
+          <ItemMenu uri={URLS.inventory}>
             <InventoryIcon />
             <span
-              className={`${pathname === URLS.employees ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.inventory ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Inventario
             </span>
@@ -73,10 +83,10 @@ export function Aside({ state }: { state: boolean }) {
               Actividades
             </span>
           </ItemMenu>
-          <ItemMenu uri={URLS.employees}>
+          <ItemMenu uri={URLS.suppliers}>
             <SupliersIcon />
             <span
-              className={`${pathname === URLS.employees ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.suppliers ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Proveedores
             </span>
