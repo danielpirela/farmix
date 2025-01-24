@@ -1,15 +1,13 @@
-import Image from 'next/image'
-
 interface Props {
   src?: string | null | undefined
   name: string
 }
 const DEFAULT_IMAGE_URL =
-  'https://img.freepik.com/premium-vector/gray-avatar-icon-vector-illustration_276184-163.jpg?semt=ais_hybrid'
+  'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
 
 export function UserImage({ src, name }: Props) {
   return (
-    <Image
+    <img
       className="rounded-full"
       src={src ?? DEFAULT_IMAGE_URL}
       width={32}

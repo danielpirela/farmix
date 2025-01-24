@@ -2,7 +2,6 @@ import NextAuth, { DefaultSession, NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { supabaseServer } from '@lib/supabaseServer'
 
-// Extender el tipo `Session` para incluir `isProfileComplete`
 declare module 'next-auth' {
   interface Session {
     user: {
