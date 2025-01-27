@@ -30,6 +30,7 @@ const ReportsPage = () => {
   const { milkProductionData } = useMilkProduction()
   const [data, setData] = useState({})
   const [monthlyData, setMonthlyData] = useState({})
+  const [yearlyData, setYearlyData] = useState({})
 
   const options = {
     responsive: true,
@@ -73,6 +74,27 @@ const ReportsPage = () => {
       }
     }
   }
+  const yearlyOptions = {
+    responsive: true,
+    animation: {
+      duration: 500,
+      easing: 'easeOutBounce'
+    },
+    plugins: {
+      legend: {
+        display: true
+      }
+    },
+    scales: {
+      y: {
+        min: 0,
+        max: 12000
+      },
+      x: {
+        ticks: { color: 'rgba(0, 220, 195)' }
+      }
+    }
+  }
 
   useEffect(() => {
     if (milkProductionData) {
@@ -92,6 +114,11 @@ const ReportsPage = () => {
       // Calcular la producción mensual de leche
       const monthlyMilkProduction = milk.map((milkQuantity) => {
         const totalMilk = (milkQuantity as number) * 30
+        return totalMilk
+      })
+
+      const yearlyMilkProduction = milk.map((milkQuantity) => {
+        const totalMilk = (milkQuantity as number) * 365
         return totalMilk
       })
 
@@ -117,6 +144,18 @@ const ReportsPage = () => {
           }
         ]
       })
+
+      // Configurar datos para la gráfica anual
+      setYearlyData({
+        labels: names,
+        datasets: [
+          {
+            label: 'Producciones Anuales de Leche',
+            data: yearlyMilkProduction, // Usar la nueva variable aquí
+            backgroundColor: 'rgba(255, 99, 132, 0.6)'
+          }
+        ]
+      })
     }
   }, [])
 
@@ -127,6 +166,7 @@ const ReportsPage = () => {
       <h1>Reportes de Ganado</h1>
       <Bar data={data} options={options} />
       <Bar data={monthlyData} options={monthlyOptions} />
+      <Bar data={yearlyData} options={yearlyOptions} />
     </div>
   )
 }
