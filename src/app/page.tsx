@@ -1,7 +1,9 @@
 import { Navbar } from '@components/Navbar'
+import { startCronJob } from '@lib/cron/milk'
 import Link from 'next/link'
 
 export default function Home() {
+  startCronJob()
   return (
     <main className="min-h-screen font-[family-name:var(--font-geist-sans)] min-w-full">
       <Navbar />

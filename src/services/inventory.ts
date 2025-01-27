@@ -6,7 +6,6 @@ export const getInventory = async (): Promise<InventoryResponse> => {
         const { data: inventory, error } = await supabase
         .from('inventory')
         .select('*, suppliers(*)')
-
         if (error) throw new Error('Error fetching inventory: ' + error.message)
 
         return { inventory: inventory as Inventory[] ?? null }

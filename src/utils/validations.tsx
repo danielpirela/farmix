@@ -166,8 +166,8 @@ export const animalSchema = z.object({
     .string()
     .min(1, 'La ubicación es obligatoria'),
   [ANIMAL_FORM_FIELDS.weight]: z
-    .number()
-    .min(0, 'El peso debe ser mayor que 0'),
+    .string()
+    .min(2, 'El peso debe ser mayor que 0'),
   [ANIMAL_FORM_FIELDS.daily_milk_production]: z
     .number()
     .min(0, 'La producción diaria de leche debe ser mayor o igual a 0')

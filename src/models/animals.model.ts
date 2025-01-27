@@ -11,7 +11,6 @@ export interface Animal {
   weight: number
   daily_milk_production: number
   life_stage: string
-  gender: string
   child_id: string
   parents_id: string[]
 }

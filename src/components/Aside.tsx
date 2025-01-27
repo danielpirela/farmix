@@ -22,6 +22,7 @@ const URLS = {
   inventory: '/dashboard/admin/inventory',
   employees: '/dashboard/employees',
   suppliers: '/dashboard/admin/suppliers',
+  animalReports: '/dashboard/admin/animals/reports',
   logout: '/logout'
 }
 
@@ -89,6 +90,14 @@ export function Aside({ state }: { state: boolean }) {
               className={`${pathname === URLS.suppliers ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Proveedores
+            </span>
+          </ItemMenu>
+          <ItemMenu uri={URLS.animalReports}>
+            <SupliersIcon />
+            <span
+              className={`${pathname === URLS.animalReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+            >
+              Reportes de Animales
             </span>
           </ItemMenu>
           <AuthButton

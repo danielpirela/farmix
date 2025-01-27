@@ -55,7 +55,7 @@ const AnimalsPage = () => {
         health_status,
         location,
         birth_date,
-        daily_milk_production,
+        life_stage,
         child_id,
         mother_id,
         father_id
@@ -67,15 +67,16 @@ const AnimalsPage = () => {
         breed
       })
 
-      const newAnimal: Partial<Animal> = {
+      const newAnimal: Animal = {
         breed,
         name,
         type,
-        weight,
+        weight: Number(weight),
         health_status,
+        life_stage,
         location,
         birth_date,
-        daily_milk_production: milkCalculated,
+        daily_milk_production: Number(milkCalculated),
         parents_id: [father_id, mother_id] as string[] | [],
         child_id
       }
@@ -106,7 +107,7 @@ const AnimalsPage = () => {
       birth_date: '',
       health_status: '',
       location: '',
-      weight: 0,
+      weight: '',
       daily_milk_production: 0,
       life_stage: '',
       child_id: ''
@@ -165,6 +166,7 @@ const AnimalsPage = () => {
               <Option key={type} value={type} label={type} />
             ))}
           </Select>
+
           <Select
             register={register}
             name="health_status"
@@ -208,17 +210,6 @@ const AnimalsPage = () => {
           >
             {lifeStageOptions.map((life) => (
               <Option key={life} value={life} label={life} />
-            ))}
-          </Select>
-
-          <Select
-            register={register}
-            name="health_status"
-            label="Estado de salud"
-            errors={errors}
-          >
-            {lifeStageOptions.map((health) => (
-              <Option key={health} value={health} label={health} />
             ))}
           </Select>
 
