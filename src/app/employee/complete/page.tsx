@@ -12,6 +12,7 @@ import { Form } from '@components/form/Form'
 import { getEmployee } from '@services/employee'
 import { useEffect, useState } from 'react'
 import { Employee } from '@models/types'
+import { useRouter } from 'next/navigation'
 
 interface FormData {
   address: string
@@ -23,9 +24,15 @@ interface FormData {
 }
 
 export default function CompleteProfile() {
-  const { data: session } = useSession()
+  const router = useRouter()
+  const { data: session, update } = useSession()
 
-  const { employee, mutate, isPending, isError } = useUpdateProfile()
+  const {
+    data: employee,
+    mutate: updateProfile,
+    isPending,
+    isError
+  } = useUpdateProfile()
   const [prevEmployee, setPrevEmployee] = useState<Employee | null>(null)
 
   const methods = useForm<FormData>({
@@ -47,7 +54,7 @@ export default function CompleteProfile() {
     formState: { errors }
   } = methods
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const profileData = {
       address: data.address || prevEmployee?.address || '',
       first_name: data.firstName || prevEmployee?.first_name || '',
@@ -58,15 +65,18 @@ export default function CompleteProfile() {
       salary: 0
     }
 
-    mutate(
+    updateProfile(
       {
         email: session?.user?.email ?? '',
         profileData
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          // sospechoso este condicional
           if (session) {
-            session.user.isProfileComplete = true
+            await update()
+            await new Promise((resolve) => setTimeout(resolve, 1000)) // Add a small delay
+            router.push('/dashboard')
           }
         },
         onError: (error) => {

@@ -5,16 +5,16 @@ import { supabaseServer } from '@lib/supabaseServer'
 declare module 'next-auth' {
   interface Session {
     user: {
-      isProfileComplete?: boolean;
-      id? : string;
-    } & DefaultSession['user'];
+      isProfileComplete?: boolean
+      id?: string
+    } & DefaultSession['user']
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    isProfileComplete?: boolean;
-    id?: string;
+    isProfileComplete?: boolean
+    id?: string
   }
 }
 
@@ -22,8 +22,8 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+    })
   ],
   callbacks: {
     async signIn({ user }) {
@@ -46,8 +46,8 @@ export const authOptions: NextAuthOptions = {
             email: email,
             address: '',
             hire_date: null,
-            role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35',
-          },
+            role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35'
+          }
         ])
       }
       return true
@@ -59,30 +59,30 @@ export const authOptions: NextAuthOptions = {
       return session
     },
 
-    async jwt({ token, user }) {
-      if (user) {
-        const supabase = await supabaseServer()
-        const { data: existingEmployee } = await supabase
-          .from('employees')
-          .select('*')
-          .eq('email', user.email)
-          .single()
+    async jwt({ token }) {
+      // Remove the user check to always verify the employee data
+      const supabase = await supabaseServer()
+      const { data: existingEmployee } = await supabase
+        .from('employees')
+        .select('*')
+        .eq('email', token.email)
+        .single()
 
-        token.isProfileComplete =
-          !!existingEmployee?.phone &&
-          !!existingEmployee?.address &&
-          !!existingEmployee?.email &&
-          !!existingEmployee?.first_name &&
-          !!existingEmployee?.last_name &&
-          !!existingEmployee?.hire_date &&
-          !!existingEmployee?.role_id &&
-          !!existingEmployee?.id_document
+      token.isProfileComplete =
+        !!existingEmployee?.phone &&
+        !!existingEmployee?.address &&
+        !!existingEmployee?.email &&
+        !!existingEmployee?.first_name &&
+        !!existingEmployee?.last_name &&
+        !!existingEmployee?.hire_date &&
+        !!existingEmployee?.role_id &&
+        !!existingEmployee?.id_document
 
-        token.id = existingEmployee?.employee_id
-      }
+      token.id = existingEmployee?.employee_id
+
       return token
-    },
-  },
+    }
+  }
 }
 
 const handler = NextAuth(authOptions)

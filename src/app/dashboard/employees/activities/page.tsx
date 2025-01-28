@@ -104,7 +104,7 @@ export default function Page() {
       </ButtonAnimated>
 
       {/* Tabla de actividades */}
-      {isPending && activities ? (
+      {isPending ? (
         <LoadingIcon />
       ) : (
         <Table

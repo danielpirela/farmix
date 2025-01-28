@@ -17,13 +17,20 @@ export function Menu({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (!session?.user) {
+    const isLoadingSession = session === undefined
+    const hasSession = session !== null
+    const hasCompletedProfile = session?.user.isProfileComplete === false
+
+    if (isLoadingSession) return
+
+    if (!hasSession) {
       signIn('google', {
         callbackUrl: '/'
       })
+      return
     }
 
-    if (session?.user.isProfileComplete === false) {
+    if (hasCompletedProfile) {
       router.push('employee/complete')
     }
   }, [session, router])

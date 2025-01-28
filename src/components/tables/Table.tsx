@@ -100,7 +100,7 @@ export default function Table<
 
   return (
     <>
-      {data.length > 0 && (
+      {data.length > 0 ? (
         <div className="flex flex-col min-h-screen animate-once animate-duration-300 animate-delay-300 animate-fade-left">
           {/* Search bar */}
           <div className="mb-4 flex gap-2">
@@ -195,6 +195,8 @@ export default function Table<
             </button>
           </div>
         </div>
+      ) : (
+        <p>No hay datos</p>
       )}
     </>
   )
