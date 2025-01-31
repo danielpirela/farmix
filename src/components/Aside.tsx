@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { ItemMenu } from './ItemMenu'
 import {
   ActivitiesIcon,
+  ArrowDown,
   DashboardIcon,
   EmployeesIcon,
   InventoryIcon,
@@ -13,6 +14,7 @@ import {
 import { AuthButton } from './auth/AuthButton'
 
 import { usePathname } from 'next/navigation'
+import { constructor, useState } from 'react'
 
 const URLS = {
   dashboard: '/dashboard',
@@ -20,15 +22,38 @@ const URLS = {
   animals: '/dashboard/admin/animals',
   finances: '/dashboard/admin/finances',
   inventory: '/dashboard/admin/inventory',
-  employees: '/dashboard/employees',
+  employees: {
+    index: '/dashboard/employees',
+    reports: '/dashboard/employees/reports',
+    isOpen: false
+  },
   suppliers: '/dashboard/admin/suppliers',
   animalReports: '/dashboard/admin/animals/reports',
+  employeesReports: '/dashboard/employees/reports',
   financesReports: '/dashboard/admin/finances/reports',
   logout: '/logout'
 }
 
 export function Aside({ state }: { state: boolean }) {
   const { data: session } = useSession()
+  const [menuState, setMenuState] = useState({
+    dashboard: '/dashboard',
+    activities: '/dashboard/employees/activities',
+    animals: '/dashboard/admin/animals',
+    finances: '/dashboard/admin/finances',
+    inventory: '/dashboard/admin/inventory',
+    employees: {
+      index: '/dashboard/employees',
+      reports: '/dashboard/employees/reports',
+      isOpen: false
+    },
+    suppliers: '/dashboard/admin/suppliers',
+    animalReports: '/dashboard/admin/animals/reports',
+    employeesReports: '/dashboard/employees/reports',
+    financesReports: '/dashboard/admin/finances/reports',
+    logout: '/logout'
+  })
+
   const pathname = usePathname()
 
   return (
@@ -37,22 +62,52 @@ export function Aside({ state }: { state: boolean }) {
     >
       <div className="h-full overflow-y-auto px-3 py-4">
         <ul className="font-medium space-y-4">
-          <ItemMenu uri={URLS.employees}>
+          <ItemMenu uri={URLS.employees.index}>
             <DashboardIcon />
             <span
-              className={`${pathname === URLS.employees ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Dashboard
             </span>
           </ItemMenu>
-          <ItemMenu uri={URLS.employees}>
-            <EmployeesIcon />
-            <span
-              className={`${pathname === URLS.employees ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
-            >
-              Trabajadores
-            </span>
-          </ItemMenu>
+          <div>
+            <div className="flex gap-1 justify-start items-center">
+              <ItemMenu uri={URLS.employees.index}>
+                <EmployeesIcon />
+                <span
+                  className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                >
+                  Trabajadores
+                </span>
+              </ItemMenu>
+              <button
+                className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+                onClick={() =>
+                  setMenuState((prev) => ({
+                    ...prev,
+                    employees: {
+                      ...prev.employees,
+                      isOpen: !prev.employees.isOpen
+                    }
+                  }))
+                }
+              >
+                <ArrowDown />
+              </button>
+            </div>
+            {menuState.employees.isOpen && (
+              <ItemMenu
+                uri={URLS.employees.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
           <ItemMenu uri={URLS.animals}>
             <EmployeesIcon />
             <span

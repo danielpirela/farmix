@@ -119,15 +119,15 @@ export default function Table<
           </div>
 
           {/* Table container */}
-          <div className="overflow-x-auto rounded-md shadow-md bg-white dark:bg-gray-800 max-w-full animate-once animate-duration-300 animate-delay-300:">
-            <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-md">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-t-md">
+          <div className="overflow-x-auto rounded-md shadow-md bg-white dark:bg-gray-800 max-w-full animate-once animate-duration-300 animate-delay-300">
+            <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="px-6 py-3 min-w-[150px] cursor-pointer"
+                        className="px-6 py-3 min-w-[150px] cursor-pointer border-b border-gray-200 dark:border-gray-600"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {header.isPlaceholder ? null : (
@@ -144,16 +144,16 @@ export default function Table<
                   </tr>
                 ))}
               </thead>
-              <tbody className="rounded-md">
+              <tbody>
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 max-h-9"
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis dark:text-white "
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis dark:text-white"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

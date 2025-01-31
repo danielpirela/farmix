@@ -33,7 +33,7 @@ export function LogOutIcon() {
   )
 }
 
-export function EmployeesIcon() {
+export function EmployeesIcon({ ...props }) {
   return (
     <svg
       className="w-6 h-6 text-gray-800 dark:text-white  hover:fill-accent"
@@ -43,6 +43,7 @@ export function EmployeesIcon() {
       height="24"
       fill="currentColor"
       viewBox="0 0 24 24"
+      {...props}
     >
       <path
         fillRule="evenodd"
@@ -357,6 +358,53 @@ export function RefreshIcon({ ...props }) {
         strokeLinejoin="round"
         strokeWidth="2"
         d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+      />
+    </svg>
+  )
+}
+
+export function ArrowDown({ ...props }) {
+  return (
+    <svg
+      className="w-4 h-4 text-gray-800 dark:text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 10 6"
+      {...props}
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="m1 1 4 4 4-4"
+      />
+    </svg>
+  )
+}
+
+export function Download({ ...props }) {
+  return (
+    <svg
+      className="w-6 h-6 text-gray-800 dark:text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        d="M13 11.15V4a1 1 0 1 0-2 0v7.15L8.78 8.374a1 1 0 1 0-1.56 1.25l4 5a1 1 0 0 0 1.56 0l4-5a1 1 0 1 0-1.56-1.25L13 11.15Z"
+        clipRule="evenodd"
+      />
+      <path
+        fillRule="evenodd"
+        d="M9.657 15.874 7.358 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2.358l-2.3 2.874a3 3 0 0 1-4.685 0ZM17 16a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z"
+        clipRule="evenodd"
       />
     </svg>
   )

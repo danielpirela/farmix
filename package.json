@@ -19,6 +19,7 @@
     "@tanstack/react-table": "^8.20.5",
     "animate.css": "^4.1.1",
     "chart.js": "^4.4.7",
+    "html2pdf.js": "^0.10.2",
     "million": "^3.1.11",
     "next": "15.0.3",
     "next-auth": "^4.24.10",
