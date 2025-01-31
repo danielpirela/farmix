@@ -1,8 +1,9 @@
 'use client'
 
 import { CardDetailsEmployee } from '@components/CardDetailsEmployee'
+import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Modal } from '@components/form/Modal'
-import { LoadingIcon } from '@components/icons/DashboardIcon'
+import { LoadingIcon, PlusIcon } from '@components/icons/DashboardIcon'
 import { EditableStatusEmployee } from '@components/tables/EditableStatusEmployee'
 import Table from '@components/tables/Table'
 import { TableImage } from '@components/tables/TableImage'
@@ -28,6 +29,7 @@ export default function Page() {
   const { employees, isPending, isError } = useEmployee(null)
   const [isViewable, setIsViewable] = useState(false)
   const [employee, setEmployee] = useState<Employee | null>(null)
+  const [formModalOpen, setFormModalOpen] = useState(false)
 
   const Finalemployees = employees ?? []
   console.log(Finalemployees)
@@ -44,6 +46,14 @@ export default function Page() {
 
   return (
     <>
+      {/* Botón para abrir el formulario */}
+      <ButtonAnimated
+        onClick={() => setFormModalOpen(true)}
+        className="fixed bottom-4 right-4"
+      >
+        <PlusIcon />
+      </ButtonAnimated>
+
       {Finalemployees ? (
         <Table
           data={Finalemployees}

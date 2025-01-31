@@ -8,8 +8,9 @@ const DEFAULT_IMAGE_URL =
 export function UserImage({ src, name }: Props) {
   return (
     <img
-      className="rounded-full"
+      className="rounded-full max-w-8"
       src={src ?? DEFAULT_IMAGE_URL}
+      style={{ height: '32px', width: '32px' }}
       width={32}
       height={32}
       alt={`User image of ${name}`}
