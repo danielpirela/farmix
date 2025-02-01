@@ -2,12 +2,12 @@
 
 import { useEmployee } from '@hooks/useEmployee'
 import { Employee } from '@models/types'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Button } from '@components/form/Button'
 import { Download } from '@components/icons/DashboardIcon'
-import html2pdf from 'html2pdf.js'
+import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -17,6 +17,9 @@ const options = {
 }
 
 export default function ReportsPage() {
+  const { downloadPDF, pdfRef } = useHtml2Pdf({
+    filename: 'Reporte_salarios.pdf'
+  })
   const { employees, isPending, isError } = useEmployee(null)
   const Finalemployees = useMemo(() => employees ?? [], [employees])
   const [chartData, setChartData] = useState<{
@@ -32,24 +35,6 @@ export default function ReportsPage() {
     labels: [],
     datasets: []
   })
-  const pdfRef = useRef(null)
-
-  useEffect(() => {
-    import('html2pdf.js')
-  }, [])
-  const downloadPDF = () => {
-    const opt = {
-      margin: 1,
-      filename: 'Reporte_salarios.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, background: '#fff' },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    }
-    if (!pdfRef.current) return
-    if (!html2pdf) return
-
-    html2pdf().from(pdfRef.current).set(opt).save('reportes_empleados.pdf')
-  }
 
   useEffect(() => {
     if (Finalemployees.length === 0) return
