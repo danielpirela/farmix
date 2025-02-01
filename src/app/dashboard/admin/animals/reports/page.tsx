@@ -26,18 +26,32 @@ ChartJS.register(
   Filler
 )
 
+const monthNames = {
+  '01': 'Enero',
+  '02': 'Febrero',
+  '03': 'Marzo',
+  '04': 'Abril',
+  '05': 'Mayo',
+  '06': 'Junio',
+  '07': 'Julio',
+  '08': 'Agosto',
+  '09': 'Septiembre',
+  '10': 'Octubre',
+  '11': 'Noviembre',
+  '12': 'Diciembre'
+}
+
 const ReportsPage = () => {
   const { milkProductionData } = useMilkProduction()
   const [data, setData] = useState({})
   const [monthlyData, setMonthlyData] = useState({})
   const [yearlyData, setYearlyData] = useState({})
+  const [dailyDataGeneral, setDailyDataGeneral] = useState({})
+  const [monthlyDataGeneral, setMonthlyDataGeneral] = useState({})
+  const [yearlyDataGeneral, setYearlyDataGeneral] = useState({})
 
   const options = {
     responsive: true,
-    animation: {
-      duration: 500,
-      easing: 'easeOutBounce'
-    },
     plugins: {
       legend: {
         display: true
@@ -45,8 +59,7 @@ const ReportsPage = () => {
     },
     scales: {
       y: {
-        min: 0,
-        max: 30
+        min: 0
       },
       x: {
         ticks: { color: 'rgba(0, 220, 195)' }
@@ -55,10 +68,6 @@ const ReportsPage = () => {
   }
   const monthlyOptions = {
     responsive: true,
-    animation: {
-      duration: 500,
-      easing: 'easeOutBounce'
-    },
     plugins: {
       legend: {
         display: true
@@ -66,8 +75,7 @@ const ReportsPage = () => {
     },
     scales: {
       y: {
-        min: 0,
-        max: 1000
+        min: 0
       },
       x: {
         ticks: { color: 'rgba(0, 220, 195)' }
@@ -76,10 +84,6 @@ const ReportsPage = () => {
   }
   const yearlyOptions = {
     responsive: true,
-    animation: {
-      duration: 500,
-      easing: 'easeOutBounce'
-    },
     plugins: {
       legend: {
         display: true
@@ -87,8 +91,7 @@ const ReportsPage = () => {
     },
     scales: {
       y: {
-        min: 0,
-        max: 12000
+        min: 0
       },
       x: {
         ticks: { color: 'rgba(0, 220, 195)' }
@@ -106,7 +109,32 @@ const ReportsPage = () => {
         return acc
       }, {})
 
-      console.log(milkData)
+      const milkDailyData = milkProductionData?.reduce((acc, animal) => {
+        acc[animal.date] = (acc[animal.date] || 0) + animal.quantity
+        return acc
+      }, {})
+      // ... código existente ...
+      const milkMonthlyData = milkProductionData?.reduce((acc, animal) => {
+        const [year, month] = animal.date.split('-')
+        const key = `${year}-${month}`
+        acc[key] = (acc[key] || 0) + animal.quantity
+        return acc
+      }, {})
+
+      const milkYearlyData = milkProductionData?.reduce((acc, animal) => {
+        const year = animal.date.split('-')[0] // Obtener el mes
+        acc[year] = (acc[year] || 0) + animal.quantity // Asegurarse de que acc[month] sea un número
+        return acc
+      }, {})
+
+      const namesDaily = Object.keys(milkDailyData)
+      const milkDaily = Object.values(milkDailyData)
+
+      const namesMonthly = Object.keys(milkMonthlyData)
+      const milkMonthly = Object.values(milkMonthlyData)
+
+      const namesYearly = Object.keys(milkYearlyData)
+      const milkYearly = Object.values(milkYearlyData)
 
       const names = Object.keys(milkData)
       const milk = Object.values(milkData)
@@ -156,6 +184,39 @@ const ReportsPage = () => {
           }
         ]
       })
+
+      setDailyDataGeneral({
+        labels: namesDaily,
+        datasets: [
+          {
+            label: 'Producciones Diaria general',
+            data: milkDaily,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+          }
+        ]
+      })
+
+      setMonthlyDataGeneral({
+        labels: namesMonthly,
+        datasets: [
+          {
+            label: 'Producciones Mensuales de Leche',
+            data: milkMonthly,
+            backgroundColor: 'rgba(153, 102, 255, 0.6)'
+          }
+        ]
+      })
+
+      setYearlyDataGeneral({
+        labels: namesYearly,
+        datasets: [
+          {
+            label: 'Producciones Diarias de Leche',
+            data: milkYearly,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+          }
+        ]
+      })
     }
   }, [])
 
@@ -167,6 +228,9 @@ const ReportsPage = () => {
       <Bar data={data} options={options} />
       <Bar data={monthlyData} options={monthlyOptions} />
       <Bar data={yearlyData} options={yearlyOptions} />
+      <Bar data={dailyDataGeneral} options={dailyDataGeneral} />
+      <Bar data={monthlyDataGeneral} options={monthlyOptions} />
+      <Bar data={yearlyDataGeneral} options={yearlyOptions} />
     </div>
   )
 }

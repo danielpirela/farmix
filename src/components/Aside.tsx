@@ -14,13 +14,17 @@ import {
 import { AuthButton } from './auth/AuthButton'
 
 import { usePathname } from 'next/navigation'
-import { constructor, useState } from 'react'
+import { useState } from 'react'
 
 const URLS = {
   dashboard: '/dashboard',
   activities: '/dashboard/employees/activities',
   animals: '/dashboard/admin/animals',
-  finances: '/dashboard/admin/finances',
+  finances: {
+    index: '/dashboard/admin/finances',
+    reports: '/dashboard/admin/finances/reports',
+    isOpen: false
+  },
   inventory: '/dashboard/admin/inventory',
   employees: {
     index: '/dashboard/employees',
@@ -40,7 +44,11 @@ export function Aside({ state }: { state: boolean }) {
     dashboard: '/dashboard',
     activities: '/dashboard/employees/activities',
     animals: '/dashboard/admin/animals',
-    finances: '/dashboard/admin/finances',
+    finances: {
+      index: '/dashboard/admin/finances',
+      reports: '/dashboard/admin/finances/reports',
+      isOpen: false
+    },
     inventory: '/dashboard/admin/inventory',
     employees: {
       index: '/dashboard/employees',
@@ -116,14 +124,44 @@ export function Aside({ state }: { state: boolean }) {
               Animales
             </span>
           </ItemMenu>
-          <ItemMenu uri={URLS.finances}>
-            <MoneyIcon />
-            <span
-              className={`${pathname === URLS.finances ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
-            >
-              Finanzas
-            </span>
-          </ItemMenu>
+          <div>
+            <div className="flex gap-1 justify-start items-center">
+              <ItemMenu uri={URLS.finances.index}>
+                <EmployeesIcon />
+                <span
+                  className={`${pathname === URLS.finances.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                >
+                  Finanzas
+                </span>
+              </ItemMenu>
+              <button
+                className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+                onClick={() =>
+                  setMenuState((prev) => ({
+                    ...prev,
+                    finances: {
+                      ...prev.finances,
+                      isOpen: !prev.finances.isOpen
+                    }
+                  }))
+                }
+              >
+                <ArrowDown />
+              </button>
+            </div>
+            {menuState.finances.isOpen && (
+              <ItemMenu
+                uri={URLS.finances.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.finances.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
           <ItemMenu uri={URLS.inventory}>
             <InventoryIcon />
             <span
@@ -154,14 +192,6 @@ export function Aside({ state }: { state: boolean }) {
               className={`${pathname === URLS.animalReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
             >
               Reportes de Animales
-            </span>
-          </ItemMenu>
-          <ItemMenu uri={URLS.financesReports}>
-            <SupliersIcon />
-            <span
-              className={`${pathname === URLS.financesReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
-            >
-              Reportes de Finanzas
             </span>
           </ItemMenu>
           <AuthButton

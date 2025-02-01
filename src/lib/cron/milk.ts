@@ -2,7 +2,7 @@ import cron from 'node-cron'
 import { calculateAverageMilk } from '@utils/averageMilkProduction'
 import { getAnimals } from '@services/animals'
 import { Animal, AnimalResponse } from '@models/animals.model'
-import { createMilkProduction } from '@services/milk'
+import { createMilkProduction, getMilkProductionsByMonth } from '@services/milk'
 import { MilkProduction } from '@models/milkProduction.model'
 
 // Tarea programada para ejecutar todos los días a la medianoche

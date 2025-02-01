@@ -30,6 +30,8 @@ export const getMilkProductions = async (): Promise<MilkProductionResponse> => {
     }
 }
 
+
+
 export const getMilkProductionByAnimalId = async (animalId: string): Promise<MilkProductionResponse | undefined> => {
     try {
         const { data, error } = await supabase

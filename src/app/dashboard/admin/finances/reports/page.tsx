@@ -8,7 +8,9 @@ import { useFinances } from '@hooks/useFinances'
 
 const ReportsPage = () => {
   const { finances } = useFinances()
-  const [data, setData] = useState({})
+  const [dataEgreso, setDataEgreso] = useState({})
+  const [filter, setFilter] = useState('2025')
+  const [dataIngreso, setDataIngreso] = useState({})
   const [monthlyData, setMonthlyData] = useState({})
   const [yearlyData, setYearlyData] = useState({})
 
@@ -63,28 +65,28 @@ const ReportsPage = () => {
   useEffect(() => {
     if (finances) {
       // Procesar los datos para las estadísticas
-      const financesData = finances?.finances?.reduce((acc, tran) => {
-        acc[tran.category] = tran.amount
-        return acc
-      }, {})
+      const financesDataEgreso = finances?.finances
+        ?.filter(
+          (finance) =>
+            finance.type === 'Egreso' &&
+            finance.transaction_date.split('-')[0] === filter
+        )
+        .reduce((acc, tran) => {
+          acc[tran.category] = (acc[tran.category] || 0) + tran.amount
+          return acc
+        }, {})
 
-      console.log(financesData)
+      const financesDataIngreso = finances?.finances
+        ?.filter((finance) => finance.type === 'Ingreso')
+        .reduce((acc, tran) => {
+          acc[tran.category] = (acc[tran.category] || 0) + tran.amount
+          return acc
+        }, {})
 
-      const categegory = Object.keys(financesData)
-      const amount = Object.values(financesData)
+      const categegory = Object.keys(financesDataEgreso)
+      const amount = Object.values(financesDataEgreso)
 
-      // Calcular la producción mensual de leche
-      /* const monthlyMilkProduction = milk.map((milkQuantity) => {
-        const totalMilk = (milkQuantity as number) * 30
-        return totalMilk
-      })
-
-      const yearlyMilkProduction = milk.map((milkQuantity) => {
-        const totalMilk = (milkQuantity as number) * 365
-        return totalMilk
-      }) */
-
-      setData({
+      setDataEgreso({
         labels: categegory,
         datasets: [
           {
@@ -108,39 +110,30 @@ const ReportsPage = () => {
           }
         ]
       })
-
-      // Configurar datos para la gráfica mensual
-      /*  setMonthlyData({
-        labels: names,
-        datasets: [
-          {
-            label: 'Producciones Mensuales de Leche',
-            data: monthlyMilkProduction, // Usar la nueva variable aquí
-            backgroundColor: 'rgba(153, 102, 255, 0.6)'
-          }
-        ]
-      })
-
-      // Configurar datos para la gráfica anual
-      setYearlyData({
-        labels: names,
-        datasets: [
-          {
-            label: 'Producciones Anuales de Leche',
-            data: yearlyMilkProduction, // Usar la nueva variable aquí
-            backgroundColor: 'rgba(255, 99, 132, 0.6)'
-          }
-        ]
-      }) */
     }
-  }, [])
+  }, [filter, finances])
 
-  if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
+  if (!dataEgreso?.labels || dataEgreso?.labels.length === 0)
+    return <p>cargando</p>
 
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-black text-md">Reportes de Gastos</h1>
-      <Pie data={data} options={options} />
+      <select
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        id="countries"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option value="2025" selected>
+          2025
+        </option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+      </select>
+      <Pie data={dataEgreso} options={options} />
     </div>
   )
 }
