@@ -50,6 +50,7 @@ const CertificatesPage = () => {
       console.error('Error al crear certificado', err)
     }
   }
+  console.log(certificates)
 
   if (isCertificatesLoading)
     return <div className="text-black">Cargando...</div>
@@ -77,6 +78,52 @@ const CertificatesPage = () => {
           // Agrega más columnas según tu modelo
         ]}
       />
+
+      {/* Mostrar el primer certificado con toda la información */}
+      {certificates?.certificates && certificates.certificates.length > 0 && (
+        <div className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg bg-white">
+          <h2 className="text-xl font-semibold mb-2">
+            Detalles del Primer Certificado
+          </h2>
+          <p className="mb-1">
+            <strong>ID:</strong> {certificates.certificates[0].id}
+          </p>
+          <p className="mb-1">
+            <strong>ID del Empleado:</strong>{' '}
+            {certificates.certificates[0].employee_id}
+          </p>
+          <p className="mb-1">
+            <strong>Tipo de Certificado:</strong>{' '}
+            {certificates.certificates[0].certificate_type}
+          </p>
+          <p className="mb-1">
+            <strong>Fecha de Inicio:</strong>{' '}
+            {certificates.certificates[0].start_date}
+          </p>
+          <p className="mb-1">
+            <strong>Fecha de Fin:</strong>{' '}
+            {certificates.certificates[0].end_date}
+          </p>
+          <p className="mb-1">
+            <strong>Motivo:</strong> {certificates.certificates[0].reason}
+          </p>
+          <p className="mb-1">
+            <strong>Estado:</strong> {certificates.certificates[0].status}
+          </p>
+          <p className="mb-1">
+            <strong>Emitido por:</strong>{' '}
+            {certificates.certificates[0].issued_by ?? 'N/A'}
+          </p>
+          <p className="mb-1">
+            <strong>Fecha de Creación:</strong>{' '}
+            {certificates.certificates[0].created_at}
+          </p>
+          <p className="mb-1">
+            <strong>Última Actualización:</strong>{' '}
+            {certificates.certificates[0].updated_at}
+          </p>
+        </div>
+      )}
 
       <Modal
         isOpen={isFormModalOpen}

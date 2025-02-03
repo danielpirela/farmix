@@ -70,7 +70,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.employees.index}>
             <DashboardIcon />
             <span
-              className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Dashboard
             </span>
@@ -80,7 +80,7 @@ export function Aside({ state }: { state: boolean }) {
               <ItemMenu uri={URLS.employees.index}>
                 <EmployeesIcon />
                 <span
-                  className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                  className={`${pathname === URLS.employees.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                 >
                   Trabajadores
                 </span>
@@ -107,7 +107,7 @@ export function Aside({ state }: { state: boolean }) {
                   className="animate-fade-down duration-300 delay-150 transition-all"
                 >
                   <span
-                    className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                    className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                   >
                     Reportes
                   </span>
@@ -117,7 +117,7 @@ export function Aside({ state }: { state: boolean }) {
                   className="animate-fade-down duration-300 delay-150 transition-all"
                 >
                   <span
-                    className={`${pathname === URLS.employees.certificates ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                    className={`${pathname === URLS.employees.certificates ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                   >
                     Constancias
                   </span>
@@ -128,7 +128,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.animals}>
             <EmployeesIcon />
             <span
-              className={`${pathname === URLS.animals ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.animals ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Animales
             </span>
@@ -138,7 +138,7 @@ export function Aside({ state }: { state: boolean }) {
               <ItemMenu uri={URLS.finances.index}>
                 <MoneyIcon />
                 <span
-                  className={`${pathname === URLS.finances.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                  className={`${pathname === URLS.finances.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                 >
                   Finanzas
                 </span>
@@ -164,7 +164,7 @@ export function Aside({ state }: { state: boolean }) {
                 className="animate-fade-down duration-300 delay-150 transition-all"
               >
                 <span
-                  className={`${pathname === URLS.finances.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                  className={`${pathname === URLS.finances.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                 >
                   Reportes
                 </span>
@@ -174,7 +174,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.inventory}>
             <InventoryIcon />
             <span
-              className={`${pathname === URLS.inventory ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.inventory ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Inventario
             </span>
@@ -182,7 +182,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.activities}>
             <ActivitiesIcon />
             <span
-              className={`${pathname === URLS.activities ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.activities ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Actividades
             </span>
@@ -190,7 +190,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.suppliers}>
             <SupliersIcon />
             <span
-              className={`${pathname === URLS.suppliers ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.suppliers ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Proveedores
             </span>
@@ -198,7 +198,7 @@ export function Aside({ state }: { state: boolean }) {
           <ItemMenu uri={URLS.animalReports}>
             <SupliersIcon />
             <span
-              className={`${pathname === URLS.animalReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              className={`${pathname === URLS.animalReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
             >
               Reportes de Animales
             </span>
