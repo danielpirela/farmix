@@ -1,94 +1,161 @@
 import { Navbar } from '@components/Navbar'
 import { startCronJob } from '@lib/cron/milk'
-import Link from 'next/link'
+import { Milk, Users, ArrowRight, Leaf, BarChart3, Clock } from 'lucide-react'
 
 export default function Home() {
   startCronJob()
   return (
-    <main className="min-h-screen font-[family-name:var(--font-geist-sans)] min-w-full">
+    <main className="min-h-screen bg-white dark:bg-gray-900 overflow-hidden">
       <Navbar />
-      <div className="bg-white mt-20 dark:bg-gray-800 min-h-screen flex flex-col justify-center items-center p-6">
-        {/* Hero Section */}
-        <div className="text-center animate__animated animate__fadeIn animate__delay-1s">
-          <h1 className="text-4xl font-semibold text-gray-900 dark:text-white mb-6 animate__animated animate__fadeInUp animate__delay-1s">
-            Bienvenido a la Gestión Eficiente de Fincas
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden mt-4">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-white dark:to-gray-900 z-10" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              'url("https://images.unsplash.com/photo-1597432480301-a3b64410d898?auto=format&fit=crop&q=80&w=3540")',
+            transform: 'scale(1.1)'
+          }}
+        />
+        <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
+          <h1 className="text-7xl sm:text-8xl font-bold mb-6 tracking-tight text-white">
+            Finca Manager
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 animate__animated animate__fadeInUp animate__delay-1.5s">
-            Nuestra plataforma le permite gestionar su finca de manera sencilla
-            y eficiente, optimizando todos los procesos operativos.
-          </p>
-          <p className="text-base text-gray-500 dark:text-gray-400 mb-8 animate__animated animate__fadeInUp animate__delay-2s">
-            Mejore el rendimiento, controle el inventario, gestione empleados y
-            mucho más.
+          <p className="text-2xl sm:text-3xl font-medium text-gray-100 mb-8">
+            El futuro de la gestión lechera.
           </p>
           <a
-            href="#"
-            className="inline-block px-6 py-3 text-white bg-accent rounded-md hover:bg-accent hover:scale-105 transition-all active:scale-95  animate__animated animate__fadeInUp animate__delay-2.5s"
+            href="#features"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300"
           >
-            Comienza Ahora
+            Descubrir más
+            <ArrowRight className="ml-2 h-5 w-5" />
           </a>
         </div>
+      </section>
 
-        {/* Feature Section */}
-        <div className="mt-16 max-w-7xl w-full px-6">
-          <h2 className="text-3xl font-semibold text-center text-gray-900 dark:text-white mb-8 animate__animated animate__fadeInUp animate__delay-3s">
-            Características Principales
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 animate__animated animate__fadeInUp animate__delay-3.5s">
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Gestión de Inventarios
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Mantén el control total de tu inventario, gestionando productos,
-                insumos y más con facilidad.
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 animate__animated animate__fadeInUp animate__delay-4s">
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Gestión de Empleados
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Administra de manera eficiente a tu personal, con acceso rápido
-                a sus registros y tareas.
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 animate__animated animate__fadeInUp animate__delay-4.5s">
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Monitoreo de Actividades
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Realiza un seguimiento completo de las actividades realizadas en
-                la finca para mejorar la productividad.
-              </p>
+      {/* Product Highlight Section */}
+      <section className="py-32 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-24">
+            <h2 className="text-5xl sm:text-6xl font-bold mb-8 text-gray-900 dark:text-white">
+              Innovación en cada detalle
+            </h2>
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Una nueva era en la gestión de fincas lecheras, diseñada para la
+              excelencia.
+            </p>
+          </div>
+          <div className="relative">
+            <div className="aspect-[16/9] rounded-lg overflow-hidden shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=3540"
+                alt="Dashboard"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Call to Action Section */}
-        <div className="mt-16 p-8 bg-accent-ligth rounded-lg text-center animate__animated animate__fadeIn animate__delay-5s">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-            ¿Estás listo para mejorar la gestión de tu finca?
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Únete a nosotros y empieza a optimizar tu finca hoy mismo. ¡Es hora
-            de tomar control!
-          </p>
-          <Link
-            href="/api/auth/"
-            className="inline-block px-6 py-3 text-white bg-accent rounded-md hover:bg-accent/80 scale-105 transition-all active:scale-95 duration-300"
-          >
-            ¡Regístrate Ahora!
-          </Link>
+      {/* Features Grid */}
+      <section className="py-32 bg-white dark:bg-gray-900" id="features">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Control de Producción',
+                description:
+                  'Seguimiento detallado de la producción láctea diaria y análisis de rendimiento.',
+                icon: BarChart3
+              },
+              {
+                title: 'Gestión de Personal',
+                description:
+                  'Administre eficientemente los horarios y tareas de sus empleados.',
+                icon: Users
+              },
+              {
+                title: 'Monitoreo en Tiempo Real',
+                description:
+                  'Acceda a datos actualizados de su operación desde cualquier dispositivo.',
+                icon: Clock
+              }
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="p-8 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
+              >
+                <feature.icon className="h-12 w-12 text-[#007A4D] mb-6" />
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Footer */}
-        <footer className="mt-24 text-center text-gray-600 dark:text-gray-400 text-sm">
-          <p>© 2024 Todos los derechos reservados. Finca Manager</p>
-        </footer>
-      </div>
+      {/* CTA Section */}
+      <section className="relative py-32 bg-[#A3D8A8]/20 dark:bg-[#007A4D]/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-5xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-8">
+            El momento es ahora
+          </h2>
+          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+            Únase a la revolución en gestión de fincas lecheras y transforme su
+            operación.
+          </p>
+          <a
+            href="#"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300"
+          >
+            Comenzar prueba gratuita
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </a>
+        </div>
+        <div className="absolute left-0 top-0 -z-10">
+          <Leaf className="h-64 w-64 text-[#007A4D]/5" />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-50 dark:bg-gray-800 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <Milk className="h-8 w-8 text-[#007A4D] mb-4" />
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                &copy; 2024 Finca Manager. Todos los derechos reservados.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-6 md:justify-end">
+              <a
+                href="#"
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#007A4D] dark:hover:text-[#A3D8A8] transition-colors"
+              >
+                Términos y condiciones
+              </a>
+              <a
+                href="#"
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#007A4D] dark:hover:text-[#A3D8A8] transition-colors"
+              >
+                Política de privacidad
+              </a>
+              <a
+                href="#"
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#007A4D] dark:hover:text-[#A3D8A8] transition-colors"
+              >
+                Contacto
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }

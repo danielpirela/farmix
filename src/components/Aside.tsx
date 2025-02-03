@@ -29,13 +29,11 @@ const URLS = {
   employees: {
     index: '/dashboard/employees',
     reports: '/dashboard/employees/reports',
+    certificates: '/dashboard/employees/certificates',
     isOpen: false
   },
   suppliers: '/dashboard/admin/suppliers',
-  animalReports: '/dashboard/admin/animals/reports',
-  employeesReports: '/dashboard/employees/reports',
-  financesReports: '/dashboard/admin/finances/reports',
-  logout: '/logout'
+  animalReports: '/dashboard/admin/animals/reports'
 }
 
 export function Aside({ state }: { state: boolean }) {
@@ -53,12 +51,11 @@ export function Aside({ state }: { state: boolean }) {
     employees: {
       index: '/dashboard/employees',
       reports: '/dashboard/employees/reports',
+      certificates: '/dashboard/employees/certificates',
       isOpen: false
     },
     suppliers: '/dashboard/admin/suppliers',
     animalReports: '/dashboard/admin/animals/reports',
-    employeesReports: '/dashboard/employees/reports',
-    financesReports: '/dashboard/admin/finances/reports',
     logout: '/logout'
   })
 
@@ -104,16 +101,28 @@ export function Aside({ state }: { state: boolean }) {
               </button>
             </div>
             {menuState.employees.isOpen && (
-              <ItemMenu
-                uri={URLS.employees.reports}
-                className="animate-fade-down duration-300 delay-150 transition-all"
-              >
-                <span
-                  className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+              <>
+                <ItemMenu
+                  uri={URLS.employees.reports}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
                 >
-                  Reportes
-                </span>
-              </ItemMenu>
+                  <span
+                    className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                  >
+                    Reportes
+                  </span>
+                </ItemMenu>
+                <ItemMenu
+                  uri={URLS.employees.certificates}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
+                >
+                  <span
+                    className={`${pathname === URLS.employees.certificates ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
+                  >
+                    Constancias
+                  </span>
+                </ItemMenu>
+              </>
             )}
           </div>
           <ItemMenu uri={URLS.animals}>
@@ -127,7 +136,7 @@ export function Aside({ state }: { state: boolean }) {
           <div>
             <div className="flex gap-1 justify-start items-center">
               <ItemMenu uri={URLS.finances.index}>
-                <EmployeesIcon />
+                <MoneyIcon />
                 <span
                   className={`${pathname === URLS.finances.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300`}
                 >

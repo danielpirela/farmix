@@ -30,9 +30,13 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-accent/10 dark:border-accent-/90 border-b-2 dark:bg-gray-800 ${
-        isScrolled ? 'bg-white/80 backdrop-blur-md' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300  dark:bg-gray-800 ${
+        isScrolled
+          ? 'bg-white/90 dark:bg-gray-800/90 backdrop-blur-md'
+          : 'bg-white '
+      }
+      ${isMenuOpen ? 'bg-white' : ''}
+      `}
     >
       <nav className="max-w-7xl mx-auto p-4 flex justify-between items-center bg-transparent">
         <div className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -42,7 +46,7 @@ export function Navbar() {
         </div>
         {/* Toggle Button for Mobile */}
         <div className="flex items-center lg:hidden gap-4">
-          <ToggleTheme />
+          <ToggleTheme isScrolled={isScrolled} />
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-gray-900 dark:text-white focus:outline-none"
@@ -52,14 +56,14 @@ export function Navbar() {
         </div>
 
         {/* Desktop Links */}
-        <ul className="hidden lg:flex space-x-6 justify-center items-center">
+        <ul className="hidden lg:flex space-x-6 justify-center items-center ">
           <li className="flex space-x-6 justify-center items-center">
-            <ToggleTheme />
+            <ToggleTheme isScrolled={isScrolled} />
           </li>
           <li>
             <Link
               href={'/dashboard'}
-              className="inline-flex items-center mr-10 pt-1 text-sm font-medium text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
+              className="inline-flex items-center  pt-1 text-sm font-semibold text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
             >
               Dashboard
             </Link>
@@ -67,7 +71,7 @@ export function Navbar() {
           <li>
             <AuthButton
               withImage={true}
-              className="inline-flex items-center px-1 pt-1 text-sm font-medium text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
+              className="inline-flex items-center px-1 pt-1 text-sm font-semibold text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
             />
           </li>
         </ul>

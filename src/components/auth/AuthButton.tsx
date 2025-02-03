@@ -12,6 +12,7 @@ interface Props {
 export function AuthButton({ className, withImage }: Props) {
   const { data: session } = useSession()
   const finalName = session?.user?.name ?? ''
+  console.log(session)
 
   return (
     <>
@@ -29,7 +30,7 @@ export function AuthButton({ className, withImage }: Props) {
       ) : (
         // Cambios realizados aquí
         <div
-          className={`flex gap-2 group-hover:text-accent dark:group-hover:text-accent hover:fill-accent hover:scale-105 transition-all duration-300 ${withImage ? 'pl-2' : 'flex-col'}`}
+          className={`flex gap-2 group-hover:text-accent dark:group-hover:text-accent hover:fill-accent transition-all duration-300 ${withImage ? 'pl-2' : 'flex-col'}`}
         >
           {withImage && (
             <UserImage
@@ -43,11 +44,11 @@ export function AuthButton({ className, withImage }: Props) {
                 callbackUrl: '/'
               })
             }}
-            className={`text-black ${className} hover:text-accent  `}
+            className={`text-black hover:scale-105 transition-all duration-300  ${className} hover:text-accent  `}
           >
             <LogOutIcon />
             <span
-              className={`font-medium ${withImage ? 'flex-1 ms-3 whitespace-nowrap' : 'ml-4'}`}
+              className={`font-medium  ${withImage ? 'flex-1 ms-3 whitespace-nowrap' : 'ml-4'}`}
             >
               Cerrar Sesion
             </span>

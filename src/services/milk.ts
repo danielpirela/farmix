@@ -31,6 +31,21 @@ export const getMilkProductions = async (): Promise<MilkProductionResponse> => {
 }
 
 
+ export const getMilkProductionsByMonth = async () => {
+     console.log('getMilkProductionsByMonth')
+
+     try {
+         const { data, error } = await supabase
+            .rpc('group_by_month')
+
+            console.log(data)
+         if (error) throw new Error('Error getting milk productions: ' + error.message)
+         return data
+     } catch (err) {
+         if (err instanceof Error) throw new Error('Error getting milk productions: ' + err.message)
+         return { milk_production: null }
+     }
+ }
 
 export const getMilkProductionByAnimalId = async (animalId: string): Promise<MilkProductionResponse | undefined> => {
     try {

@@ -25,9 +25,17 @@ import { Finance } from '@models/finances.model'
 import { Inventory } from '@models/inventory.model'
 import { Supplier } from '@models/suppliers.model'
 import { Animal } from '@models/animals.model'
+import { Certificate } from 'crypto'
 
 interface Props<
-  T extends Activity | Employee | Finance | Inventory | Supplier | Animal
+  T extends
+    | Activity
+    | Employee
+    | Finance
+    | Inventory
+    | Supplier
+    | Animal
+    | Certificate
 > {
   data: T[]
   columns: ColumnDef<T, unknown>[]
@@ -35,7 +43,14 @@ interface Props<
 }
 
 export default function Table<
-  T extends Activity | Employee | Finance | Inventory | Supplier | Animal
+  T extends
+    | Activity
+    | Employee
+    | Finance
+    | Inventory
+    | Supplier
+    | Animal
+    | Certificate
 >({ data, columns, onViewDetails }: Props<T>) {
   const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])
