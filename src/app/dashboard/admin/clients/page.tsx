@@ -13,6 +13,7 @@ import Table from '@components/tables/Table'
 import { Client } from '@models/clients.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
+import { EditableCell } from '@components/tables/EditableCell'
 
 const columns = [
   {
@@ -25,13 +26,18 @@ const columns = [
     }) => `${info.row.original.first_name} ${info.row.original.last_name}`
   },
   { header: 'Teléfono', accessorKey: 'phone' },
-  { header: 'Email', accessorKey: 'email' }
+  { header: 'Email', accessorKey: 'email', cell: EditableCell }
 ]
 
 const ClientsPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
-  const { clients, clientsError, isClientsLoading, createClientMutation } =
-    useClients()
+  const {
+    clients,
+    clientsError,
+    isClientsLoading,
+    createClientMutation,
+    updateClientMutation
+  } = useClients()
 
   const methods = useForm<Client>({
     resolver: zodResolver(clientSchema),
@@ -73,6 +79,16 @@ const ClientsPage = () => {
     }
   }
 
+  const updateRows = async (data: Client) => {
+    console.log(data)
+
+    try {
+      await updateClientMutation.mutateAsync(data)
+    } catch (err) {
+      console.error('Error al actualizar cliente', err)
+    }
+  }
+
   if (isClientsLoading) return <div className="text-black">Cargando...</div>
   if (clientsError)
     return <div className="text-black">Error: {clientsError.message}</div>
@@ -87,7 +103,11 @@ const ClientsPage = () => {
         <PlusIcon />
       </ButtonAnimated>
 
-      <Table data={clients?.clients ?? []} columns={columns} />
+      <Table
+        data={clients?.clients ?? []}
+        columns={columns}
+        updateRows={updateRows}
+      />
 
       <Modal
         isOpen={isFormModalOpen}

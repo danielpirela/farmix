@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -42,6 +42,7 @@ interface Props<
   data: T[]
   columns: ColumnDef<T, unknown>[]
   onViewDetails: (data: T) => void
+  updateRows: (data: T) => void
 }
 
 export default function Table<
@@ -54,13 +55,13 @@ export default function Table<
     | Animal
     | Certificate
     | Client
->({ data, columns, onViewDetails }: Props<T>) {
+>({ data, columns, onViewDetails, updateRows }: Props<T>) {
   const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])
   const [filtering, setFiltering] = useState('')
 
   const table = useReactTable<T>({
-    data: finalData,
+    data: finalData ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -77,7 +78,7 @@ export default function Table<
         rowIndex: number,
         columnId: string,
         value: string,
-        query: string
+        query?: string
       ) => {
         const updatedData = finalData.map((row, index) =>
           index === rowIndex
@@ -87,8 +88,6 @@ export default function Table<
               }
             : row
         )
-        setData(updatedData)
-
         // Recuperar solo el objeto de la fila actual
         const currentRowData: T = updatedData[rowIndex]
 
@@ -102,6 +101,9 @@ export default function Table<
           const { email, roles, ...rest } = currentRowData as Employee
           await updateEmployee({ email, profileData: rest })
         }
+
+        if (updateRows) updateRows(currentRowData)
+        setData(updatedData)
       },
 
       viewDetails: async (data: T) => {
@@ -109,7 +111,7 @@ export default function Table<
       },
 
       resetTableState: () => {
-        setData(data)
+        setData(finalData)
         setSorting([])
         setFiltering('')
       }

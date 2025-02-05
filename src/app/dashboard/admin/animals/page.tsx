@@ -21,6 +21,10 @@ import {
 import { Option } from '@components/form/Option'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 import { calculateAverageMilk } from '@utils/averageMilkProduction'
+import { EditableCell } from '@components/tables/EditableCell'
+import { EditableTypeAnimal } from '@components/tables/EditableTypeAnimal'
+import { EditableBreedCell } from '@components/tables/EditableBreedCell'
+import { EditableHealthStatusCell } from '@components/tables/EditableHealthStatusCell'
 
 const AnimalsPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -36,12 +40,16 @@ const AnimalsPage = () => {
 
   const columns = [
     { header: 'Id', accessorKey: 'animal_id' },
-    { header: 'Nombre', accessorKey: 'name' },
-    { header: 'Tipo', accessorKey: 'type' },
-    { header: 'Raza', accessorKey: 'breed' },
-    { header: 'Estado de salud', accessorKey: 'health_status' },
-    { header: 'Ubicación', accessorKey: 'location' },
-    { header: 'Peso', accessorKey: 'weight' }
+    { header: 'Nombre', accessorKey: 'name', cell: EditableCell },
+    { header: 'Tipo', accessorKey: 'type', cell: EditableTypeAnimal },
+    { header: 'Raza', accessorKey: 'breed', cell: EditableBreedCell },
+    {
+      header: 'Estado de salud',
+      accessorKey: 'health_status',
+      cell: EditableHealthStatusCell
+    },
+    { header: 'Ubicación', accessorKey: 'location', cell: EditableCell },
+    { header: 'Peso', accessorKey: 'weight', cell: EditableCell }
   ]
 
   const handleCreateAnimal: SubmitHandler<Animal> = async (data) => {
@@ -86,9 +94,16 @@ const AnimalsPage = () => {
     }
   }
 
-  const handleUpdateAnimal = async (id: string) => {
-    const updatedData = { health_status: 'Saludable' } // Datos a actualizar
-    await updateAnimalMutation.mutateAsync({ id, data: updatedData })
+  const handleUpdateAnimal = async (animal: any) => {
+    if (!animal) return
+    try {
+      await updateAnimalMutation.mutateAsync({
+        id: animal.animal_id,
+        data: animal
+      })
+    } catch (error) {
+      console.error('Error al actualizar el animal:', error)
+    }
   }
 
   const handleDeleteAnimal = async (id: string) => {
@@ -138,7 +153,8 @@ const AnimalsPage = () => {
       <Table
         data={finalAnimals as Animal[]}
         columns={columns}
-        onViewDetails={handleViewDetails} // Implementa esta función si es necesario
+        onViewDetails={handleViewDetails}
+        updateRows={handleUpdateAnimal}
       />
 
       <Modal

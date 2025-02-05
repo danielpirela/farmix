@@ -24,8 +24,6 @@ export const updateEmployee = async ({ email, profileData }: UpdateParams) => {
   if (!email) throw new Error('Employee is not found')
   if (!profileData) throw new Error('No data provided')
 
-  console.log(email,profileData)
-
   const { data: employee, error } = await supabase
     .from('employees')
     .update(profileData)
