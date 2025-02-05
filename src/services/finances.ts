@@ -23,7 +23,8 @@ export const getFinances = async (): Promise<FinancesResponse> => {
 
         const { data: finances, error } = await supabase
         .from('finances')
-        .select('*, employees(*)')
+        .select('*, employees(*), clients(*), suppliers(*)')
+        console.log(finances)
 
         if (error) throw new Error('Error fetching finances: ' + error.message)
 

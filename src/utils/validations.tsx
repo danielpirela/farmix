@@ -10,7 +10,9 @@ export const TRASACTION_FORM_FIELDS = {
   description: 'description',
   descriptionOpt: 'descriptionOpt',
   category: 'category',
-  employee_id: 'employee_id'
+  employee_id: 'employee_id',
+  client_id: 'client_id',
+  supplier_id: 'supplier_id'
 } as const
 
 export const INVENTORY_FORM_FIELDS = {
@@ -91,7 +93,9 @@ export const transactionSchema = z.object({
   [TRASACTION_FORM_FIELDS.method]: z
     .string()
     .min(3, 'Ingrese un método de pago'),
-  [TRASACTION_FORM_FIELDS.employee_id]: z.string().optional()
+  [TRASACTION_FORM_FIELDS.employee_id]: z.string().optional(),
+  [TRASACTION_FORM_FIELDS.client_id]: z.string().optional(),
+  [TRASACTION_FORM_FIELDS.supplier_id]: z.string().optional()
 })
 
 export const activitySchema = z.object({
@@ -180,6 +184,17 @@ export const animalSchema = z.object({
   [ANIMAL_FORM_FIELDS.father_id]: z.string().optional()
 })
 
+export const clientSchema = z.object({
+  first_name: z.string().min(1, 'El nombre es obligatorio'),
+  last_name: z.string().min(1, 'El nombre es obligatorio'),
+  phone: z.string().min(1, 'El teléfono es obligatorio'),
+  email: z
+    .string()
+    .email('El email debe ser válido')
+    .min(1, 'El email es obligatorio')
+})
+
+export type Client = z.infer<typeof clientSchema>
 export type User = z.infer<typeof userSchema>
 export type Activity = z.infer<typeof activitySchema>
 export type Transaction = z.infer<typeof transactionSchema>

@@ -25,7 +25,7 @@ import { useFinances } from '@hooks/useFinances'
 
 const ReportsPage = () => {
   const { finances } = useFinances()
-  const [dataEgreso, setDataEgreso] = useState({})
+  const [data, setData] = useState({})
   const [filter, setFilter] = useState('2025')
   const [type, setType] = useState('Egreso')
   const [yearlyDataIngreso, setYearlyDataIngreso] = useState({})
@@ -84,7 +84,7 @@ const ReportsPage = () => {
   useEffect(() => {
     if (finances) {
       // Procesar los datos para las estadísticas
-      const financesDataEgreso = finances?.finances
+      const financesData = finances?.finances
         ?.filter(
           (finance) =>
             finance.type === type &&
@@ -97,7 +97,7 @@ const ReportsPage = () => {
           return acc
         }, {})
 
-      console.log(financesDataEgreso)
+      console.log(financesData)
 
       const financesMonthlyData = finances?.finances
         ?.filter((finance) => finance.type === 'Ingreso')
@@ -145,10 +145,10 @@ const ReportsPage = () => {
       const categoryYearlyEgreso = Object.keys(financesYearlyDataEgreso)
       const amountYearlyEgreso = Object.values(financesYearlyDataEgreso)
 
-      const categegory = Object.keys(financesDataEgreso)
-      const amount = Object.values(financesDataEgreso)
+      const categegory = Object.keys(financesData)
+      const amount = Object.values(financesData)
 
-      setDataEgreso({
+      setData({
         labels: categegory,
         datasets: [
           {
@@ -275,8 +275,7 @@ const ReportsPage = () => {
     }
   }, [filter, finances, startDate, endDate, type])
 
-  if (!dataEgreso?.labels || dataEgreso?.labels.length === 0)
-    return <p>cargando</p>
+  if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
 
   return (
     <div className="max-w-xl mx-auto flex flex-col gap-4 min-h-screen">
@@ -297,7 +296,7 @@ const ReportsPage = () => {
 
           <select
             value={type}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => setType(e.target.value)}
             id="type"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -321,7 +320,7 @@ const ReportsPage = () => {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
-        <Pie data={dataEgreso} options={options} />
+        <Pie data={data} options={options} />
       </div>
 
       <div className="flex flex-col items-center justify-center min-w-full">

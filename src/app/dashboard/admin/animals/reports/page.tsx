@@ -218,7 +218,7 @@ const ReportsPage = () => {
         ]
       })
     }
-  }, [milkProductionData])
+  }, [])
 
   if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
 

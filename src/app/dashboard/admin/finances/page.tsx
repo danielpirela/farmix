@@ -21,6 +21,8 @@ import {
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 import { useSession } from 'next-auth/react'
+import { useSuppliers } from '@hooks/useSuppliers'
+import { useClients } from '@hooks/useClients'
 
 const FinancesPage = () => {
   const { data: session } = useSession()
@@ -37,6 +39,9 @@ const FinancesPage = () => {
     updateTransactionMutation,
     deleteTransactionMutation
   } = useFinances()
+
+  const { suppliers, isSuppliersLoading } = useSuppliers()
+  const { clients, isClientsLoading } = useClients()
 
   const columns = [
     {
@@ -70,7 +75,9 @@ const FinancesPage = () => {
       amount,
       method,
       transaction_date,
-      descriptionOpt
+      descriptionOpt,
+      client_id,
+      supplier_id
     } = data
 
     const newTransaction = {
@@ -80,7 +87,9 @@ const FinancesPage = () => {
       description: descriptionOpt ?? description,
       method,
       category,
-      employee_id: id
+      employee_id: id,
+      client_id,
+      supplier_id
     }
     await createTransactionMutation.mutateAsync(newTransaction)
   }
@@ -103,7 +112,9 @@ const FinancesPage = () => {
       method: '',
       category: '',
       descriptionOpt: '',
-      employee_id: ''
+      employee_id: '',
+      client_id: '',
+      supplier_id: ''
     }
   })
 
@@ -113,7 +124,8 @@ const FinancesPage = () => {
     formState: { errors }
   } = methods
 
-  if (isFinancesLoading) return <div className="text-black">Cargando...</div>
+  if (isFinancesLoading || isSuppliersLoading || isClientsLoading)
+    return <div className="text-black">Cargando...</div>
   if (financesError)
     return <div className="text-black">Error: {financesError.message}</div>
 
@@ -128,6 +140,7 @@ const FinancesPage = () => {
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
+        title="Nueva Transacción"
       >
         <PlusIcon />
       </ButtonAnimated>
@@ -212,6 +225,32 @@ const FinancesPage = () => {
             errors={errors}
             type="date"
           />
+
+          <Select
+            name="client_id"
+            register={register}
+            label="Cliente"
+            errors={errors}
+          >
+            {clients?.clients.map(({ first_name, last_name, id }) => (
+              <Option
+                key={id}
+                value={id}
+                label={`${first_name} ${last_name}`}
+              />
+            ))}
+          </Select>
+          <Select
+            name="supplier_id"
+            register={register}
+            label="Proveedor"
+            errors={errors}
+          >
+            {suppliers?.suppliers.map(({ name, supplier_id }) => (
+              <Option key={supplier_id} value={supplier_id} label={name} />
+            ))}
+          </Select>
+
           <Button
             loading={isFinancesLoading}
             disabled={isFinancesLoading}

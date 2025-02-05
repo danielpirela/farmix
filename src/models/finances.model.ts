@@ -1,3 +1,6 @@
+import { Client } from '@utils/validations'
+import { Supplier } from './suppliers.model'
+
 export type FinanceType  = 'Ingreso' | 'Egreso'
 
 export interface Finance {
@@ -9,6 +12,10 @@ export interface Finance {
     description: string
     category: string
     employee_id: string
+    supplier_id?: string
+    client_id?: string
+    suppliers?: Supplier | null | undefined
+    clients?: Client | null | undefined
 }
 
 export interface TransactionResponse {

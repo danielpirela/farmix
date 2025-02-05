@@ -26,6 +26,7 @@ import { Inventory } from '@models/inventory.model'
 import { Supplier } from '@models/suppliers.model'
 import { Animal } from '@models/animals.model'
 import { Certificate } from 'crypto'
+import { Client } from '@models/clients.model'
 
 interface Props<
   T extends
@@ -36,6 +37,7 @@ interface Props<
     | Supplier
     | Animal
     | Certificate
+    | Client
 > {
   data: T[]
   columns: ColumnDef<T, unknown>[]
@@ -51,6 +53,7 @@ export default function Table<
     | Supplier
     | Animal
     | Certificate
+    | Client
 >({ data, columns, onViewDetails }: Props<T>) {
   const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])

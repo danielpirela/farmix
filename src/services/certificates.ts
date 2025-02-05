@@ -5,7 +5,10 @@ export const getCertificates = async (): Promise<CertificateResponse> => {
     try {
         const { data, error } = await supabase
             .from('certificates')
-            .select('*')
+            .select('*, employee:employees(phone, first_name, last_name)')
+
+            console.log(data)
+
         if (error) throw new Error('Error getting certificates: ' + error.message)
         return { certificates: data as Certificate[] }
     }

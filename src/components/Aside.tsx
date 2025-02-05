@@ -31,6 +31,7 @@ const URLS = {
   inventory: {
     index: '/dashboard/admin/inventory',
     reports: '/dashboard/admin/inventory/reports',
+    decrease: '/dashboard/admin/inventory/decrease',
     isOpen: false
   },
   employees: {
@@ -43,6 +44,11 @@ const URLS = {
   suppliers: {
     index: '/dashboard/admin/suppliers',
     reports: '/dashboard/admin/suppliers/reports',
+    isOpen: false
+  },
+  clients: {
+    index: '/dashboard/admin/clients',
+    reports: '/dashboard/admin/clients/reports',
     isOpen: false
   }
 }
@@ -64,6 +70,7 @@ export function Aside({ state }: { state: boolean }) {
     inventory: {
       index: '/dashboard/admin/inventory',
       reports: '/dashboard/admin/inventory/reports',
+      decrease: '/dashboard/admin/inventory/decrease',
       isOpen: false
     },
     employees: {
@@ -76,6 +83,11 @@ export function Aside({ state }: { state: boolean }) {
     suppliers: {
       index: '/dashboard/admin/suppliers',
       reports: '/dashboard/admin/suppliers/reports',
+      isOpen: false
+    },
+    clients: {
+      index: '/dashboard/admin/clients',
+      reports: '/dashboard/admin/clients/reports',
       isOpen: false
     },
     logout: '/logout'
@@ -257,16 +269,28 @@ export function Aside({ state }: { state: boolean }) {
           </div>
           <div>
             {menuState.inventory.isOpen && (
-              <ItemMenu
-                uri={URLS.inventory.reports}
-                className="animate-fade-down duration-300 delay-150 transition-all"
-              >
-                <span
-                  className={`${pathname === URLS.inventory.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              <>
+                <ItemMenu
+                  uri={URLS.inventory.decrease}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
                 >
-                  Reportes
-                </span>
-              </ItemMenu>
+                  <span
+                    className={`${pathname === URLS.inventory.decrease ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                  >
+                    Descargo
+                  </span>
+                </ItemMenu>
+                <ItemMenu
+                  uri={URLS.inventory.reports}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
+                >
+                  <span
+                    className={`${pathname === URLS.inventory.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                  >
+                    Reportes
+                  </span>
+                </ItemMenu>
+              </>
             )}
           </div>
 
@@ -302,6 +326,45 @@ export function Aside({ state }: { state: boolean }) {
               >
                 <span
                   className={`${pathname === URLS.inventory.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
+
+          <div>
+            <div className="flex gap-1 justify-start items-center">
+              <ItemMenu uri={URLS.clients.index}>
+                <MoneyIcon />
+                <span
+                  className={`${pathname === URLS.clients.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Clientes
+                </span>
+              </ItemMenu>
+              <button
+                className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+                onClick={() =>
+                  setMenuState((prev) => ({
+                    ...prev,
+                    clients: {
+                      ...prev.clients,
+                      isOpen: !prev.clients.isOpen
+                    }
+                  }))
+                }
+              >
+                <ArrowDown />
+              </button>
+            </div>
+            {menuState.clients.isOpen && (
+              <ItemMenu
+                uri={URLS.clients.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.clients.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                 >
                   Reportes
                 </span>

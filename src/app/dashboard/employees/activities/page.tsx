@@ -99,6 +99,7 @@ export default function Page() {
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
+        title="Nueva Actividad"
       >
         <PlusIcon />
       </ButtonAnimated>
