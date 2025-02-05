@@ -18,44 +18,66 @@ import { useState } from 'react'
 
 const URLS = {
   dashboard: '/dashboard',
-  activities: '/dashboard/employees/activities',
-  animals: '/dashboard/admin/animals',
+  animals: {
+    index: '/dashboard/admin/animals',
+    reports: '/dashboard/admin/animals/reports',
+    isOpen: false
+  },
   finances: {
     index: '/dashboard/admin/finances',
     reports: '/dashboard/admin/finances/reports',
     isOpen: false
   },
-  inventory: '/dashboard/admin/inventory',
+  inventory: {
+    index: '/dashboard/admin/inventory',
+    reports: '/dashboard/admin/inventory/reports',
+    isOpen: false
+  },
   employees: {
     index: '/dashboard/employees',
     reports: '/dashboard/employees/reports',
     certificates: '/dashboard/employees/certificates',
+    activities: '/dashboard/employees/activities',
     isOpen: false
   },
-  suppliers: '/dashboard/admin/suppliers',
-  animalReports: '/dashboard/admin/animals/reports'
+  suppliers: {
+    index: '/dashboard/admin/suppliers',
+    reports: '/dashboard/admin/suppliers/reports',
+    isOpen: false
+  }
 }
 
 export function Aside({ state }: { state: boolean }) {
   const { data: session } = useSession()
   const [menuState, setMenuState] = useState({
     dashboard: '/dashboard',
-    activities: '/dashboard/employees/activities',
-    animals: '/dashboard/admin/animals',
+    animals: {
+      index: '/dashboard/admin/animals',
+      reports: '/dashboard/admin/animals/reports',
+      isOpen: false
+    },
     finances: {
       index: '/dashboard/admin/finances',
       reports: '/dashboard/admin/finances/reports',
       isOpen: false
     },
-    inventory: '/dashboard/admin/inventory',
+    inventory: {
+      index: '/dashboard/admin/inventory',
+      reports: '/dashboard/admin/inventory/reports',
+      isOpen: false
+    },
     employees: {
       index: '/dashboard/employees',
       reports: '/dashboard/employees/reports',
       certificates: '/dashboard/employees/certificates',
+      activities: '/dashboard/employees/activities',
       isOpen: false
     },
-    suppliers: '/dashboard/admin/suppliers',
-    animalReports: '/dashboard/admin/animals/reports',
+    suppliers: {
+      index: '/dashboard/admin/suppliers',
+      reports: '/dashboard/admin/suppliers/reports',
+      isOpen: false
+    },
     logout: '/logout'
   })
 
@@ -122,17 +144,55 @@ export function Aside({ state }: { state: boolean }) {
                     Constancias
                   </span>
                 </ItemMenu>
+                <ItemMenu uri={URLS.employees.activities}>
+                  <span
+                    className={`${pathname === URLS.employees.activities ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                  >
+                    Actividades
+                  </span>
+                </ItemMenu>
               </>
             )}
           </div>
-          <ItemMenu uri={URLS.animals}>
-            <EmployeesIcon />
-            <span
-              className={`${pathname === URLS.animals ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
-            >
-              Animales
-            </span>
-          </ItemMenu>
+          <div>
+            <div className="flex gap-1 justify-start items-center">
+              <ItemMenu uri={URLS.animals.index}>
+                <MoneyIcon />
+                <span
+                  className={`${pathname === URLS.animals.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Animales
+                </span>
+              </ItemMenu>
+              <button
+                className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+                onClick={() =>
+                  setMenuState((prev) => ({
+                    ...prev,
+                    animals: {
+                      ...prev.animals,
+                      isOpen: !prev.animals.isOpen
+                    }
+                  }))
+                }
+              >
+                <ArrowDown />
+              </button>
+            </div>
+            {menuState.animals.isOpen && (
+              <ItemMenu
+                uri={URLS.animals.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.animals.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
+
           <div>
             <div className="flex gap-1 justify-start items-center">
               <ItemMenu uri={URLS.finances.index}>
@@ -171,38 +231,83 @@ export function Aside({ state }: { state: boolean }) {
               </ItemMenu>
             )}
           </div>
-          <ItemMenu uri={URLS.inventory}>
-            <InventoryIcon />
-            <span
-              className={`${pathname === URLS.inventory ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+          <div className="flex gap-1 justify-start items-center">
+            <ItemMenu uri={URLS.inventory.index}>
+              <InventoryIcon />
+              <span
+                className={`${pathname === URLS.inventory.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              >
+                Inventario
+              </span>
+            </ItemMenu>
+            <button
+              className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+              onClick={() =>
+                setMenuState((prev) => ({
+                  ...prev,
+                  inventory: {
+                    ...prev.inventory,
+                    isOpen: !prev.inventory.isOpen
+                  }
+                }))
+              }
             >
-              Inventario
-            </span>
-          </ItemMenu>
-          <ItemMenu uri={URLS.activities}>
-            <ActivitiesIcon />
-            <span
-              className={`${pathname === URLS.activities ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              <ArrowDown />
+            </button>
+          </div>
+          <div>
+            {menuState.inventory.isOpen && (
+              <ItemMenu
+                uri={URLS.inventory.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.inventory.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
+
+          <div className="flex gap-1 justify-start items-center">
+            <ItemMenu uri={URLS.suppliers.index}>
+              <SupliersIcon />
+              <span
+                className={`${pathname === URLS.suppliers.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              >
+                Proveedores
+              </span>
+            </ItemMenu>
+            <button
+              className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 dark:hover:bg-gray-700 group"
+              onClick={() =>
+                setMenuState((prev) => ({
+                  ...prev,
+                  suppliers: {
+                    ...prev.suppliers,
+                    isOpen: !prev.suppliers.isOpen
+                  }
+                }))
+              }
             >
-              Actividades
-            </span>
-          </ItemMenu>
-          <ItemMenu uri={URLS.suppliers}>
-            <SupliersIcon />
-            <span
-              className={`${pathname === URLS.suppliers ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
-            >
-              Proveedores
-            </span>
-          </ItemMenu>
-          <ItemMenu uri={URLS.animalReports}>
-            <SupliersIcon />
-            <span
-              className={`${pathname === URLS.animalReports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
-            >
-              Reportes de Animales
-            </span>
-          </ItemMenu>
+              <ArrowDown />
+            </button>
+          </div>
+          <div>
+            {menuState.suppliers.isOpen && (
+              <ItemMenu
+                uri={URLS.suppliers.reports}
+                className="animate-fade-down duration-300 delay-150 transition-all"
+              >
+                <span
+                  className={`${pathname === URLS.inventory.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                >
+                  Reportes
+                </span>
+              </ItemMenu>
+            )}
+          </div>
           <AuthButton
             className="flex min-w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             session={session}

@@ -32,7 +32,6 @@ export default function Page() {
   const [formModalOpen, setFormModalOpen] = useState(false)
 
   const Finalemployees = employees ?? []
-  console.log(Finalemployees)
 
   if (isPending) return <p>Cargando...</p>
   if (isError) return <p>Hubo un error al cargar los empleados.</p>
@@ -50,6 +49,7 @@ export default function Page() {
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
+        title="Agregar Empleado"
       >
         <PlusIcon />
       </ButtonAnimated>
@@ -68,6 +68,14 @@ export default function Page() {
           <CardDetailsEmployee data={employee || null} />
         </Modal>
       )}
+      {/* Modal para crear un nuevo empleado */}
+      <Modal
+        isOpen={formModalOpen}
+        onClose={() => setFormModalOpen(false)}
+        title="Nuevo Empleado"
+      >
+        <p>Crear un nuevo empleado</p>
+      </Modal>
     </>
   )
 }

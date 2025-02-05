@@ -12,8 +12,6 @@ interface Props {
 export function AuthButton({ className, withImage }: Props) {
   const { data: session } = useSession()
   const finalName = session?.user?.name ?? ''
-  console.log(session)
-
   return (
     <>
       {!session?.user ? (

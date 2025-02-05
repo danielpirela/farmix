@@ -14,8 +14,28 @@ import { Certificate } from '@models/certificate.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 
+import { Details } from '@components/tables/Details'
+
+const columns = [
+  { header: 'Detalles', accessorKey: 'id', cell: Details },
+  { header: 'Tipo', accessorKey: 'certificate_type' },
+  { header: 'Empleado', accessorKey: 'employee_id' },
+  { header: 'Fecha de Inicio', accessorKey: 'start_date' },
+  { header: 'Fecha de Fin', accessorKey: 'end_date' }
+]
+
 const CertificatesPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
+  const [isViewable, setIsViewable] = useState(false)
+  const [certificate, setCertificate] = useState<Certificate | null>(null)
+
+  const onViewDetails = (data: Certificate) => {
+    if (!data) return setIsViewable(false)
+    setIsViewable(true)
+    setCertificate(data)
+    return
+  }
+
   const {
     certificates,
     certificatesError,
@@ -70,60 +90,10 @@ const CertificatesPage = () => {
 
       <Table
         data={certificates?.certificates ?? []}
-        columns={[
-          { header: 'Tipo', accessorKey: 'certificate_type' },
-          { header: 'Empleado', accessorKey: 'employee_id' },
-          { header: 'Fecha de Inicio', accessorKey: 'start_date' },
-          { header: 'Fecha de Fin', accessorKey: 'end_date' }
-          // Agrega más columnas según tu modelo
-        ]}
+        columns={columns}
+        onViewDetails={onViewDetails}
       />
-
       {/* Mostrar el primer certificado con toda la información */}
-      {certificates?.certificates && certificates.certificates.length > 0 && (
-        <div className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg bg-white">
-          <h2 className="text-xl font-semibold mb-2">
-            Detalles del Primer Certificado
-          </h2>
-          <p className="mb-1">
-            <strong>ID:</strong> {certificates.certificates[0].id}
-          </p>
-          <p className="mb-1">
-            <strong>ID del Empleado:</strong>{' '}
-            {certificates.certificates[0].employee_id}
-          </p>
-          <p className="mb-1">
-            <strong>Tipo de Certificado:</strong>{' '}
-            {certificates.certificates[0].certificate_type}
-          </p>
-          <p className="mb-1">
-            <strong>Fecha de Inicio:</strong>{' '}
-            {certificates.certificates[0].start_date}
-          </p>
-          <p className="mb-1">
-            <strong>Fecha de Fin:</strong>{' '}
-            {certificates.certificates[0].end_date}
-          </p>
-          <p className="mb-1">
-            <strong>Motivo:</strong> {certificates.certificates[0].reason}
-          </p>
-          <p className="mb-1">
-            <strong>Estado:</strong> {certificates.certificates[0].status}
-          </p>
-          <p className="mb-1">
-            <strong>Emitido por:</strong>{' '}
-            {certificates.certificates[0].issued_by ?? 'N/A'}
-          </p>
-          <p className="mb-1">
-            <strong>Fecha de Creación:</strong>{' '}
-            {certificates.certificates[0].created_at}
-          </p>
-          <p className="mb-1">
-            <strong>Última Actualización:</strong>{' '}
-            {certificates.certificates[0].updated_at}
-          </p>
-        </div>
-      )}
 
       <Modal
         isOpen={isFormModalOpen}
@@ -171,6 +141,47 @@ const CertificatesPage = () => {
             Enviar
           </Button>
         </Form>
+      </Modal>
+
+      <Modal isOpen={isViewable} onClose={() => setIsViewable(false)}>
+        {certificate && (
+          <div className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg bg-white overflow-auto max-h-96">
+            <h2 className="text-xl font-semibold mb-2">
+              Detalles de la Costancia
+            </h2>
+            <p className="mb-1">
+              <strong>ID:</strong> {certificate.id}
+            </p>
+            <p className="mb-1">
+              <strong>ID del Empleado:</strong> {certificate.employee_id}
+            </p>
+            <p className="mb-1">
+              <strong>Tipo de Certificado:</strong>{' '}
+              {certificate.certificate_type}
+            </p>
+            <p className="mb-1">
+              <strong>Fecha de Inicio:</strong> {certificate.start_date}
+            </p>
+            <p className="mb-1">
+              <strong>Fecha de Fin:</strong> {certificate.end_date}
+            </p>
+            <p className="mb-1">
+              <strong>Motivo:</strong> {certificate.reason}
+            </p>
+            <p className="mb-1">
+              <strong>Estado:</strong> {certificate.status}
+            </p>
+            <p className="mb-1">
+              <strong>Emitido por:</strong> {certificate.issued_by ?? 'N/A'}
+            </p>
+            <p className="mb-1">
+              <strong>Fecha de Creación:</strong> {certificate.created_at}
+            </p>
+            <p className="mb-1">
+              <strong>Última Actualización:</strong> {certificate.updated_at}
+            </p>
+          </div>
+        )}
       </Modal>
     </>
   )

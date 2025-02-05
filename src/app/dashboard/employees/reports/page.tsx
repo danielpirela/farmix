@@ -102,9 +102,9 @@ export default function ReportsPage() {
         Reportes de Empleados
       </h1>
 
-      <div className="flex justify-center items-center max-w-sm">
+      <div className="flex justify-center items-center max-w-md">
         <Button onClick={downloadPDF} className="absolute top-0 right-0 ">
-          <Download className="fill-white" />
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
       </div>
       {Finalemployees.length > 0 ? (

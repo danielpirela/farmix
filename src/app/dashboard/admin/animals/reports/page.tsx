@@ -218,13 +218,15 @@ const ReportsPage = () => {
         ]
       })
     }
-  }, [])
+  }, [milkProductionData])
 
   if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
 
   return (
     <div>
-      <h1>Reportes de Ganado</h1>
+      <h1 className="text-black text-lg text-pretty">
+        Reportes de Produccion de leche
+      </h1>
       <Bar data={data} options={options} />
       <Bar data={monthlyData} options={monthlyOptions} />
       <Bar data={yearlyData} options={yearlyOptions} />
