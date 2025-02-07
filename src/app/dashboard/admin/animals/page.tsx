@@ -25,9 +25,12 @@ import { EditableCell } from '@components/tables/EditableCell'
 import { EditableTypeAnimal } from '@components/tables/EditableTypeAnimal'
 import { EditableBreedCell } from '@components/tables/EditableBreedCell'
 import { EditableHealthStatusCell } from '@components/tables/EditableHealthStatusCell'
+import { Details } from '@components/tables/Details'
 
 const AnimalsPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
+  const [animal, setAnimal] = useState<Animal>()
+  const [isOpenModal, setIsOpenModal] = useState(false)
 
   const {
     animals,
@@ -39,6 +42,7 @@ const AnimalsPage = () => {
   } = useAnimals()
 
   const columns = [
+    { header: 'Parto', accessorKey: 'birth', cell: Details },
     { header: 'Id', accessorKey: 'animal_id' },
     { header: 'Nombre', accessorKey: 'name', cell: EditableCell },
     { header: 'Tipo', accessorKey: 'type', cell: EditableTypeAnimal },
@@ -111,7 +115,8 @@ const AnimalsPage = () => {
   }
 
   const handleViewDetails = (data: Animal) => {
-    console.log(data)
+    setAnimal(data)
+    setIsOpenModal(true)
   }
   const methods = useForm<AnimalForm>({
     resolver: zodResolver(animalSchema), // Asegúrate de tener un esquema de validación para los animales
@@ -270,6 +275,26 @@ const AnimalsPage = () => {
             Enviar
           </Button>
         </Form>
+      </Modal>
+
+      <Modal
+        isOpen={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        title="Detalles del animal"
+      >
+        <div className="text-black">
+          <p>Nombre: {animal?.name}</p>
+          <p>Raza: {animal?.breed}</p>
+          <p>Tipo: {animal?.type}</p>
+          <p>Estado de salud: {animal?.health_status}</p>
+          <p>Ubicación: {animal?.location}</p>
+          <p>Peso: {animal?.weight}</p>
+          <p>Fecha de nacimiento: {animal?.birth_date}</p>
+          <p>Etapa de vida: {animal?.life_stage}</p>
+          <p>Madre: {animal?.parents_id[0]}</p>
+          <p>Padre: {animal?.parents_id[1]}</p>
+          <p>Hijo: {animal?.child_id}</p>
+        </div>
       </Modal>
     </>
   )

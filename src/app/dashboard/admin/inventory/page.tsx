@@ -33,22 +33,32 @@ const InventoryPage = () => {
   const columns = [
     { header: 'Nombre', accessorKey: 'name' },
     { header: 'Descripción', accessorKey: 'description' },
-    { header: 'Cantidad disponible', accessorKey: 'quantity_available' },
+    {
+      header: 'Cantidad y Tipo',
+      accessorKey: 'quantity',
+      cell: (info: {
+        row: {
+          original: { quantity: number; type: string }
+        }
+      }) =>
+        `${info.row.original.type === 'Cargo' ? +info.row.original.quantity : -info.row.original.quantity}`
+    },
     { header: 'Costo unitario', accessorKey: 'unit_cost' },
-    { header: 'Proveedor', accessorKey: 'suppliers.name' }
+    { header: 'Proveedor', accessorKey: 'suppliers.name' },
+    { header: 'Fecha', accessorKey: 'created_at' }
   ]
 
   const handleCreateInventory: SubmitHandler<Inventory> = async (data) => {
     if (!data) return
 
-    const { name, description, quantity_available, unit_cost, supplier_id } =
-      data
+    const { name, description, unit_cost, supplier_id, type, quantity } = data
     const newInventory: Inventory = {
       name,
       description,
-      quantity_available: Number(quantity_available),
+      quantity: Number(quantity),
       unit_cost: Number(unit_cost),
-      supplier_id
+      supplier_id,
+      type
     }
     try {
       await createInventoryMutation.mutateAsync(newInventory)
@@ -73,9 +83,10 @@ const InventoryPage = () => {
     defaultValues: {
       name: '',
       description: '',
-      quantity_available: '0',
+      quantity: '0',
       unit_cost: '0',
-      supplier_id: ''
+      supplier_id: '',
+      type: ''
     }
   })
 
@@ -104,7 +115,7 @@ const InventoryPage = () => {
       <Table
         data={finalInventory as Inventory[]}
         columns={columns}
-        onViewDetails={handleViewDetails} // Implementa esta función si es necesario
+        onViewDetails={handleViewDetails}
       />
 
       <Modal
@@ -128,9 +139,9 @@ const InventoryPage = () => {
             type="text"
           />
           <InputField
-            name="quantity_available"
+            name="quantity"
             register={register}
-            label="Cantidad disponible"
+            label="Cantidad"
             errors={errors}
             type="number"
           />
@@ -152,6 +163,10 @@ const InventoryPage = () => {
               suppliers?.suppliers?.map(({ supplier_id, name }) => (
                 <Option key={supplier_id} value={supplier_id} label={name} />
               ))}
+          </Select>
+          <Select name="type" register={register} label="Tipo" errors={errors}>
+            <Option value="Descargo" label="Descargo" />
+            <Option value="Cargo" label="Cargo" />
           </Select>
           <Button
             loading={isInventoryLoading || isSuppliersLoading}

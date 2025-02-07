@@ -4,10 +4,13 @@ export interface Inventory {
     product_id?: string
     name: string
     description: string
-    quantity_available: number
+    quantity: number
     unit_cost: number
     suppliers?: Supplier[]
     supplier_id: string
+    type: string
+    created_at?: string
+    updated_at?: string
 }
 
 export interface InventoryResponse {

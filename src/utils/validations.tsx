@@ -18,9 +18,10 @@ export const TRASACTION_FORM_FIELDS = {
 export const INVENTORY_FORM_FIELDS = {
   name: 'name',
   description: 'description',
-  quantity_available: 'quantity_available',
+  quantity: 'quantity',
   unit_cost: 'unit_cost',
-  supplier_id: 'supplier_id'
+  supplier_id: 'supplier_id',
+  type: 'type'
 } as const
 
 export const USER_FORM_FIELDS = {
@@ -146,14 +147,15 @@ export const inventorySchema = z.object({
   [INVENTORY_FORM_FIELDS.name]: z
     .string()
     .min(1, 'El nombre del artículo es obligatorio'),
-  [INVENTORY_FORM_FIELDS.quantity_available]: z
+  [INVENTORY_FORM_FIELDS.quantity]: z
     .string()
     .min(1, 'La cantidad debe ser al menos 1'),
   [INVENTORY_FORM_FIELDS.unit_cost]: z
     .string()
     .min(1, 'El precio debe ser mayor que 0'),
   [INVENTORY_FORM_FIELDS.description]: z.string().optional(),
-  [INVENTORY_FORM_FIELDS.supplier_id]: z.string().optional()
+  [INVENTORY_FORM_FIELDS.supplier_id]: z.string().optional(),
+  [INVENTORY_FORM_FIELDS.type]: z.string().optional()
 })
 
 export const animalSchema = z.object({

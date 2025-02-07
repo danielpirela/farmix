@@ -24,6 +24,27 @@ export const createAnimal = async (data: Animal): Promise<CreateTransactionRespo
             .insert(data)
             .select('*')
 
+        console.log(animal)
+
+        if (!animal) return { animal: null }
+
+        const birthData = {
+            mother_id: await animal[0].parents_id[0],
+            child_id: await animal[0].animal_id,
+        }
+        const { data: birth, error: parentsError } = await supabase
+        .from('birth')
+        .insert(birthData)
+        .select('*')
+
+        console.log(parentsError , error)
+
+        console.log(birth)
+
+
+
+
+
         if (error) throw new Error('Error creating animal: ' + error.message)
         return { animal: animal?.[0] || null }
     } catch (err) {

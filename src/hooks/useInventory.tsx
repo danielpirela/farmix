@@ -26,6 +26,22 @@ export const useInventory = () => {
     queryFn: getInventory
   })
 
+  // Calcular total y extraer nombres de productos
+  const productNamesWithTotal =
+    inventoryQuery.data?.inventory?.reduce((acc, item) => {
+      const existingItem = acc.find((i) => i.name === item.name)
+      const totalQuantity =
+        item.type === 'Cargo' ? item.quantity : -item.quantity
+
+      if (existingItem) {
+        existingItem.total += totalQuantity
+      } else {
+        acc.push({ name: item.name, total: totalQuantity })
+      }
+
+      return acc
+    }, []) || []
+
   // Crear un nuevo inventario
   const createInventoryMutation = useMutation<
     CreateTransactionResponse,
@@ -63,6 +79,7 @@ export const useInventory = () => {
   })
 
   return {
+    productNamesWithTotal,
     inventory: inventoryQuery.data,
     inventoryError: inventoryQuery.error,
     isInventoryLoading: inventoryQuery.isLoading,

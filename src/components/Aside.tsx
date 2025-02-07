@@ -31,7 +31,6 @@ const URLS = {
   inventory: {
     index: '/dashboard/admin/inventory',
     reports: '/dashboard/admin/inventory/reports',
-    decrease: '/dashboard/admin/inventory/decrease',
     isOpen: false
   },
   employees: {
@@ -70,7 +69,6 @@ export function Aside({ state }: { state: boolean }) {
     inventory: {
       index: '/dashboard/admin/inventory',
       reports: '/dashboard/admin/inventory/reports',
-      decrease: '/dashboard/admin/inventory/decrease',
       isOpen: false
     },
     employees: {
@@ -270,16 +268,6 @@ export function Aside({ state }: { state: boolean }) {
           <div>
             {menuState.inventory.isOpen && (
               <>
-                <ItemMenu
-                  uri={URLS.inventory.decrease}
-                  className="animate-fade-down duration-300 delay-150 transition-all"
-                >
-                  <span
-                    className={`${pathname === URLS.inventory.decrease ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
-                  >
-                    Descargo
-                  </span>
-                </ItemMenu>
                 <ItemMenu
                   uri={URLS.inventory.reports}
                   className="animate-fade-down duration-300 delay-150 transition-all"
