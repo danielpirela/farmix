@@ -1,3 +1,4 @@
+import { Button } from '@components/form/Button'
 import { Navbar } from '@components/Navbar'
 import { startCronJob } from '@lib/cron/milk'
 import { Milk, Users, ArrowRight, Leaf, BarChart3, Clock } from 'lucide-react'
@@ -110,13 +111,10 @@ export default function Home() {
             Únase a la revolución en gestión de fincas lecheras y transforme su
             operación.
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300"
-          >
-            Comenzar prueba gratuita
+          <Button className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300">
+            Comenzar Ahora
             <ArrowRight className="ml-2 h-5 w-5" />
-          </a>
+          </Button>
         </div>
         <div className="absolute left-0 top-0 -z-10">
           <Leaf className="h-64 w-64 text-[#007A4D]/5" />
