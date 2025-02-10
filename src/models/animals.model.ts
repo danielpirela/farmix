@@ -2,6 +2,7 @@ export interface Animal {
   animal_id?: string
   mother_id?: string
   father_id?: string
+  code: number
   name: string
   type: string
   breed: string

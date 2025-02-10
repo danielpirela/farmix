@@ -31,7 +31,7 @@ export default function Page() {
 
   const { data: session } = useSession()
   const id = session?.user?.id ?? null
-  const { activities, isPending } = useActivities(id)
+  const { activities, isPending } = useActivities()
   const { mutate, created, isOnError, isLoading } = useCreateActivity()
 
   const columns = [

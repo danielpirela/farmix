@@ -16,6 +16,26 @@ export const getBirths = async (): Promise<BirthResponse> => {
         return { birth: null }
     }
 }
+export const getBirthAnimals  = async (parentId: string) => {
+try{
+    if (!parentId) throw new Error('Parent ID is required')
+
+    const { data, error } = await supabase
+    .rpc('get_births_by_parent', { parent_uuid: parentId })
+
+    console.log(data)
+  if (error) {
+      console.error('Error fetching births:', error.message)
+      return null
+    }
+
+    return data
+} catch (err) {
+    console.error('Error fetching births:', err.message)
+    return null
+  }
+}
+
 
 
 export const getBirthById = async (id: string): Promise<GetBirthByIdResponse> => {

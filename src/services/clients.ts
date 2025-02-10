@@ -65,6 +65,7 @@ export const deleteClient = async (id: string): Promise<DeleteTransactionRespons
             .from('clients')
             .delete()
             .eq('id', id)
+            .select('*')
         if (error) throw new Error('Error deleting client: ' + error.message)
         return { data }
     }

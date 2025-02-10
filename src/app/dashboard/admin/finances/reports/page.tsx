@@ -89,8 +89,7 @@ const ReportsPage = () => {
           (finance) =>
             finance.type === type &&
             finance.transaction_date >= startDate &&
-            finance.transaction_date <= endDate &&
-            finance.transaction_date.split('-')[0] === filter
+            finance.transaction_date <= endDate
         )
         .reduce((acc, tran) => {
           acc[tran.category] = (acc[tran.category] || 0) + tran.amount
@@ -282,18 +281,6 @@ const ReportsPage = () => {
       <h1 className="text-black text-md">Reportes de Gastos</h1>
       <div className="max-w-lg justify-center items-center">
         <div className="flex gap-4 mt-2">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            id="countries"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option value="2025" defaultValue={'2025'}>
-              2025
-            </option>
-            <option value="2024">2024</option>
-          </select>
-
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}

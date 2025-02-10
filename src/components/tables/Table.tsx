@@ -27,6 +27,7 @@ import { Supplier } from '@models/suppliers.model'
 import { Animal } from '@models/animals.model'
 import { Certificate } from 'crypto'
 import { Client } from '@models/clients.model'
+import { HealthControl } from '@models/healthControl.model'
 
 interface Props<
   T extends
@@ -38,11 +39,15 @@ interface Props<
     | Animal
     | Certificate
     | Client
+    | HealthControl
 > {
   data: T[]
   columns: ColumnDef<T, unknown>[]
-  onViewDetails: (data: T) => void
-  updateRows: (data: T) => void
+  onViewDetails?: (data: T) => void
+  updateRows?: (data: T) => void
+  deleteRows?: (id: string) => void
+  filterAndSort: string
+  filters: []
 }
 
 export default function Table<
@@ -55,10 +60,19 @@ export default function Table<
     | Animal
     | Certificate
     | Client
->({ data, columns, onViewDetails, updateRows }: Props<T>) {
+    | HealthControl
+>({
+  data,
+  columns,
+  onViewDetails,
+  updateRows,
+  filterAndSort = '',
+  filters = [],
+  deleteRows
+}: Props<T>) {
   const [finalData, setData] = useState(data)
   const [sorting, setSorting] = useState([])
-  const [filtering, setFiltering] = useState('')
+  const [filtering, setFiltering] = useState(filterAndSort)
 
   const table = useReactTable<T>({
     data: finalData ?? [],
@@ -105,7 +119,9 @@ export default function Table<
         if (updateRows) updateRows(currentRowData)
         setData(updatedData)
       },
-
+      deleteData: async (data: T) => {
+        deleteRows(data)
+      },
       viewDetails: async (data: T) => {
         onViewDetails(data)
       },
@@ -117,6 +133,10 @@ export default function Table<
       }
     } as TableMeta<T>
   })
+
+  useEffect(() => {
+    return setFiltering(filterAndSort)
+  }, [filterAndSort])
 
   return (
     <>

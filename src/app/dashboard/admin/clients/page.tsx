@@ -14,6 +14,8 @@ import { Client } from '@models/clients.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 import { EditableCell } from '@components/tables/EditableCell'
+import { DeleteButton } from '@components/tables/DeleteButton'
+import { useFinances } from '@hooks/useFinances'
 
 const columns = [
   {
@@ -26,7 +28,12 @@ const columns = [
     }) => `${info.row.original.first_name} ${info.row.original.last_name}`
   },
   { header: 'Teléfono', accessorKey: 'phone' },
-  { header: 'Email', accessorKey: 'email', cell: EditableCell }
+  { header: 'Email', accessorKey: 'email', cell: EditableCell },
+  {
+    header: 'Acciones',
+    accessorKey: 'actions',
+    cell: DeleteButton
+  }
 ]
 
 const ClientsPage = () => {
@@ -36,8 +43,11 @@ const ClientsPage = () => {
     clientsError,
     isClientsLoading,
     createClientMutation,
-    updateClientMutation
+    updateClientMutation,
+    deleteClientMutation
   } = useClients()
+
+  const { updateTransactionMutation } = useFinances()
 
   const methods = useForm<Client>({
     resolver: zodResolver(clientSchema),
@@ -54,7 +64,20 @@ const ClientsPage = () => {
     handleSubmit,
     formState: { errors }
   } = methods
-  console.log(errors)
+
+  const deleteItem = async (data: Client) => {
+    console.log(data)
+    if (!data.id) return
+
+    const res = await updateTransactionMutation.mutateAsync({
+      id: data.id,
+      data: {
+        client_id: null
+      }
+    })
+    console.log(res)
+    await deleteClientMutation.mutateAsync(data.id)
+  }
 
   const handleCreateClient: SubmitHandler<Client> = async (data) => {
     console.log(data)
@@ -105,6 +128,7 @@ const ClientsPage = () => {
 
       <Table
         data={clients?.clients ?? []}
+        deleteRows={deleteItem}
         columns={columns}
         updateRows={updateRows}
       />

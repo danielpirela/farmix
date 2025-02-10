@@ -3,7 +3,6 @@
 import { useSession } from 'next-auth/react'
 import { ItemMenu } from './ItemMenu'
 import {
-  ActivitiesIcon,
   ArrowDown,
   DashboardIcon,
   EmployeesIcon,
@@ -21,6 +20,7 @@ const URLS = {
   animals: {
     index: '/dashboard/admin/animals',
     reports: '/dashboard/admin/animals/reports',
+    health: '/dashboard/admin/animals/health',
     isOpen: false
   },
   finances: {
@@ -59,6 +59,7 @@ export function Aside({ state }: { state: boolean }) {
     animals: {
       index: '/dashboard/admin/animals',
       reports: '/dashboard/admin/animals/reports',
+      health: '/dashboard/admin/animals/health',
       isOpen: false
     },
     finances: {
@@ -190,16 +191,28 @@ export function Aside({ state }: { state: boolean }) {
               </button>
             </div>
             {menuState.animals.isOpen && (
-              <ItemMenu
-                uri={URLS.animals.reports}
-                className="animate-fade-down duration-300 delay-150 transition-all"
-              >
-                <span
-                  className={`${pathname === URLS.animals.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              <>
+                <ItemMenu
+                  uri={URLS.animals.reports}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
                 >
-                  Reportes
-                </span>
-              </ItemMenu>
+                  <span
+                    className={`${pathname === URLS.animals.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                  >
+                    Reportes
+                  </span>
+                </ItemMenu>
+                <ItemMenu
+                  uri={URLS.animals.health}
+                  className="animate-fade-down duration-300 delay-150 transition-all"
+                >
+                  <span
+                    className={`${pathname === URLS.animals.health ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                  >
+                    Salud
+                  </span>
+                </ItemMenu>
+              </>
             )}
           </div>
 

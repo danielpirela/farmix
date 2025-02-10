@@ -5,7 +5,8 @@ import {
   getBirthById,
   createBirth,
   updateBirth,
-  deleteBirth
+  deleteBirth,
+  getBirthAnimals
 } from '../services/birth'
 
 import type {
@@ -31,7 +32,7 @@ export const useBirth = () => {
   const useBirthById = (id: string) => {
     return useQuery<BirthByIdResponse, Error>({
       queryKey: ['birth', id],
-      queryFn: () => getBirthById(id)
+      queryFn: () => getBirthAnimals(id)
     })
   }
 

@@ -1,5 +1,5 @@
-export type TypeOptions = 'Ingreso' | 'Egreso'
-export type MethodOptions = 'Efectivo' | 'Transferencia'
+export type TypeOptions = 'Ingreso' | 'Egreso' | 'Deuda'
+export type MethodOptions = 'Efectivo' | 'Transferencia' | 'Credito'
 
 export type TransactionCategory =
   | 'Gastos de alimentación'
@@ -24,12 +24,14 @@ export type Transaction = {
 
 export const transactionTypes: TypeOptions[] = [
     'Ingreso',
-    'Egreso'
+    'Egreso',
+    'Deuda',
 ]
 
 export const transactionMethods: MethodOptions[] = [
     'Efectivo',
-    'Transferencia'
+    'Transferencia',
+    'Credito',
 ]
 
 export const transactionOptions: Transaction[] = [
