@@ -14,10 +14,16 @@ import { Client } from '@models/clients.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { PlusIcon } from '@components/icons/DashboardIcon'
 import { EditableCell } from '@components/tables/EditableCell'
-import { DeleteButton } from '@components/tables/DeleteButton'
-import { useFinances } from '@hooks/useFinances'
+import { EditableStatusClient } from '@components/tables/EditableStatusClient'
+import { Details } from '@components/tables/Details'
+import ClientDetailsModal from '@components/modals/ClientDetailsModal'
 
 const columns = [
+  {
+    header: 'Detalles',
+    accessorKey: 'actions',
+    cell: Details
+  },
   {
     header: 'Nombre',
     accessorKey: 'full_name',
@@ -29,25 +35,21 @@ const columns = [
   },
   { header: 'Teléfono', accessorKey: 'phone' },
   { header: 'Email', accessorKey: 'email', cell: EditableCell },
-  {
-    header: 'Acciones',
-    accessorKey: 'actions',
-    cell: DeleteButton
-  }
+  { header: 'Estado', accessorKey: 'status', cell: EditableStatusClient }
 ]
 
 const ClientsPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false)
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
+
   const {
     clients,
     clientsError,
     isClientsLoading,
     createClientMutation,
-    updateClientMutation,
-    deleteClientMutation
+    updateClientMutation
   } = useClients()
-
-  const { updateTransactionMutation } = useFinances()
 
   const methods = useForm<Client>({
     resolver: zodResolver(clientSchema),
@@ -64,20 +66,6 @@ const ClientsPage = () => {
     handleSubmit,
     formState: { errors }
   } = methods
-
-  const deleteItem = async (data: Client) => {
-    console.log(data)
-    if (!data.id) return
-
-    const res = await updateTransactionMutation.mutateAsync({
-      id: data.id,
-      data: {
-        client_id: null
-      }
-    })
-    console.log(res)
-    await deleteClientMutation.mutateAsync(data.id)
-  }
 
   const handleCreateClient: SubmitHandler<Client> = async (data) => {
     console.log(data)
@@ -112,6 +100,11 @@ const ClientsPage = () => {
     }
   }
 
+  const handleClientDetails = (client: Client) => {
+    setSelectedClient(client)
+    setDetailsModalOpen(true)
+  }
+
   if (isClientsLoading) return <div className="text-black">Cargando...</div>
   if (clientsError)
     return <div className="text-black">Error: {clientsError.message}</div>
@@ -128,9 +121,9 @@ const ClientsPage = () => {
 
       <Table
         data={clients?.clients ?? []}
-        deleteRows={deleteItem}
         columns={columns}
         updateRows={updateRows}
+        onViewDetails={handleClientDetails}
       />
 
       <Modal
@@ -176,6 +169,12 @@ const ClientsPage = () => {
           </Button>
         </Form>
       </Modal>
+
+      <ClientDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+        client={selectedClient}
+      />
     </>
   )
 }

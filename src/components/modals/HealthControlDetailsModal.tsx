@@ -31,7 +31,7 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
       onClose={onClose}
       title="Detalles del Control de Salud"
     >
-      <div className="p-4">
+      <div className="p-4 text-black max-h-80 overflow-y-auto">
         <h2 className="text-lg font-semibold">
           Información del Control de Salud
         </h2>

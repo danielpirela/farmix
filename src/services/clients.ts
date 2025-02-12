@@ -74,3 +74,19 @@ export const deleteClient = async (id: string): Promise<DeleteTransactionRespons
         return { data: null }
     }
 }
+
+export const getClientTransactions = async (clientId: string): Promise<any[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('finances')
+      .select('*')
+      .eq('client_id', clientId)
+
+    if (error) throw new Error('Error fetching transactions: ' + error.message)
+
+    return data as any[] || []
+  } catch (err) {
+    if (err instanceof Error) throw new Error('Error fetching transactions: ' + err.message)
+    return []
+  }
+}
