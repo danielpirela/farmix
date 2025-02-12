@@ -18,9 +18,11 @@ import { useAnimals } from '@hooks/useAnimals'
 import { Select } from '@components/form/Select'
 import { Option } from '@components/form/Option'
 import { useEmployee } from '@hooks/useEmployee'
+import { Details } from '@components/tables/Details'
+import HealthControlDetailsModal from '@components/modals/HealthControlDetailsModal'
 
 const columns = [
-  { header: 'Acciones', accessorKey: 'actions', cell: DeleteButton }, // Asegúrate de tener un componente DeleteButton
+  { header: 'Acciones', accessorKey: 'actions', cell: Details }, // Asegúrate de tener un componente DeleteButton
   { header: 'ID', accessorKey: 'id' },
   { header: 'Animal ID', accessorKey: 'animal_id' },
   { header: 'Fecha de Control', accessorKey: 'checkup_date' },
@@ -41,6 +43,7 @@ const HealthControlPage = () => {
   const { employees, isError, isLoading } = useEmployee()
   const [selectedHealthControl, setSelectedHealthControl] =
     useState<HealthControl | null>(null)
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false)
 
   const methods = useForm<HealthControl>({
     resolver: zodResolver(healthControlSchema),
@@ -69,6 +72,11 @@ const HealthControlPage = () => {
   const handleDeleteHealthControl = async (id: string) => {
     await deleteHealthControlMutation.mutateAsync(id)
   }
+  const handleViewDetails = async (data: HealthControl) => {
+    if (data === null) return
+    setSelectedHealthControl(data)
+    setDetailsModalOpen(true)
+  }
 
   if (isHealthControlsLoading || isHealthControlsLoading || isLoading)
     return <div className="text-black">Cargando...</div>
@@ -91,6 +99,7 @@ const HealthControlPage = () => {
         data={healthControls ?? []}
         columns={columns}
         deleteRows={handleDeleteHealthControl}
+        onViewDetails={handleViewDetails}
       />
 
       <Modal
@@ -161,6 +170,13 @@ const HealthControlPage = () => {
           </Button>
         </Form>
       </Modal>
+      <HealthControlDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+        healthControl={selectedHealthControl}
+        animal={selectedHealthControl?.animals}
+        employee={selectedHealthControl?.employees}
+      />
     </>
   )
 }

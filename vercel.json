@@ -1,0 +1,8 @@
+{
+    "crons": [
+        {
+            "url": "/api/cron/milk",
+            "schedule": "* 9 * * *"
+        }
+    ]
+}

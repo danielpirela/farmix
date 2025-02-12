@@ -4,7 +4,6 @@ import { startCronJob } from '@lib/cron/milk'
 import { Milk, Users, ArrowRight, Leaf, BarChart3, Clock } from 'lucide-react'
 
 export default function Home() {
-  startCronJob()
   return (
     <main className="min-h-screen bg-white dark:bg-gray-900 overflow-hidden">
       <Navbar />

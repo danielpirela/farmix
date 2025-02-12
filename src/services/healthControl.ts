@@ -12,7 +12,7 @@ export const getHealthControls = async (): Promise<HealthControlResponse> => {
   try {
     const { data, error } = await supabase
       .from('health_control')
-      .select('*')
+      .select('* , employees(*), animals(*)')
 
     if (error) throw new Error('Error fetching health controls: ' + error.message)
 
