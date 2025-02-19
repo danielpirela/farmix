@@ -41,12 +41,12 @@ export const authOptions: NextAuthOptions = {
       if (!existingEmployee) {
         await supabase.from('employees').insert([
           {
-            id_document: '',
+            id_document: null,
             last_name: name?.split(' ')[1] || '',
             first_name: name?.split(' ')[0] || '',
-            phone: '',
+            phone: null,
             email: email,
-            address: '',
+            address: null,
             hire_date: null,
             role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35',
             salary: 0,
