@@ -13,11 +13,12 @@ import { getEmployee } from '@services/employee'
 import { useEffect, useState } from 'react'
 import { Employee } from '@models/types'
 import { useRouter } from 'next/navigation'
+import { format } from 'date-fns'
 
 interface FormData {
   address: string
   firstName: string
-  hireDate: string
+  hire_date: Date
   idDocument: string
   lastName: string
   phone: string
@@ -43,7 +44,7 @@ export default function CompleteProfile() {
       idDocument: prevEmployee?.id_document,
       phone: prevEmployee?.phone,
       address: prevEmployee?.address,
-      hireDate: prevEmployee?.hire_date
+      hire_date: prevEmployee?.hire_date
     },
     mode: 'onBlur'
   })
@@ -54,11 +55,18 @@ export default function CompleteProfile() {
     formState: { errors }
   } = methods
 
+  console.log(errors)
+
   const onSubmit = async (data: FormData) => {
+    console.log(data)
+    const formattedHireDate = data.hire_date
+      ? format(new Date(data.hire_date), 'MM-dd-yyyy')
+      : null
+
     const profileData = {
       address: data.address || prevEmployee?.address || '',
       first_name: data.firstName || prevEmployee?.first_name || '',
-      hire_date: data.hireDate || prevEmployee?.hire_date || '',
+      hire_date: formattedHireDate,
       id_document: data.idDocument || prevEmployee?.id_document || '',
       last_name: data.lastName || prevEmployee?.last_name || '',
       phone: data.phone || prevEmployee?.phone || '',
@@ -106,7 +114,9 @@ export default function CompleteProfile() {
         idDocument: prevEmployee.id_document,
         phone: prevEmployee.phone,
         address: prevEmployee.address,
-        hireDate: prevEmployee.hire_date
+        hire_date: prevEmployee.hire_date
+          ? format(new Date(prevEmployee.hire_date), 'yyyy-MM-dd')
+          : ''
       })
     }
   }, [prevEmployee, methods])
@@ -159,11 +169,15 @@ export default function CompleteProfile() {
 
         <InputField
           label="Fecha de contratación"
-          defaultValue={prevEmployee?.hire_date}
-          name={USER_FORM_FIELDS.hireDate}
+          name={USER_FORM_FIELDS.hire_date}
           register={register}
           errors={errors}
-          type="text"
+          type="date"
+          defaultValue={
+            prevEmployee?.hire_date
+              ? format(new Date(prevEmployee.hire_date), 'yyyy-MM-dd')
+              : ''
+          }
         />
 
         <Button type="submit" disabled={isPending} loading={isPending}>

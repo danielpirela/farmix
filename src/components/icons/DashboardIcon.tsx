@@ -102,7 +102,7 @@ export function InventoryIcon() {
   )
 }
 
-export function SupliersIcon() {
+export function SupliersIcon({ ...props }) {
   return (
     <svg
       className="w-6 h-6 text-gray-800 dark:text-white  hover:fill-accent"
@@ -112,6 +112,7 @@ export function SupliersIcon() {
       height="24"
       fill="currentColor"
       viewBox="0 0 24 24"
+      {...props}
     >
       <path
         fillRule="evenodd"

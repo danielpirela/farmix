@@ -29,9 +29,9 @@ export const EditableTypeAnimal = ({ getValue, row, column, table }: any) => {
           {typeOptions.map((opt: TypeOptions) => (
             <input
               key={opt}
-              type="button" // Cambiado de input a button para evitar problemas
+              type="button"
               onClick={() => {
-                setValue(opt) // Cambiado para usar opt directamente
+                setValue(opt)
                 setIsStatusOpen(false)
                 onBlur()
               }}

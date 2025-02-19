@@ -1,7 +1,7 @@
 import { TableMeta } from '@tanstack/react-table'
 
 export interface Employee {
-  employee_id: string
+  employee_id?: string
   email?: string
   first_name: string
   last_name: string
@@ -10,10 +10,10 @@ export interface Employee {
   address: string
   hire_date: string
   salary: number
-  status: string
-  img: string
-  role_id: string
-  roles? : Role
+  status?: string
+  img?: string
+  role_id?: string
+  roles?: Role[]
 }
 
 export interface Profile {
@@ -22,7 +22,7 @@ export interface Profile {
   id_document: string
   phone: string
   address: string
-  hire_date: string
+  hire_date: Date
   status: string
   img: string
   salary: number

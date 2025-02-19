@@ -23,6 +23,8 @@ import { AlertToast } from '@components/AlertToast'
 import { EditableStatusEmployee } from '@components/tables/EditableStatusEmployee'
 import { TableImage } from '@components/tables/TableImage'
 import { FormatData } from '@components/tables/FormatData'
+import { EditableStatusActivity } from '@components/tables/EditableStatusActivity'
+import { updateActivity } from '@services/activities'
 
 export default function Page() {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -51,7 +53,7 @@ export default function Page() {
     {
       header: 'Estado',
       accessorKey: 'status',
-      cell: EditableStatusEmployee
+      cell: EditableStatusActivity
     }
   ]
 
@@ -93,6 +95,14 @@ export default function Page() {
     })
   }
 
+  const updateRows = async (data: Activity) => {
+    console.log(data.status)
+    if (!data) return
+    const { activities_id, employees, ...rest } = data
+    const res = await updateActivity(activities_id, rest)
+    console.log(res)
+  }
+
   return (
     <div>
       {/* Botón para abrir el formulario */}
@@ -112,6 +122,7 @@ export default function Page() {
           data={activities ?? []}
           columns={columns}
           onViewDetails={onViewDetails}
+          updateRows={updateRows}
           onRefresh={created}
         />
       )}

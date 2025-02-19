@@ -11,13 +11,17 @@ export function CustomTransactionType({ children }: Props) {
     'bg-green-100 text-green-800 ': children === 'Ingreso',
     'dark:bg-green-900 text-green-300 ': children === 'Ingreso',
 
+    'bg-blue-100 text-blue-800': children === 'Deuda',
+    'dark:bg-blue-900 text-blue-300': children === 'Deuda',
+
     'bg-red-100 text-red-800': children === 'Egreso',
     'dark:bg-red-900 dark:text-red-300': children === 'Egreso'
   }
 
   const customClassesSon: CustomClasses = {
     'bg-green-500': children === 'Ingreso',
-    'bg-red-500': children === 'Egreso'
+    'bg-red-500': children === 'Egreso',
+    'bg-blue-500': children === 'Deuda'
   }
 
   const classNameFather =

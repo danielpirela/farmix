@@ -30,7 +30,7 @@ export const USER_FORM_FIELDS = {
   idDocument: 'idDocument',
   phone: 'phone',
   address: 'address',
-  hireDate: 'hireDate'
+  hire_date: 'hire_date'
 } as const
 
 export const ACTIVITY_FORM_FIELDS = {
@@ -122,24 +122,15 @@ export const userSchema = z.object({
     .optional(),
   [USER_FORM_FIELDS.phone]: z
     .string()
-    .min(14, 'Teléfono es obligatorio')
-    .optional(),
+    .min(11, 'El telefono es obligatorio')
+    .max(11, 'El número de teléfono debe tener 11 caracteres'),
   [USER_FORM_FIELDS.address]: z
     .string()
     .min(16, 'Dirección debe tener al menos 16 caracteres')
     .optional(),
-  [USER_FORM_FIELDS.hireDate]: z
+  [USER_FORM_FIELDS.hire_date]: z
     .string()
-    .regex(REGEX_DATE, 'La fecha debe estar en formato dd/mm/yyyy')
-    .refine((date) => {
-      const [day, month, year] = date.split('/').map(Number)
-      const dateObject = new Date(year, month - 1, day) // Año, mes (0-11), día
-      return (
-        dateObject.getDate() === day &&
-        dateObject.getMonth() === month - 1 &&
-        dateObject.getFullYear() === year
-      )
-    }, 'La fecha proporcionada no es válida')
+    .min(10, 'Ingrese una fecha válida')
     .optional()
 })
 
@@ -189,7 +180,7 @@ export const animalSchema = z.object({
 export const clientSchema = z.object({
   first_name: z.string().min(1, 'El nombre es obligatorio'),
   last_name: z.string().min(1, 'El nombre es obligatorio'),
-  phone: z.string().min(1, 'El teléfono es obligatorio'),
+  phone: z.string().min(11, 'El numero de teléfono es obligatorio'),
   email: z
     .string()
     .email('El email debe ser válido')

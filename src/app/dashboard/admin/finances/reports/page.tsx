@@ -10,24 +10,53 @@ import {
   PointElement,
   BarElement
 } from 'chart.js'
-import { Bar, Pie } from 'react-chartjs-2'
 
 ChartJS.register(
   ArcElement,
-  Tooltip,
+  BarElement,
+  CategoryScale,
   Legend,
   LinearScale,
-  CategoryScale,
-  BarElement,
-  PointElement
+  PointElement,
+  Tooltip
 )
+
+import { Bar, Pie } from 'react-chartjs-2'
 import { useFinances } from '@hooks/useFinances'
+import Table from '@components/tables/Table'
+import { TransactionTypePill } from '@components/tables/TransactionTypePill'
+
+const columns = [
+  {
+    header: 'Empleado',
+    accessorKey: 'full_name',
+    cell: (info: {
+      row: {
+        original: { employees: { first_name: string; last_name: string } }
+      }
+    }) =>
+      `${info.row.original.employees.first_name} ${info.row.original.employees.last_name}`
+  },
+  { header: 'Categoría', accessorKey: 'category' },
+  {
+    header: 'Monto',
+    accessorKey: 'amount',
+    cell: (info: { row: { original: { amount: number } } }) =>
+      `${info.row.original.amount.toFixed(2)}$`
+  },
+  { header: 'Método de pago', accessorKey: 'method' },
+  { header: 'Fecha', accessorKey: 'transaction_date' },
+  { header: 'Tipo', accessorKey: 'type', cell: TransactionTypePill }
+]
 
 const ReportsPage = () => {
   const { finances } = useFinances()
   const [data, setData] = useState({})
   const [filter, setFilter] = useState('2025')
   const [type, setType] = useState('Egreso')
+  const [typeFilter, setTypeFilter] = useState('Deuda')
+  const [finalFinances, setFinalFinances] = useState([])
+
   const [yearlyDataIngreso, setYearlyDataIngreso] = useState({})
   const [yearlyDataEgreso, setYearlyDataEgreso] = useState({})
   const [monthlyDataIngreso, setMonthlyDataIngreso] = useState({})
@@ -83,7 +112,16 @@ const ReportsPage = () => {
 
   useEffect(() => {
     if (finances) {
-      // Procesar los datos para las estadísticas
+      const filteredFinances = finances?.finances?.filter((fin) => {
+        console.log(fin.method)
+
+        return fin.type === typeFilter || fin.method === 'Credito'
+      })
+
+      setFinalFinances(filteredFinances)
+
+      console.log(filteredFinances)
+
       const financesData = finances?.finances
         ?.filter(
           (finance) =>
@@ -272,7 +310,7 @@ const ReportsPage = () => {
         ]
       })
     }
-  }, [filter, finances, startDate, endDate, type])
+  }, [finances, startDate, endDate, type, typeFilter])
 
   if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
 
@@ -291,6 +329,7 @@ const ReportsPage = () => {
               Egreso
             </option>
             <option value="Ingreso">Ingreso</option>
+            <option value="Deuda">Deuda</option>
           </select>
         </div>
         <div className="flex gap-4 mt-2">
@@ -318,6 +357,27 @@ const ReportsPage = () => {
         <Bar data={monthlyDataEgreso} options={monthlyOptions} />
         <Bar data={yearlyDataEgreso} options={yearlyOptions} />
       </div>
+
+      <select
+        value={typeFilter}
+        onChange={(e) => setTypeFilter(e.target.value)}
+        id="typefilter"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option value="Deuda" defaultValue={'Egreso'}>
+          Cuentas por pagar
+        </option>
+        <option value="Credito">Cuentas por cobrar</option>
+      </select>
+      {finalFinances?.length > 0 ? (
+        <Table
+          data={finalFinances}
+          columns={columns}
+          filterAndSort={typeFilter}
+        />
+      ) : (
+        <p>No hay transacciones</p>
+      )}
     </div>
   )
 }

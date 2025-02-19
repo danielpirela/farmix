@@ -105,11 +105,7 @@ export default function Table<
         // Recuperar solo el objeto de la fila actual
         const currentRowData: T = updatedData[rowIndex]
 
-        if (query === 'ActivityStatusUpdate') {
-          const { activities_id, employees, ...rest } =
-            currentRowData as Activity
-          await updateActivity(rest, activities_id)
-        }
+        console.log(currentRowData)
 
         if (query === 'EmployeeStatusUpdate') {
           const { email, roles, ...rest } = currentRowData as Employee

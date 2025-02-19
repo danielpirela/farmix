@@ -7,6 +7,7 @@ declare module 'next-auth' {
     user: {
       isProfileComplete?: boolean
       id?: string
+      role: string
     } & DefaultSession['user']
   }
 }
@@ -15,6 +16,7 @@ declare module 'next-auth/jwt' {
   interface JWT {
     isProfileComplete?: boolean
     id?: string
+    role: string
   }
 }
 
@@ -46,7 +48,9 @@ export const authOptions: NextAuthOptions = {
             email: email,
             address: '',
             hire_date: null,
-            role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35'
+            role_id: '5872e3a8-02bf-4ac4-b42e-188f70dacb35',
+            salary: 0,
+            status: 'Descansando',
           }
         ])
       }
@@ -56,6 +60,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user.isProfileComplete = token.isProfileComplete
       session.user.id = token.id // Agregar el id a la sesión
+      session.user.role = token.role
       return session
     },
 
@@ -79,6 +84,7 @@ export const authOptions: NextAuthOptions = {
         !!existingEmployee?.id_document
 
       token.id = existingEmployee?.employee_id
+      token.role = existingEmployee?.role_id
 
       return token
     }

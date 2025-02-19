@@ -1,4 +1,5 @@
 import { supabase } from '@lib/supabase'
+import { ActivityResponse } from '@models/activities.model'
 
 export const getActivities = async (id: string | null) => {
   if (id !== null) {
@@ -45,7 +46,7 @@ export const createActivity = async (data: ActivityData) => {
   }
 }
 
-export const updateActivity = async (data: ActivityData, id: string) => {
+export const updateActivity = async (id: string, data: ActivityData): Promise<ActivityResponse> => {
   try {
     if (data && id) {
       const { data: Activities, error } = await supabase
@@ -62,8 +63,9 @@ export const updateActivity = async (data: ActivityData, id: string) => {
         throw new Error('No se pudo actualizar la actividad')
       }
 
-      return Activities
+      return { data: Activities }
     }
+    return { data: [] }
   } catch (err) {
     console.error('Error updating activity', err)
     throw err
