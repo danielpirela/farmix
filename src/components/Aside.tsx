@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { ItemMenu } from './ItemMenu'
 import {
   ArrowDown,
+  ClientIcon,
   EmployeesIcon,
   InventoryIcon,
   MoneyIcon,
@@ -168,7 +169,7 @@ export const Aside = ({ state }: { state: boolean }) => {
                 </Link>
                 <ArrowDown
                   onClick={() => toggleMenu('animals')}
-                  className={`ml-2 transform w-4 h-4 transition-transform ${menuState.animals ? 'rotate-180' : ''}`}
+                  className={`ml-2 transform w-4 h-4 transition-transform text-black dark:text-white ${menuState.animals ? 'rotate-180' : ''}`}
                 />
               </div>
               {menuState.animals && (
@@ -209,7 +210,7 @@ export const Aside = ({ state }: { state: boolean }) => {
                 </Link>
                 <ArrowDown
                   onClick={() => toggleMenu('finances')}
-                  className={`ml-2 transform w-4 h-4 transition-transform ${menuState.finances ? 'rotate-180' : ''}`}
+                  className={`ml-2 transform w-4 h-4 transition-transform text-black dark:text-white ${menuState.finances ? 'rotate-180' : ''}`}
                 />
               </div>
               {menuState.finances && (
@@ -241,7 +242,7 @@ export const Aside = ({ state }: { state: boolean }) => {
                 </Link>
                 <ArrowDown
                   onClick={() => toggleMenu('inventory')}
-                  className={`ml-2 transform w-4 h-4 transition-transform ${menuState.inventory ? 'rotate-180' : ''}`}
+                  className={`ml-2 transform w-4 h-4 transition-transform text-black dark:text-white ${menuState.inventory ? 'rotate-180' : ''}`}
                 />
               </div>
               {menuState.inventory && (
@@ -273,7 +274,7 @@ export const Aside = ({ state }: { state: boolean }) => {
                 </Link>
                 <ArrowDown
                   onClick={() => toggleMenu('employees')}
-                  className={`ml-2 transform w-4 h-4 transition-transform ${menuState.employees ? 'rotate-180' : ''}`}
+                  className={`ml-2 transform w-4 h-4 transition-transform text-black dark:text-white ${menuState.employees ? 'rotate-180' : ''}`}
                 />
               </div>
               {menuState.employees && (
@@ -321,7 +322,7 @@ export const Aside = ({ state }: { state: boolean }) => {
                   </span>
                 </ItemMenu>
                 <ArrowDown
-                  className={`ml-2 transform w-4 h-4 transition-transform ${menuState.suppliers ? 'rotate-180' : ''}`}
+                  className={`ml-2 transform w-4 h-4 transition-transform text-black dark:text-white ${menuState.suppliers ? 'rotate-180' : ''}`}
                 />
               </div>
               {menuState.suppliers && (
@@ -343,9 +344,9 @@ export const Aside = ({ state }: { state: boolean }) => {
           {/* Clientes */}
           {validations.clients && (
             <ItemMenu uri={URLS.clients.index}>
-              <SupliersIcon />
+              <ClientIcon />
               <span
-                className={`${pathname === URLS.clients.index ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                className={`${pathname === URLS.clients.index ? 'text-accent' : ''} ml-2 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
               >
                 Clientes
               </span>
