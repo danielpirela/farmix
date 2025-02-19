@@ -90,7 +90,7 @@ const SuppliersReportsPage = () => {
     return <div className="text-black">Error: {inventoryError.message}</div>
   return (
     <>
-      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+      {/*   <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Reportes de Proveedores
       </h1>
       <div className="flex justify-center mt-4">
@@ -99,7 +99,7 @@ const SuppliersReportsPage = () => {
         ) : (
           <p className="text-black">No hay datos para mostrar.</p>
         )}
-      </div>
+      </div> */}
 
       <h1 className="text-2xl font-bold text-center text-gray-800 my-6">
         Proveedores por Producto
