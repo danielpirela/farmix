@@ -87,9 +87,9 @@ export async function middleware(req: NextRequest) {
   // Verifica si la ruta es protegida
   for (const route in protectedRoutes) {
     if (pathname.startsWith(route)) {
-      console.log({ token: token?.role })
-      console.log(route)
-      console.log(protectedRoutes[route])
+      console.error({ token: token?.role })
+      console.error(route)
+      console.error(protectedRoutes[route])
 
       if (!token || !protectedRoutes[route].includes(token.role)) {
         // Redirige a la página de inicio si no tiene acceso
