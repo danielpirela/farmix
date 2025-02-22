@@ -316,7 +316,7 @@ const ReportsPage = () => {
 
   return (
     <div className="max-w-xl mx-auto flex flex-col gap-4 min-h-screen">
-      <h1 className="text-black text-md">Reportes de Gastos</h1>
+      <h1 className="text-black text-xl">Reportes de Gastos</h1>
       <div className="max-w-lg justify-center items-center">
         <div className="flex gap-4 mt-2">
           <select

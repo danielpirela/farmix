@@ -143,9 +143,13 @@ const CertificatesPage = () => {
         </Form>
       </Modal>
 
-      <Modal isOpen={isViewable} onClose={() => setIsViewable(false)}>
+      <Modal
+        isOpen={isViewable}
+        onClose={() => setIsViewable(false)}
+        title="Detalles del Certificado"
+      >
         {certificate && (
-          <div className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg bg-white overflow-auto max-h-96">
+          <div className="max-h-12 overflow-auto   my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-2">
               Detalles de la Costancia
             </h2>

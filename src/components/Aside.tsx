@@ -121,6 +121,11 @@ export const Aside = ({ state }: { state: boolean }) => {
       session?.user.role === ROLES.owner ||
       session?.user.role === ROLES.foreman,
 
+    employeesReports:
+      session?.user.role === ROLES.admin ||
+      session?.user.role === ROLES.owner ||
+      session?.user.role === ROLES.foreman,
+
     certificates:
       session?.user.role === ROLES.employee ||
       session?.user.role === ROLES.owner ||
@@ -297,6 +302,17 @@ export const Aside = ({ state }: { state: boolean }) => {
                           className={`${pathname === URLS.employees.certificates ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
                         >
                           Constancias
+                        </span>
+                      </ItemMenu>
+                    )}
+                  </div>
+                  <div className="ml-6">
+                    {validations.employeesReports && (
+                      <ItemMenu uri={URLS.employees.reports}>
+                        <span
+                          className={`${pathname === URLS.employees.reports ? 'text-accent' : ''} ml-3 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+                        >
+                          Reportes
                         </span>
                       </ItemMenu>
                     )}

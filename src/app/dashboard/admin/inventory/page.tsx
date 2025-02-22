@@ -38,12 +38,17 @@ const InventoryPage = () => {
       accessorKey: 'quantity',
       cell: (info: {
         row: {
-          original: { quantity: number; type: string }
+          original: { quantity: number; type: string; unit: string }
         }
       }) =>
-        `${info.row.original.type === 'Cargo' ? +info.row.original.quantity : -info.row.original.quantity}`
+        `${info.row.original.type === 'Cargo' ? +info.row.original.quantity : -info.row.original.quantity} ${info.row.original.unit}`
     },
-    { header: 'Costo unitario', accessorKey: 'unit_cost' },
+    {
+      header: 'Costo unitario',
+      accessorKey: 'unit_cost',
+      cell: (info: { row: { original: { unit_cost: number } } }) =>
+        `${info.row.original.unit_cost}$`
+    },
     { header: 'Proveedor', accessorKey: 'suppliers.name' },
     { header: 'Fecha', accessorKey: 'created_at' }
   ]
@@ -86,7 +91,8 @@ const InventoryPage = () => {
       quantity: '0',
       unit_cost: '0',
       supplier_id: '',
-      type: ''
+      type: '',
+      unit: ''
     }
   })
 
@@ -145,6 +151,11 @@ const InventoryPage = () => {
             errors={errors}
             type="number"
           />
+          <Select name="unit" register={register} label="Tipo" errors={errors}>
+            <Option value="kg" label="kg" />
+            <Option value="l" label="l" />
+          </Select>
+
           <InputField
             name="unit_cost"
             register={register}

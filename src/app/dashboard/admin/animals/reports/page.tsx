@@ -14,6 +14,7 @@ import {
   Filler
 } from 'chart.js'
 import { useMilkProduction } from '@hooks/useMilkProduction'
+import { Button } from '@components/pdf/Button'
 
 ChartJS.register(
   CategoryScale,

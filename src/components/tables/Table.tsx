@@ -88,12 +88,7 @@ export default function Table<
     onSortingChange: setSorting as OnChangeFn<SortingState>,
     onGlobalFilterChange: setFiltering,
     meta: {
-      updateData: async (
-        rowIndex: number,
-        columnId: string,
-        value: string,
-        query?: string
-      ) => {
+      updateData: async (rowIndex: number, columnId: string, value: string) => {
         const updatedData = finalData.map((row, index) =>
           index === rowIndex
             ? {
@@ -106,11 +101,6 @@ export default function Table<
         const currentRowData: T = updatedData[rowIndex]
 
         console.log(currentRowData)
-
-        if (query === 'EmployeeStatusUpdate') {
-          const { email, roles, ...rest } = currentRowData as Employee
-          await updateEmployee({ email, profileData: rest })
-        }
 
         if (updateRows) updateRows(currentRowData)
         setData(updatedData)

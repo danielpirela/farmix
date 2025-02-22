@@ -21,7 +21,8 @@ export const INVENTORY_FORM_FIELDS = {
   quantity: 'quantity',
   unit_cost: 'unit_cost',
   supplier_id: 'supplier_id',
-  type: 'type'
+  type: 'type',
+  unit: 'unit'
 } as const
 
 export const USER_FORM_FIELDS = {
@@ -146,7 +147,10 @@ export const inventorySchema = z.object({
     .min(1, 'El precio debe ser mayor que 0'),
   [INVENTORY_FORM_FIELDS.description]: z.string().optional(),
   [INVENTORY_FORM_FIELDS.supplier_id]: z.string().optional(),
-  [INVENTORY_FORM_FIELDS.type]: z.string().optional()
+  [INVENTORY_FORM_FIELDS.type]: z.string().optional(),
+  [INVENTORY_FORM_FIELDS.unit]: z
+    .string()
+    .min(1, 'Seleccione un tipo de unidad')
 })
 
 export const animalSchema = z.object({

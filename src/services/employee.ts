@@ -1,8 +1,8 @@
 import { supabase } from '@lib/supabase'
-import { UpdateParams } from '../models/types'
+import { Employee, EmployeeResponse, CreateEmployeeResponse, UpdateEmployeeResponse, DeleteEmployeeResponse } from '@models/employee.model'
 
 
-export const getEmployee = async (email: string | null) => {
+export const getEmployee = async (email: string | null) : Promise<EmployeeResponse> => {
   if (email === null) {
     const { data: Employee } = await supabase
       .from('employees')
@@ -20,11 +20,27 @@ export const getEmployee = async (email: string | null) => {
   return [Employee]
 }
 
-export const updateEmployee = async ({ email, profileData }: UpdateParams) => {
-  if (!email) throw new Error('Employee is not found')
-  if (!profileData) throw new Error('No data provided')
+// Crear un nuevo empleado
+export const createEmployee = async (employee: Employee): Promise<CreateEmployeeResponse> => {
+  if (!employee) throw new Error('Employee data is required')
+  try {
+    const { data, error } = await supabase
+      .from('employees')
+      .insert(employee)
+      .select('*')
 
-  const { data: employee, error } = await supabase
+    if (error) throw new Error('Error creating employee: ' + error.message)
+    return data?.[0] || null
+  } catch (err) {
+    if (err instanceof Error) throw new Error('Error creating employee: ' + err.message)
+    return  null
+  }
+}
+
+export const updateEmployee = async (email: string, profileData: Employee): Promise<UpdateEmployeeResponse> => {
+  try {
+
+    const { data: employee, error } = await supabase
     .from('employees')
     .update(profileData)
     .eq('email', email)
@@ -35,4 +51,25 @@ export const updateEmployee = async ({ email, profileData }: UpdateParams) => {
   }
 
   return employee
+} catch (err) {
+  if (err instanceof Error) throw new Error('Error updating employee: ' + err.message)
+    return null
+  }
+}
+
+// Eliminar un empleado
+export const deleteEmployee = async (id: string): Promise<DeleteEmployeeResponse> => {
+  try {
+    const { data, error } = await supabase
+      .from('employees')
+      .delete()
+      .eq('empployee_id', id)
+      .select('*')
+
+    if (error) throw new Error('Error deleting employee: ' + error.message)
+    return data as Employee[] || null
+  } catch (err) {
+    if (err instanceof Error) throw new Error('Error deleting employee: ' + err.message)
+    return null
+  }
 }

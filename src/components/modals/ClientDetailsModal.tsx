@@ -70,7 +70,7 @@ const ClientDetailsModal: React.FC<ClientDetailsModalProps> = ({
                         <strong>Monto:</strong> {transaction.amount}$
                       </p>
                       <p>
-                        <strong>Fecha:</strong> {transaction.date}
+                        <strong>Fecha:</strong> {transaction.transaction_date}
                       </p>
                       <hr />
                     </li>

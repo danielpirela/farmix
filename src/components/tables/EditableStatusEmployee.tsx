@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StatusEmployee } from './StatusEmployee'
 import {
   StatusEmployeeOptions,
@@ -10,8 +10,7 @@ interface TableMeta {
   updateData: (
     rowIndex: number,
     columnId: string,
-    value: string,
-    query: string
+    value: string
   ) => Promise<void>
 }
 
@@ -36,10 +35,18 @@ export const EditableStatusEmployee = ({
   column,
   table
 }: EditableStatusEmployeeProps) => {
+  const initialValue = getValue() || ''
+  const [value, setValue] = useState(initialValue)
   const [isStatusOpen, setIsStatusOpen] = useState(false)
-  const value = getValue() || ''
-  const { updateData } = table.options.meta
 
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  const onBlur = () => {
+    table.options.meta.updateData(row.index, column.id, value)
+    setIsStatusOpen(false)
+  }
   return (
     <div className="flex items-center justify-center flex-col">
       <button onClick={() => setIsStatusOpen(!isStatusOpen)}>
@@ -54,8 +61,9 @@ export const EditableStatusEmployee = ({
             <button
               key={status}
               onClick={async () => {
-                updateData(row.index, column.id, status, 'EmployeeStatusUpdate')
+                setValue(status)
                 setIsStatusOpen(false)
+                onBlur()
               }}
               className="flex items-center justify-start px-2 py-1 hover:scale-105 transition-all duration-300 ease-in-out"
             >

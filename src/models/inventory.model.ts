@@ -11,6 +11,7 @@ export interface Inventory {
     type: string
     created_at?: string
     updated_at?: string
+    unit: string
 }
 
 export interface InventoryResponse {

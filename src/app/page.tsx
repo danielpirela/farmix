@@ -1,6 +1,5 @@
 import { Button } from '@components/form/Button'
 import { Navbar } from '@components/Navbar'
-import { startCronJob } from '@lib/cron/milk'
 import { Milk, Users, ArrowRight, Leaf, BarChart3, Clock } from 'lucide-react'
 
 export default function Home() {
@@ -20,14 +19,14 @@ export default function Home() {
         />
         <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
           <h1 className="text-7xl sm:text-8xl font-bold mb-6 tracking-tight text-white">
-            Finca Manager
+            Farmix
           </h1>
           <p className="text-2xl sm:text-3xl font-medium text-gray-100 mb-8">
             El futuro de la gestión lechera.
           </p>
           <a
             href="#features"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 hover:scale-105 transition-all duration-300"
           >
             Descubrir más
             <ArrowRight className="ml-2 h-5 w-5" />
@@ -110,9 +109,11 @@ export default function Home() {
             Únase a la revolución en gestión de fincas lecheras y transforme su
             operación.
           </p>
-          <Button className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-[#007A4D] rounded-lg hover:bg-[#007A4D]/90 transition-all duration-300">
-            Comenzar Ahora
-            <ArrowRight className="ml-2 h-5 w-5" />
+          <Button className="flex flex-col items-center justify-center text-lg font-medium text-white rounded-lg  transition-all duration-300">
+            <div className="flex items-center gap-1 py-4 px-6 ">
+              <span>Comenzar Ahora</span>
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </div>
           </Button>
         </div>
         <div className="absolute left-0 top-0 -z-10">
@@ -127,7 +128,7 @@ export default function Home() {
             <div>
               <Milk className="h-8 w-8 text-[#007A4D] mb-4" />
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                &copy; 2024 Finca Manager. Todos los derechos reservados.
+                &copy; 2024 Farmix. Todos los derechos reservados.
               </p>
             </div>
             <div className="flex flex-wrap gap-6 md:justify-end">

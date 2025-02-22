@@ -1,6 +1,7 @@
 'use client'
 
 import { CardDetailsEmployee } from '@components/CardDetailsEmployee'
+import CreateEmployeeForm from '@components/CreateEmployeeForm'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Modal } from '@components/form/Modal'
 import { LoadingIcon, PlusIcon } from '@components/icons/DashboardIcon'
@@ -8,7 +9,9 @@ import { EditableStatusEmployee } from '@components/tables/EditableStatusEmploye
 import Table from '@components/tables/Table'
 import { TableImage } from '@components/tables/TableImage'
 import { useEmployee } from '@hooks/useEmployee'
+import { useEmployees } from '@hooks/useEmployees'
 import { Employee } from '@models/types'
+import { updateEmployee } from '@services/employee'
 import { useState } from 'react'
 
 const columns = [
@@ -30,7 +33,7 @@ export default function Page() {
   const [isViewable, setIsViewable] = useState(false)
   const [employee, setEmployee] = useState<Employee | null>(null)
   const [formModalOpen, setFormModalOpen] = useState(false)
-
+  const { createEmployeeMutation } = useEmployees()
   const Finalemployees = employees ?? []
 
   if (isPending) return <p>Cargando...</p>
@@ -41,6 +44,14 @@ export default function Page() {
     setIsViewable(true)
     setEmployee(data)
     return
+  }
+
+  const updateRows = async (data: Employee) => {
+    if (!data) return
+    const { email, roles, ...rest } = data
+
+    const res = await updateEmployee(email, rest)
+    console.log(res)
   }
 
   return (
@@ -59,6 +70,7 @@ export default function Page() {
           data={Finalemployees}
           columns={columns}
           onViewDetails={onViewDetails}
+          onUpdate={updateRows}
         />
       ) : (
         <LoadingIcon />
@@ -74,7 +86,7 @@ export default function Page() {
         onClose={() => setFormModalOpen(false)}
         title="Nuevo Empleado"
       >
-        <p>Crear un nuevo empleado</p>
+        <CreateEmployeeForm />
       </Modal>
     </>
   )
