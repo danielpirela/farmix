@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { ItemMenu } from './ItemMenu'
 import {
+  ActivitiesIcon,
   ArrowDown,
   ClientIcon,
   EmployeesIcon,
@@ -15,7 +16,7 @@ import { AuthButton } from './auth/AuthButton'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Milk } from 'lucide-react'
+import { ActivityIcon, Icon, Milk } from 'lucide-react'
 
 const URLS = {
   dashboard: '/dashboard',
@@ -50,6 +51,10 @@ const URLS = {
   clients: {
     index: '/dashboard/admin/clients',
     reports: '/dashboard/admin/clients/reports',
+    isOpen: false
+  },
+  activity: {
+    index: '/dashboard/activity',
     isOpen: false
   }
 }
@@ -148,6 +153,14 @@ export const Aside = ({ state }: { state: boolean }) => {
       session?.user.role === ROLES.employee ||
       session?.user.role === ROLES.owner ||
       session?.user.role === ROLES.foreman ||
+      session?.user.role === ROLES.admin,
+
+    activity:
+      session?.user.role === ROLES.employee ||
+      session?.user.role === ROLES.owner ||
+      session?.user.role === ROLES.foreman ||
+      session?.user.role === ROLES.milker ||
+      session?.user.role === ROLES.veterinary ||
       session?.user.role === ROLES.admin
   }
 
@@ -365,6 +378,17 @@ export const Aside = ({ state }: { state: boolean }) => {
                 className={`${pathname === URLS.clients.index ? 'text-accent' : ''} ml-2 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
               >
                 Clientes
+              </span>
+            </ItemMenu>
+          )}
+
+          {validations.activity && (
+            <ItemMenu uri={URLS.activity.index}>
+              <ActivitiesIcon />
+              <span
+                className={`${pathname === URLS.activity.index ? 'text-accent' : ''} ml-2 font-medium hover:text-accent hover:scale-105 transition-all duration-300 text-black dark:text-white`}
+              >
+                Actividades
               </span>
             </ItemMenu>
           )}
