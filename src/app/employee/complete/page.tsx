@@ -9,7 +9,7 @@ import { AlertToast } from '@components/AlertToast'
 import { useSession } from 'next-auth/react'
 import { Button } from '@components/form/Button'
 import { Form } from '@components/form/Form'
-import { getEmployee } from '@services/employee'
+import { getEmployee, updateEmployee } from '@services/employee'
 import { useEffect, useState } from 'react'
 import { Employee } from '@models/types'
 import { useRouter } from 'next/navigation'
@@ -58,40 +58,25 @@ export default function CompleteProfile() {
   console.log(errors)
 
   const onSubmit = async (data: FormData) => {
-    console.log(data)
+    if (!data) return
     const formattedHireDate = data.hire_date
-      ? format(new Date(data.hire_date), 'MM-dd-yyyy')
+      ? format(new Date(data.hire_date), 'yyyy-MM-dd')
       : null
+
+    console.log(session?.user.email)
 
     const profileData = {
       address: data.address || prevEmployee?.address || '',
       first_name: data.firstName || prevEmployee?.first_name || '',
-      hire_date: formattedHireDate,
+      hire_date: formattedHireDate ?? null,
       id_document: data.idDocument || prevEmployee?.id_document || '',
       last_name: data.lastName || prevEmployee?.last_name || '',
       phone: data.phone || prevEmployee?.phone || '',
       salary: 0
     }
-
-    updateProfile(
-      {
-        email: session?.user?.email ?? '',
-        profileData
-      },
-      {
-        onSuccess: async () => {
-          // sospechoso este condicional
-          if (session) {
-            await update()
-            await new Promise((resolve) => setTimeout(resolve, 1000)) // Add a small delay
-            router.push('/dashboard')
-          }
-        },
-        onError: (error) => {
-          console.error('Error updating profile:', error.message)
-        }
-      }
-    )
+    console.log('profileData', profileData)
+    const email = session?.user?.email
+    updateEmployee(email, profileData)
   }
 
   useEffect(() => {

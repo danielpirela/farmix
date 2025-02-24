@@ -109,12 +109,12 @@ export default function Home() {
             Únase a la revolución en gestión de fincas lecheras y transforme su
             operación.
           </p>
-          <Button className="flex flex-col items-center justify-center text-lg font-medium text-white rounded-lg  transition-all duration-300">
+          {/* <Button className="flex flex-col items-center justify-center text-lg font-medium text-white rounded-lg  transition-all duration-300">
             <div className="flex items-center gap-1 py-4 px-6 ">
               <span>Comenzar Ahora</span>
               <ArrowRight className="ml-2 h-5 w-5" />
             </div>
-          </Button>
+          </Button> */}
         </div>
         <div className="absolute left-0 top-0 -z-10">
           <Leaf className="h-64 w-64 text-[#007A4D]/5" />
@@ -131,7 +131,7 @@ export default function Home() {
                 &copy; 2024 Farmix. Todos los derechos reservados.
               </p>
             </div>
-            <div className="flex flex-wrap gap-6 md:justify-end">
+            {/*    <div className="flex flex-wrap gap-6 md:justify-end">
               <a
                 href="#"
                 className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#007A4D] dark:hover:text-[#A3D8A8] transition-colors"
@@ -150,7 +150,7 @@ export default function Home() {
               >
                 Contacto
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </footer>

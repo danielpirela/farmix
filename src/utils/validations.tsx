@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Start of Selection
 export const LETTERS_ONLY_REGEX = /^[a-zA-Z\s]+$/
-export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9]+$/
+export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9\s]+$/
 export const VENEZUELA_PHONE_REGEX = /^(0412|0414|0416|0424)\d{7}$/
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 export const POSITIVE_NUMBERS_REGEX = /^[0-9]+$/

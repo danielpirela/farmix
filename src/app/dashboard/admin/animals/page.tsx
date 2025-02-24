@@ -29,6 +29,8 @@ import { Details } from '@components/tables/Details'
 import { useBirth } from '@hooks/useBirth'
 import { getBirthAnimals } from '@services/birth'
 import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
+import { AnimalDetails } from '@components/modals/AnimalDetails'
 
 export default function AnimalsPage() {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -41,7 +43,7 @@ export default function AnimalsPage() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
-  const { ref, exportAsPDF } = useComponentToPDF({
+  const { pdfRef, downloadPDF } = useHtml2Pdf({
     filename: 'Animales_reporte.pdf'
   })
 
@@ -185,9 +187,9 @@ export default function AnimalsPage() {
   const finalAnimals = animals?.animals ?? []
 
   return (
-    <div ref={ref} className="relative">
+    <div className="relative">
       <div className="flex justify-center items-center max-w-md">
-        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+        <Button onClick={downloadPDF} className="absolute top-0 right-0 z-50 ">
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
       </div>
@@ -337,57 +339,13 @@ export default function AnimalsPage() {
         onClose={() => setIsOpenModal(false)}
         title="Detalles del animal"
       >
-        <div className="text-black max-h-96 overflow-y-auto">
-          <p>Nombre: {animal?.name}</p>
-          <p>Código: {animal?.code}</p>
-          <p>Raza: {animal?.breed}</p>
-          <p>Tipo: {animal?.type}</p>
-          <p>Estado de salud: {animal?.health_status}</p>
-          <p>Ubicación: {animal?.location}</p>
-          <p>Peso: {animal?.weight}</p>
-          <p>Fecha de nacimiento: {animal?.birth_date}</p>
-          <p>Etapa de vida: {animal?.life_stage}</p>
-          {parentsData.father !== null && parentsData.mother !== null ? (
-            <>
-              <p>
-                Madre:{' '}
-                {`${parentsData?.mother.name} - ${parentsData?.mother.code}`}
-              </p>
-              <p>
-                Padre:{' '}
-                {`${parentsData?.father.name} - ${parentsData?.father.code}`}
-              </p>
-            </>
-          ) : (
-            <p>Padres no especificados</p>
-          )}
-          {childrenData !== null && childrenData.length > 0 ? (
-            <div>
-              <p>Hijos:</p>
-              {childrenData?.map((child) => {
-                return (
-                  <div key={child?.code} className="border p-2 my-2 rounded-md">
-                    <p>{`${child?.name} - Código: ${child?.code}`}</p>
-                    {showDetails && (
-                      <div className="animate-fade-down animate-duration-300 animate-delay-100">
-                        <p>{`Tipo: ${child?.type}`}</p>
-                        <p>{`Fecha de parto: ${child?.created_at}`}</p>
-                      </div>
-                    )}
-                    <button
-                      onClick={() => setShowDetails(!showDetails)}
-                      className="text-blue-500 hover:text-blue-800 hover:scale-105 transition-all duration-300"
-                    >
-                      {showDetails ? 'Ver menos' : 'Ver más'}
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <p>Hijo no especificado</p>
-          )}
-        </div>
+        <AnimalDetails
+          animal={animal}
+          parentsData={parentsData}
+          childrenData={childrenData}
+          showDetails={showDetails}
+          setShowDetails={setShowDetails}
+        />
       </Modal>
     </div>
   )
