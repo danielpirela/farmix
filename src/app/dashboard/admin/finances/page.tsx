@@ -80,6 +80,8 @@ const FinancesPage = () => {
       supplier_id
     } = data
 
+    const client = client_id === '' ? null : client_id
+    const supplier = supplier_id === '' ? null : supplier_id
     const newTransaction = {
       type,
       amount: Number(amount),
@@ -88,8 +90,8 @@ const FinancesPage = () => {
       method,
       category,
       employee_id: id,
-      client_id,
-      supplier_id
+      client_id: client,
+      supplier_id: supplier
     }
     await createTransactionMutation.mutateAsync(newTransaction)
   }

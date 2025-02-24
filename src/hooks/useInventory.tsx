@@ -36,7 +36,7 @@ export const useInventory = () => {
       if (existingItem) {
         existingItem.total += totalQuantity
       } else {
-        acc.push({ name: item.name, total: totalQuantity })
+        acc.push({ name: item.name, total: totalQuantity, unit: item.unit })
       }
 
       return acc

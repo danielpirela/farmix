@@ -25,7 +25,9 @@ import { Bar, Pie } from 'react-chartjs-2'
 import { useFinances } from '@hooks/useFinances'
 import Table from '@components/tables/Table'
 import { TransactionTypePill } from '@components/tables/TransactionTypePill'
-
+import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
+import { Button } from '@components/form/Button'
+import { Download } from '@components/icons/DashboardIcon'
 const columns = [
   {
     header: 'Empleado',
@@ -64,6 +66,7 @@ const ReportsPage = () => {
   const [startDate, setStartDate] = useState('2025-01-01')
   const [endDate, setEndDate] = useState('2025-12-31')
 
+  const { pdfRef, downloadPDF } = useHtml2Pdf({ filename: 'enercusi.pdf' })
   const options = {
     responsive: true,
     maintainAspectRatio: true
@@ -315,7 +318,15 @@ const ReportsPage = () => {
   if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
 
   return (
-    <div className="max-w-xl mx-auto flex flex-col gap-4 min-h-screen">
+    <div
+      className="max-w-xl mx-auto flex flex-col gap-4 min-h-screen relative"
+      ref={pdfRef}
+    >
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={downloadPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       <h1 className="text-black text-xl">Reportes de Gastos</h1>
       <div className="max-w-lg justify-center items-center">
         <div className="flex gap-4 mt-2">
@@ -336,13 +347,31 @@ const ReportsPage = () => {
           <input
             type="date"
             value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            onChange={(e) => {
+              const newStartDate = e.target.value
+              const currentYear = new Date().getFullYear()
+              if (
+                newStartDate !== endDate &&
+                new Date(newStartDate).getFullYear() <= currentYear
+              ) {
+                setStartDate(newStartDate)
+              }
+            }}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
           <input
             type="date"
             value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            onChange={(e) => {
+              const currentYear = new Date().getFullYear()
+              const newEndDate = e.target.value
+              if (
+                newEndDate >= startDate &&
+                new Date(newEndDate).getFullYear() <= currentYear
+              ) {
+                setEndDate(newEndDate)
+              }
+            }}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>

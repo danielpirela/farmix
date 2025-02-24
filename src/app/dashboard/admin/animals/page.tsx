@@ -19,7 +19,7 @@ import {
   typeOptions
 } from '../../../../const/animals'
 import { Option } from '@components/form/Option'
-import { PlusIcon } from '@components/icons/DashboardIcon'
+import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { calculateAverageMilk } from '@utils/averageMilkProduction'
 import { EditableCell } from '@components/tables/EditableCell'
 import { EditableTypeAnimal } from '@components/tables/EditableTypeAnimal'
@@ -28,6 +28,7 @@ import { EditableHealthStatusCell } from '@components/tables/EditableHealthStatu
 import { Details } from '@components/tables/Details'
 import { useBirth } from '@hooks/useBirth'
 import { getBirthAnimals } from '@services/birth'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
 
 export default function AnimalsPage() {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -39,6 +40,10 @@ export default function AnimalsPage() {
   const [childrenData, setChildrenData] = useState([])
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+
+  const { ref, exportAsPDF } = useComponentToPDF({
+    filename: 'Proveedores_reporte.pdf'
+  })
 
   const {
     animals,
@@ -177,7 +182,12 @@ export default function AnimalsPage() {
   const finalAnimals = animals?.animals ?? []
 
   return (
-    <>
+    <div ref={ref} className="relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
@@ -376,6 +386,6 @@ export default function AnimalsPage() {
           )}
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

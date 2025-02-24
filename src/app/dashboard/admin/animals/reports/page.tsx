@@ -14,7 +14,9 @@ import {
   Filler
 } from 'chart.js'
 import { useMilkProduction } from '@hooks/useMilkProduction'
-import { Button } from '@components/pdf/Button'
+import { Button } from '@components/form/Button'
+import { Download } from '@components/icons/DashboardIcon'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
 
 ChartJS.register(
   CategoryScale,
@@ -50,6 +52,9 @@ const ReportsPage = () => {
   const [dailyDataGeneral, setDailyDataGeneral] = useState({})
   const [monthlyDataGeneral, setMonthlyDataGeneral] = useState({})
   const [yearlyDataGeneral, setYearlyDataGeneral] = useState({})
+  const { ref, exportAsPDF } = useComponentToPDF({
+    filename: 'Produccion_de_leche.pdf'
+  })
 
   const options = {
     responsive: true,
@@ -221,19 +226,27 @@ const ReportsPage = () => {
     }
   }, [])
 
-  if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
+  if (!data?.labels || data?.labels.length === 0)
+    return <p className="text-black">cargando...</p>
 
   return (
-    <div>
+    <div className="relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       <h1 className="text-black text-lg text-pretty">
         Reportes de Produccion de leche
       </h1>
-      <Bar data={data} options={options} />
-      <Bar data={monthlyData} options={monthlyOptions} />
-      <Bar data={yearlyData} options={yearlyOptions} />
-      <Bar data={dailyDataGeneral} options={dailyDataGeneral} />
-      <Bar data={monthlyDataGeneral} options={monthlyOptions} />
-      <Bar data={yearlyDataGeneral} options={yearlyOptions} />
+      <div ref={ref}>
+        <Bar data={data} options={options} />
+        <Bar data={monthlyData} options={monthlyOptions} />
+        <Bar data={yearlyData} options={yearlyOptions} />
+        <Bar data={dailyDataGeneral} options={dailyDataGeneral} />
+        <Bar data={monthlyDataGeneral} options={monthlyOptions} />
+        <Bar data={yearlyDataGeneral} options={yearlyOptions} />
+      </div>
     </div>
   )
 }

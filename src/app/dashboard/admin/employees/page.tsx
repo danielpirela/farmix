@@ -2,7 +2,6 @@
 
 import Table from '@components/tables/Table'
 import { useEmployee } from '@hooks/useEmployee'
-import CreateEmployeeForm from '@components/CreateEmployeeForm'
 
 export default function Page() {
   const { employees, isPending, isError } = useEmployee(null)

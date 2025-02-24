@@ -13,8 +13,9 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { InventoryForm, inventorySchema } from '@utils/validations' // Asegúrate de tener un esquema de validación para el inventario
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
-import { PlusIcon } from '@components/icons/DashboardIcon'
+import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { useSuppliers } from '@hooks/useSuppliers'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
 
 const InventoryPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -27,6 +28,10 @@ const InventoryPage = () => {
     updateInventoryMutation,
     deleteInventoryMutation
   } = useInventory()
+
+  const { ref, exportAsPDF } = useComponentToPDF({
+    filename: 'Inventario_reporte.pdf'
+  })
 
   const { suppliers, isSuppliersLoading } = useSuppliers()
 
@@ -56,14 +61,16 @@ const InventoryPage = () => {
   const handleCreateInventory: SubmitHandler<Inventory> = async (data) => {
     if (!data) return
 
-    const { name, description, unit_cost, supplier_id, type, quantity } = data
+    const { name, description, unit_cost, supplier_id, type, quantity, unit } =
+      data
     const newInventory: Inventory = {
       name,
       description,
       quantity: Number(quantity),
       unit_cost: Number(unit_cost),
       supplier_id,
-      type
+      type,
+      unit
     }
     try {
       await createInventoryMutation.mutateAsync(newInventory)
@@ -110,7 +117,12 @@ const InventoryPage = () => {
   const finalInventory = inventory?.inventory ?? []
 
   return (
-    <>
+    <div ref={ref} className="relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       <ButtonAnimated
         title="Agregar Producto"
         onClick={() => setFormModalOpen(true)}
@@ -151,7 +163,12 @@ const InventoryPage = () => {
             errors={errors}
             type="number"
           />
-          <Select name="unit" register={register} label="Tipo" errors={errors}>
+          <Select
+            name="unit"
+            register={register}
+            label="Unidad"
+            errors={errors}
+          >
             <Option value="kg" label="kg" />
             <Option value="l" label="l" />
           </Select>
@@ -188,7 +205,7 @@ const InventoryPage = () => {
           </Button>
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 

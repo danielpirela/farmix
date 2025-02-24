@@ -12,12 +12,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { supplierSchema } from '@utils/validations'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Download, PlusIcon } from '@components/icons/DashboardIcon'
-import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
 
 const SuppliersPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
-  const { downloadPDF, pdfRef } = useHtml2Pdf({
-    filename: 'Reporte_proveedores.pdf'
+  const { exportAsPDF, ref } = useComponentToPDF({
+    filename: 'Lista_proveedores.pdf'
   })
 
   const {
@@ -82,9 +82,9 @@ const SuppliersPage = () => {
     return <div className="text-black">Error: {suppliersError.message}</div>
 
   return (
-    <div ref={pdfRef} id="report" className="relative">
+    <div ref={ref} id="report" className="relative">
       <div className="flex justify-center items-center max-w-md">
-        <Button onClick={downloadPDF} className="absolute top-0 right-0 ">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
       </div>

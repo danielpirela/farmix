@@ -16,6 +16,9 @@ import {
   Legend,
   Filler
 } from 'chart.js'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { Button } from '@components/form/Button'
+import { Download } from '@components/icons/DashboardIcon'
 
 ChartJS.register(
   CategoryScale,
@@ -30,7 +33,12 @@ ChartJS.register(
 
 const columns = [
   { header: 'Nombre', accessorKey: 'name' },
-  { header: 'Total', accessorKey: 'total' }
+  {
+    header: 'Total',
+    accessorKey: 'total',
+    cell: (info: { row: { original: { total: number; unit: string } } }) =>
+      `${info.row.original.total} ${info.row.original.unit}`
+  }
 ]
 
 const options = {
@@ -53,6 +61,10 @@ const options = {
 const InventoryReportsPage = () => {
   const { productNamesWithTotal, isInventoryLoading, inventoryError } =
     useInventory()
+
+  const { ref, exportAsPDF } = useComponentToPDF({
+    filename: 'Inventario_reporte.pdf'
+  })
   const [inventory, setInventory] = useState<any>(productNamesWithTotal)
   const [data, setData] = useState<any>({ labels: [], datasets: [] })
 
@@ -81,7 +93,12 @@ const InventoryReportsPage = () => {
     return <div className="text-black">Error: {inventoryError.message}</div>
 
   return (
-    <>
+    <div ref={ref} className="relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Reportes de Inventario
       </h1>
@@ -97,7 +114,7 @@ const InventoryReportsPage = () => {
         Total de Producto
       </h1>
       <Table data={productNamesWithTotal} columns={columns} />
-    </>
+    </div>
   )
 }
 

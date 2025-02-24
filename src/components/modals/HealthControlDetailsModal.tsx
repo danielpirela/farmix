@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react'
 import { Modal } from '@components/form/Modal'
-import { Button } from '@components/form/Button'
 import { HealthControl } from '@models/healthControl.model'
 import { Animal } from '@models/animals.model'
 import { Employee } from '@models/types'
+import { AppleButton } from '@components/form/AppleButton'
 
 interface HealthControlDetailsModalProps {
   isOpen: boolean
@@ -32,68 +32,93 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
       title="Detalles del Control de Salud"
     >
       <div className="p-4 text-black max-h-80 overflow-y-auto">
-        <h2 className="text-lg font-semibold">
-          Información del Control de Salud
-        </h2>
-        <p>
-          <strong>ID del Control:</strong> {healthControl?.id}
-        </p>
-        <p>
-          <strong>ID del Animal:</strong> {healthControl?.animal_id}
-        </p>
-        <p>
-          <strong>Fecha de Control:</strong> {healthControl?.checkup_date}
-        </p>
-        <p>
-          <strong>Diagnóstico:</strong> {healthControl?.diagnosis}
-        </p>
-        <p>
-          <strong>Tratamiento:</strong> {healthControl?.treatment}
-        </p>
-        <p>
-          <strong>ID del Empleado:</strong> {healthControl?.employee_id}
-        </p>
-
-        <div className="mt-4">
-          <Button onClick={() => setShowAnimalDetails(!showAnimalDetails)}>
-            {showAnimalDetails ? 'Ver Menos' : 'Ver Más sobre el Animal'}
-          </Button>
-          {showAnimalDetails && animal && (
-            <div className="mt-2 p-2 border rounded bg-gray-100">
-              <h3 className="font-semibold">Detalles del Animal</h3>
-              <p>
-                <strong>Nombre:</strong> {animal.name}
+        {healthControl ? (
+          <div className="space-y-4">
+            <div className="ring-1 ring-gray-200 p-4 bg-gray-50 rounded-lg">
+              <h2 className="text-lg font-semibold mb-2">
+                Información del Control de Salud
+              </h2>
+              <p className="mb-1">
+                <strong>ID:</strong> {healthControl.id}
               </p>
-              <p>
-                <strong>Código:</strong> {animal.code}
+              <p className="mb-1">
+                <strong>Fecha de Control:</strong> {healthControl.checkup_date}
               </p>
-              <p>
-                <strong>Tipo:</strong> {animal.type}
+              <p className="mb-1">
+                <strong>Diagnóstico:</strong> {healthControl.diagnosis}
               </p>
-              <p>
-                <strong>Raza:</strong> {animal.breed}
+              <p className="mb-1">
+                <strong>Tratamiento:</strong> {healthControl.treatment}
               </p>
             </div>
-          )}
-        </div>
 
-        <div className="mt-4">
-          <Button onClick={() => setShowEmployeeDetails(!showEmployeeDetails)}>
-            {showEmployeeDetails ? 'Ver Menos' : 'Ver Más sobre el Empleado'}
-          </Button>
-          {showEmployeeDetails && employee && (
-            <div className="mt-2 p-2 border rounded bg-gray-100">
-              <h3 className="font-semibold">Detalles del Empleado</h3>
-              <p>
-                <strong>Nombre:</strong> {employee.first_name}{' '}
-                {employee.last_name}
-              </p>
-              <p>
-                <strong>ID del Empleado:</strong> {employee.employee_id}
-              </p>
-            </div>
-          )}
-        </div>
+            {animal && (
+              <div className="ring-1 ring-gray-200 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-semibold mb-2">
+                  Información del Animal
+                </h3>
+                <p className="mb-1">
+                  <strong>Nombre:</strong> {animal.name}
+                </p>
+                <p className="mb-1">
+                  <strong>ID:</strong> {animal.code}
+                </p>
+                <AppleButton
+                  onClick={() => setShowAnimalDetails(!showAnimalDetails)}
+                >
+                  {showAnimalDetails ? 'Ocultar detalles' : 'Ver más detalles'}
+                </AppleButton>
+                {showAnimalDetails && (
+                  <div>
+                    <p className="mb-1">
+                      <strong>Raza:</strong> {animal.breed}
+                    </p>
+                    <p className="mb-1">
+                      <strong>Edad:</strong>{' '}
+                      {new Date().getFullYear() -
+                        new Date(animal.birth_date).getFullYear()}
+                      años
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {employee && (
+              <div className="ring-1 ring-gray-200 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-semibold mb-2">
+                  Información del Empleado
+                </h3>
+                <p className="mb-1">
+                  <strong>Nombre:</strong> {employee.first_name}{' '}
+                  {employee.last_name}
+                </p>
+                <p className="mb-1">
+                  <strong>ID:</strong> {employee.employee_id}
+                </p>
+                <AppleButton
+                  onClick={() => setShowEmployeeDetails(!showEmployeeDetails)}
+                >
+                  {showEmployeeDetails
+                    ? 'Ocultar detalles'
+                    : 'Ver más detalles'}
+                </AppleButton>
+                {showEmployeeDetails && (
+                  <div>
+                    <p className="mb-1">
+                      <strong>Puesto:</strong> Medico Veterinario
+                    </p>
+                    <p className="mb-1">
+                      <strong>Departamento:</strong> {employee.status}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p>No se ha seleccionado ningún control de salud.</p>
+        )}
       </div>
     </Modal>
   )

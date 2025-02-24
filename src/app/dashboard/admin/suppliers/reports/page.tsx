@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,7 +14,10 @@ import {
 } from 'chart.js'
 import { useInventory } from '@hooks/useInventory'
 import Table from '@components/tables/Table'
-
+import { usePDF } from 'react-to-pdf'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { Button } from '@components/form/Button'
+import { Download } from '@components/icons/DashboardIcon'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -52,6 +54,10 @@ const options = {
 }
 
 const SuppliersReportsPage = () => {
+  const { ref, exportAsPDF } = useComponentToPDF({
+    filename: 'Proveedores_reporte.pdf'
+  })
+
   const { inventory, isInventoryLoading, inventoryError } = useInventory()
   const [data, setData] = useState<any>({ labels: [], datasets: [] })
   const [filterData, setFilterdata] = useState('')
@@ -59,12 +65,12 @@ const SuppliersReportsPage = () => {
 
   useEffect(() => {
     if (inventory) {
-      const supplierNames = inventory.inventory.map(
-        ({ suppliers }) => suppliers.name
+      const supplierNames = inventory?.inventory?.map(
+        ({ suppliers }) => suppliers?.name
       )
 
-      const supplierCounts = inventory.inventory.map(
-        ({ suppliers }) => suppliers.supplied_products?.length || 0
+      const supplierCounts = inventory?.inventory?.map(
+        ({ suppliers }) => suppliers?.supplied_products?.length || 0
       )
 
       setData({
@@ -78,18 +84,22 @@ const SuppliersReportsPage = () => {
         ]
       })
 
-      const filteredSuppliers = inventory.inventory.filter(
+      const filteredSuppliers = inventory?.inventory?.filter(
         (item) => item.name === filterData || filterData === ''
       )
       setFilteredData(filteredSuppliers)
     }
   }, [inventory, filterData])
-  console.log(filteredData)
   if (isInventoryLoading) return <div className="text-black">Cargando...</div>
   if (inventoryError)
     return <div className="text-black">Error: {inventoryError.message}</div>
   return (
-    <>
+    <div ref={ref} className="bg-white px-10 relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
       {/*   <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Reportes de Proveedores
       </h1>
@@ -114,20 +124,16 @@ const SuppliersReportsPage = () => {
         className="bg-gray-50 border border-gray-300 text-gray-900 max-w-36  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option value="">Todos</option>
-        {Array.from(new Set(inventory?.inventory.map((item) => item.name))).map(
-          (name) => {
-            const item = inventory.inventory.find((i) => i.name === name)
-            return (
-              <option
-                value={name}
-                key={item?.product_id}
-                className="text-black"
-              >
-                {name}
-              </option>
-            )
-          }
-        )}
+        {Array.from(
+          new Set(inventory?.inventory?.map((item) => item.name))
+        ).map((name) => {
+          const item = inventory?.inventory?.find((i) => i.name === name)
+          return (
+            <option value={name} key={item?.product_id} className="text-black">
+              {name}
+            </option>
+          )
+        })}
       </select>
 
       {filteredData !== undefined && (
@@ -137,7 +143,7 @@ const SuppliersReportsPage = () => {
           filterAndSort={filterData}
         />
       )}
-    </>
+    </div>
   )
 }
 

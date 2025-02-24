@@ -58,7 +58,8 @@ const ClientsPage = () => {
       last_name: '',
       phone: '',
       email: ''
-    }
+    },
+    mode: 'onChange'
   })
 
   const {
@@ -151,7 +152,7 @@ const ClientsPage = () => {
             register={register}
             label="Teléfono"
             errors={errors}
-            type="text"
+            type="number"
           />
           <InputField
             name="email"

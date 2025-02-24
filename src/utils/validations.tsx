@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-const REGEX_DATE = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
+// Start of Selection
+export const LETTERS_ONLY_REGEX = /^[a-zA-Z\s]+$/
+export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9]+$/
+export const VENEZUELA_PHONE_REGEX = /^(0412|0414|0416|0424)\d{7}$/
+export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+export const POSITIVE_NUMBERS_REGEX = /^[0-9]+$/
 
 export const TRASACTION_FORM_FIELDS = {
   transaction_date: 'transaction_date',
@@ -66,35 +71,69 @@ export const ANIMAL_FORM_FIELDS = {
 } as const
 
 export const supplierSchema = z.object({
-  [SUPPLIER_FORM_FIELDS.name]: z.string().min(3, 'Ingrese un nombre'),
-  [SUPPLIER_FORM_FIELDS.contact]: z.string().min(3, 'Ingrese un contacto'),
+  [SUPPLIER_FORM_FIELDS.name]: z
+    .string()
+    .min(3, 'Ingrese un nombre')
+    .regex(
+      ALPHANUMERIC_REGEX,
+      'El nombre solo puede contener letras y números'
+    ),
+  [SUPPLIER_FORM_FIELDS.contact]: z
+    .string()
+    .min(3, 'Ingrese un contacto')
+    .regex(LETTERS_ONLY_REGEX, 'El contacto solo puede contener letras'),
   [SUPPLIER_FORM_FIELDS.phone]: z
     .string()
-    .min(10, 'Ingrese un número de teléfono válido'),
+    .min(11, 'Ingrese un número de teléfono válido')
+    .regex(VENEZUELA_PHONE_REGEX, 'El número de teléfono debe ser válido'),
   [SUPPLIER_FORM_FIELDS.email]: z
     .string()
     .email()
-    .min(5, 'Ingrese un email válido'),
-  [SUPPLIER_FORM_FIELDS.address]: z.string().min(5, 'Ingrese una dirección'),
+    .min(5, 'Ingrese un email válido')
+    .regex(EMAIL_REGEX, 'El email debe ser válido'),
+  [SUPPLIER_FORM_FIELDS.address]: z
+    .string()
+    .min(5, 'Ingrese una dirección')
+    .regex(
+      ALPHANUMERIC_REGEX,
+      'La dirección solo puede contener letras y números'
+    ),
   [SUPPLIER_FORM_FIELDS.supplied_products]: z
     .string()
     .min(3, 'Ingrese un producto')
+    .regex(LETTERS_ONLY_REGEX, 'El producto solo puede contener letras')
 })
 
 export const transactionSchema = z.object({
   [TRASACTION_FORM_FIELDS.transaction_date]: z.string().date(),
   [TRASACTION_FORM_FIELDS.type]: z
     .string()
-    .min(3, 'Ingrese un tipo de transacción'),
-  [TRASACTION_FORM_FIELDS.amount]: z.string().min(1, 'Ingrese un monto'),
+    .min(3, 'Ingrese un tipo de transacción')
+    .regex(
+      LETTERS_ONLY_REGEX,
+      'El tipo de transacción solo puede contener letras'
+    ),
+
+  [TRASACTION_FORM_FIELDS.amount]: z
+    .string()
+    .min(1, 'Ingrese un monto')
+    .max(5, 'Ingrese un monto válido')
+    .regex(POSITIVE_NUMBERS_REGEX, 'El monto debe ser un número positivo'),
   [TRASACTION_FORM_FIELDS.description]: z
     .string()
-    .min(5, 'Ingrese una descripción'),
-  [TRASACTION_FORM_FIELDS.category]: z.string().min(3, 'Ingrese una categoría'),
+    .min(5, 'Ingrese una descripción')
+    .regex(LETTERS_ONLY_REGEX, 'La descripción solo puede contener letras'),
+  [TRASACTION_FORM_FIELDS.category]: z
+    .string()
+    .min(3, 'Ingrese una categoría')
+    .regex(LETTERS_ONLY_REGEX, 'La categoría solo puede contener letras'),
+
   [TRASACTION_FORM_FIELDS.descriptionOpt]: z.string().optional(),
+
   [TRASACTION_FORM_FIELDS.method]: z
     .string()
-    .min(3, 'Ingrese un método de pago'),
+    .min(3, 'Ingrese un método de pago')
+    .regex(LETTERS_ONLY_REGEX, 'El método de pago solo puede contener letras'),
   [TRASACTION_FORM_FIELDS.employee_id]: z.string().optional(),
   [TRASACTION_FORM_FIELDS.client_id]: z.string().optional(),
   [TRASACTION_FORM_FIELDS.supplier_id]: z.string().optional()
@@ -103,92 +142,153 @@ export const transactionSchema = z.object({
 export const activitySchema = z.object({
   [ACTIVITY_FORM_FIELDS.description]: z
     .string()
-    .min(5, 'Escriba una descripcion'),
-  [ACTIVITY_FORM_FIELDS.type]: z.string().min(4, 'Seleccione un tipo de tarea'),
-  [ACTIVITY_FORM_FIELDS.descrptionOpt]: z.string().optional()
+    .min(5, 'Escriba una descripcion')
+    .regex(LETTERS_ONLY_REGEX, 'La descripción solo puede contener letras'),
+  [ACTIVITY_FORM_FIELDS.type]: z
+    .string()
+    .min(4, 'Seleccione un tipo de tarea')
+    .regex(LETTERS_ONLY_REGEX, 'El tipo de tarea solo puede contener letras'),
+  [ACTIVITY_FORM_FIELDS.descrptionOpt]: z
+    .string()
+    .regex(
+      LETTERS_ONLY_REGEX,
+      'La descripción opcional solo puede contener letras'
+    )
+    .optional()
 })
 
 export const userSchema = z.object({
   [USER_FORM_FIELDS.firstName]: z
     .string()
     .min(1, 'Nombre es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El nombre solo puede contener letras')
     .optional(),
   [USER_FORM_FIELDS.lastName]: z
     .string()
     .min(1, 'Apellido es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El apellido solo puede contener letras')
     .optional(),
   [USER_FORM_FIELDS.idDocument]: z
     .string()
     .min(1, 'Cédula es obligatoria')
-    .optional(),
+    .regex(
+      /^[0-9]{1,10}$/,
+      'Cédula solo puede contener números y debe tener 10 dígitos'
+    ),
   [USER_FORM_FIELDS.phone]: z
     .string()
     .min(11, 'El telefono es obligatorio')
-    .max(11, 'El número de teléfono debe tener 11 caracteres'),
+    .max(11, 'El número de teléfono debe tener 11 caracteres')
+    .regex(VENEZUELA_PHONE_REGEX, 'El número de teléfono debe ser válido'),
   [USER_FORM_FIELDS.address]: z
     .string()
-    .min(16, 'Dirección debe tener al menos 16 caracteres')
+    .min(5, 'Dirección debe tener al menos 5 caracteres')
+    .regex(
+      ALPHANUMERIC_REGEX,
+      'La dirección solo puede contener letras y números'
+    )
     .optional(),
   [USER_FORM_FIELDS.hire_date]: z
     .string()
-    .min(10, 'Ingrese una fecha válida')
+    .min(9, 'Ingrese una fecha válida')
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'La fecha debe tener el formato AAAA-MM-DD')
     .optional()
 })
 
 export const inventorySchema = z.object({
   [INVENTORY_FORM_FIELDS.name]: z
     .string()
-    .min(1, 'El nombre del artículo es obligatorio'),
+    .min(2, 'El nombre del artículo es obligatorio')
+    .regex(
+      LETTERS_ONLY_REGEX,
+      'El nombre del artículo solo puede contener letras'
+    ),
   [INVENTORY_FORM_FIELDS.quantity]: z
     .string()
-    .min(1, 'La cantidad debe ser al menos 1'),
+    .min(1, 'La cantidad debe ser al menos 1')
+    .regex(POSITIVE_NUMBERS_REGEX),
   [INVENTORY_FORM_FIELDS.unit_cost]: z
     .string()
-    .min(1, 'El precio debe ser mayor que 0'),
-  [INVENTORY_FORM_FIELDS.description]: z.string().optional(),
+    .min(1, 'El precio debe ser mayor que 0')
+    .regex(POSITIVE_NUMBERS_REGEX, 'El precio debe ser un número positivo'),
+  [INVENTORY_FORM_FIELDS.description]: z
+    .string()
+    .regex(LETTERS_ONLY_REGEX, 'La descripción solo puede contener letras')
+    .optional(),
   [INVENTORY_FORM_FIELDS.supplier_id]: z.string().optional(),
-  [INVENTORY_FORM_FIELDS.type]: z.string().optional(),
+  [INVENTORY_FORM_FIELDS.type]: z
+    .string()
+    .regex(LETTERS_ONLY_REGEX, 'El tipo de unidad solo puede contener letras')
+    .optional(),
   [INVENTORY_FORM_FIELDS.unit]: z
     .string()
     .min(1, 'Seleccione un tipo de unidad')
+    .regex(/^(kg|l|ml|g)$/, 'El tipo de unidad solo puede ser kg, l, ml o g')
 })
 
 export const animalSchema = z.object({
-  [ANIMAL_FORM_FIELDS.type]: z.string().min(1, 'El tipo es obligatorio'),
-  [ANIMAL_FORM_FIELDS.name]: z.string().min(1, 'El nombre es obligatorio'),
-  [ANIMAL_FORM_FIELDS.breed]: z.string().min(1, 'La raza es obligatoria'),
+  [ANIMAL_FORM_FIELDS.type]: z
+    .string()
+    .min(1, 'El tipo es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El tipo solo puede contener letras'),
+  [ANIMAL_FORM_FIELDS.name]: z
+    .string()
+    .min(1, 'El nombre es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El nombre solo puede contener letras'),
+  [ANIMAL_FORM_FIELDS.breed]: z
+    .string()
+    .min(1, 'La raza es obligatoria')
+    .regex(LETTERS_ONLY_REGEX, 'La raza solo puede contener letras'),
   [ANIMAL_FORM_FIELDS.birth_date]: z
     .string()
-    .min(1, 'La fecha de nacimiento es obligatoria'),
+    .min(1, 'La fecha de nacimiento es obligatoria')
+    .date(),
   [ANIMAL_FORM_FIELDS.health_status]: z
     .string()
-    .min(1, 'El estado de salud es obligatorio'),
+    .min(4, 'El estado de salud es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'EL estado de salud solo puede contener letras'),
   [ANIMAL_FORM_FIELDS.location]: z
     .string()
-    .min(1, 'La ubicación es obligatoria'),
+    .min(8, 'La ubicación es obligatoria')
+    .regex(
+      ALPHANUMERIC_REGEX,
+      'La ubicación solo puede contener letras y números'
+    ),
   [ANIMAL_FORM_FIELDS.weight]: z
     .string()
-    .min(2, 'El peso debe ser mayor que 0'),
+    .min(3, 'El peso debe ser mayor que 0')
+    .regex(POSITIVE_NUMBERS_REGEX, 'El peso debe ser un número positivo'),
   [ANIMAL_FORM_FIELDS.daily_milk_production]: z
     .number()
-    .min(0, 'La producción diaria de leche debe ser mayor o igual a 0')
+    .min(2, 'La producción diaria de leche debe ser mayor o igual a 0')
     .optional(),
   [ANIMAL_FORM_FIELDS.life_stage]: z
     .string()
-    .min(1, 'La etapa de vida es obligatoria'),
+    .min(4, 'La etapa de vida es obligatoria')
+    .regex(LETTERS_ONLY_REGEX, 'La etapa de vida solo puede contener letras'),
   [ANIMAL_FORM_FIELDS.child_id]: z.string().optional(),
   [ANIMAL_FORM_FIELDS.mother_id]: z.string().optional(),
   [ANIMAL_FORM_FIELDS.father_id]: z.string().optional()
 })
 
 export const clientSchema = z.object({
-  first_name: z.string().min(1, 'El nombre es obligatorio'),
-  last_name: z.string().min(1, 'El nombre es obligatorio'),
-  phone: z.string().min(11, 'El numero de teléfono es obligatorio'),
+  first_name: z
+    .string()
+    .min(1, 'El nombre es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El nombre solo puede contener letras'),
+  last_name: z
+    .string()
+    .min(1, 'El nombre es obligatorio')
+    .regex(LETTERS_ONLY_REGEX, 'El nombre solo puede contener letras'),
+  phone: z
+    .string()
+    .min(11, 'El numero de teléfono es obligatorio')
+    .regex(VENEZUELA_PHONE_REGEX, 'El número de teléfono debe ser válido'),
   email: z
     .string()
     .email('El email debe ser válido')
     .min(1, 'El email es obligatorio')
+    .regex(EMAIL_REGEX, 'El email debe ser válido')
 })
 
 export type Client = z.infer<typeof clientSchema>

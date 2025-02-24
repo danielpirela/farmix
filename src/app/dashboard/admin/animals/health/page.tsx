@@ -12,8 +12,7 @@ import { HealthControl } from '@models/healthControl.model'
 import { useEffect, useState } from 'react'
 import Table from '@components/tables/Table'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
-import { PlusIcon } from '@components/icons/DashboardIcon'
-import { DeleteButton } from '@components/tables/DeleteButton'
+import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { useAnimals } from '@hooks/useAnimals'
 import { Select } from '@components/form/Select'
 import { Option } from '@components/form/Option'
@@ -24,7 +23,16 @@ import HealthControlDetailsModal from '@components/modals/HealthControlDetailsMo
 const columns = [
   { header: 'Acciones', accessorKey: 'actions', cell: Details }, // Asegúrate de tener un componente DeleteButton
   { header: 'ID', accessorKey: 'id' },
-  { header: 'Animal ID', accessorKey: 'animal_id' },
+  {
+    header: 'Animal ID',
+    accessorKey: 'animal_id',
+    cell: (info: {
+      row: {
+        original: { code: number; name: string }
+      }
+    }) =>
+      `${info.row.original.animals.name} - ${info.row.original.animals.code}`
+  },
   { header: 'Fecha de Control', accessorKey: 'checkup_date' },
   { header: 'Diagnóstico', accessorKey: 'diagnosis' },
   { header: 'Tratamiento', accessorKey: 'treatment' }
@@ -39,7 +47,7 @@ const HealthControlPage = () => {
     deleteHealthControlMutation
   } = useHealthControl()
   const [isFormModalOpen, setFormModalOpen] = useState(false)
-  const { animals, animalsError, isAnimalsLoading } = useAnimals()
+  const { animals, animalsError } = useAnimals()
   const { employees, isError, isLoading } = useEmployee()
   const [selectedHealthControl, setSelectedHealthControl] =
     useState<HealthControl | null>(null)
@@ -82,8 +90,10 @@ const HealthControlPage = () => {
     return <div className="text-black">Cargando...</div>
   if (healthControlsError || animalsError || isError)
     return (
-      <div className="text-black">Error: {healthControlsError.message}</div>
+      <div className="text-black">Error: {healthControlsError?.message}</div>
     )
+
+  console.log(healthControls)
 
   return (
     <>

@@ -71,7 +71,7 @@ export async function middleware(req: NextRequest) {
     ],
     '/dashboard/employees/reports': [ROLES.admin, ROLES.owner, ROLES.foreman],
 
-    '/dashboard/employees': [
+    '/dashboard/employee': [
       ROLES.employee,
       ROLES.owner,
       ROLES.foreman,
@@ -79,7 +79,12 @@ export async function middleware(req: NextRequest) {
       ROLES.veterinary,
       ROLES.admin
     ],
-    '/dashboard/clients': [ROLES.employee, ROLES.owner, ROLES.foreman]
+    '/dashboard/admin/clients': [
+      ROLES.employee,
+      ROLES.owner,
+      ROLES.foreman,
+      ROLES.admin
+    ]
   }
 
   const { pathname } = req.nextUrl
@@ -87,10 +92,6 @@ export async function middleware(req: NextRequest) {
   // Verifica si la ruta es protegida
   for (const route in protectedRoutes) {
     if (pathname.startsWith(route)) {
-      console.error({ token: token?.role })
-      console.error(route)
-      console.error(protectedRoutes[route])
-
       if (!token || !protectedRoutes[route].includes(token.role)) {
         // Redirige a la página de inicio si no tiene acceso
         return NextResponse.redirect(new URL('/', req.url))
