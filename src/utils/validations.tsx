@@ -122,11 +122,12 @@ export const transactionSchema = z.object({
   [TRASACTION_FORM_FIELDS.description]: z
     .string()
     .min(5, 'Ingrese una descripción')
-    .regex(LETTERS_ONLY_REGEX, 'La descripción solo puede contener letras'),
+    .optional(),
+
   [TRASACTION_FORM_FIELDS.category]: z
     .string()
     .min(3, 'Ingrese una categoría')
-    .regex(LETTERS_ONLY_REGEX, 'La categoría solo puede contener letras'),
+    .optional(),
 
   [TRASACTION_FORM_FIELDS.descriptionOpt]: z.string().optional(),
 
