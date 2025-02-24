@@ -57,13 +57,13 @@ export default function Page() {
   return (
     <>
       {/* Botón para abrir el formulario */}
-      <ButtonAnimated
+      {/*       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
         title="Agregar Empleado"
       >
         <PlusIcon />
-      </ButtonAnimated>
+      </ButtonAnimated> */}
 
       {Finalemployees ? (
         <Table
