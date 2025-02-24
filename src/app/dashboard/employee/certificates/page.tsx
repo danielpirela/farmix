@@ -12,9 +12,11 @@ import { supplierSchema } from '@utils/validations'
 import Table from '@components/tables/Table'
 import { Certificate } from '@models/certificate.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
-import { PlusIcon } from '@components/icons/DashboardIcon'
+import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 
 import { Details } from '@components/tables/Details'
+import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 
 const columns = [
   { header: 'Detalles', accessorKey: 'id', cell: Details },
@@ -61,6 +63,10 @@ const CertificatesPage = () => {
     formState: { errors }
   } = methods
 
+  const { pdfRef, downloadPDF } = useHtml2Pdf({
+    filename: 'Costancia.pdf'
+  })
+
   const handleCreateCertificate: SubmitHandler<Certificate> = async (data) => {
     if (!data) return
     try {
@@ -79,7 +85,13 @@ const CertificatesPage = () => {
   if (certificates?.length === 0)
     return <div className="text-black">No hay certificados</div>
   return (
-    <>
+    <div className="relative">
+      <div className="flex justify-center items-center max-w-md">
+        <Button onClick={downloadPDF} className="absolute top-0 right-0 z-50 ">
+          <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
+        </Button>
+      </div>
+
       <ButtonAnimated
         title="Agregar Certificado"
         onClick={() => setFormModalOpen(true)}
@@ -146,13 +158,13 @@ const CertificatesPage = () => {
       <Modal
         isOpen={isViewable}
         onClose={() => setIsViewable(false)}
-        title="Detalles del Certificado"
+        title="Detalles del Costancia"
       >
         {certificate && (
-          <div className="max-h-12 overflow-auto   my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-2">
-              Detalles de la Costancia
-            </h2>
+          <div
+            className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg "
+            ref={pdfRef}
+          >
             <p className="mb-1">
               <strong>ID:</strong> {certificate.id}
             </p>
@@ -187,7 +199,7 @@ const CertificatesPage = () => {
           </div>
         )}
       </Modal>
-    </>
+    </div>
   )
 }
 

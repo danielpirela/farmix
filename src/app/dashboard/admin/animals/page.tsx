@@ -42,7 +42,7 @@ export default function AnimalsPage() {
   const [showDetails, setShowDetails] = useState(false)
 
   const { ref, exportAsPDF } = useComponentToPDF({
-    filename: 'Proveedores_reporte.pdf'
+    filename: 'Animales_reporte.pdf'
   })
 
   const {
@@ -128,6 +128,8 @@ export default function AnimalsPage() {
   }
 
   const handleViewDetails = async (data: Animal) => {
+    console.log(data)
+
     if (data.parents_id !== null) {
       const mother = finalAnimals.find(
         (animal) => animal.animal_id === data.parents_id[0]
@@ -175,6 +177,7 @@ export default function AnimalsPage() {
     formState: { errors }
   } = methods
 
+  console.log(errors)
   if (isAnimalsLoading) return <div className="text-black">Cargando...</div>
   if (animalsError)
     return <div className="text-black">Error: {animalsError.message}</div>

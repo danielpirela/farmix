@@ -260,7 +260,7 @@ export const animalSchema = z.object({
     .regex(POSITIVE_NUMBERS_REGEX, 'El peso debe ser un número positivo'),
   [ANIMAL_FORM_FIELDS.daily_milk_production]: z
     .number()
-    .min(2, 'La producción diaria de leche debe ser mayor o igual a 0')
+    .min(0, 'La producción diaria de leche debe ser mayor o igual a 0')
     .optional(),
   [ANIMAL_FORM_FIELDS.life_stage]: z
     .string()
