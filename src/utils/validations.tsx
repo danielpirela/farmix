@@ -143,19 +143,9 @@ export const transactionSchema = z.object({
 export const activitySchema = z.object({
   [ACTIVITY_FORM_FIELDS.description]: z
     .string()
-    .min(5, 'Escriba una descripcion')
-    .regex(LETTERS_ONLY_REGEX, 'La descripción solo puede contener letras'),
-  [ACTIVITY_FORM_FIELDS.type]: z
-    .string()
-    .min(4, 'Seleccione un tipo de tarea')
-    .regex(LETTERS_ONLY_REGEX, 'El tipo de tarea solo puede contener letras'),
-  [ACTIVITY_FORM_FIELDS.descrptionOpt]: z
-    .string()
-    .regex(
-      LETTERS_ONLY_REGEX,
-      'La descripción opcional solo puede contener letras'
-    )
-    .optional()
+    .min(5, 'Escriba una descripcion'),
+  [ACTIVITY_FORM_FIELDS.type]: z.string().min(4, 'Seleccione un tipo de tarea'),
+  [ACTIVITY_FORM_FIELDS.descrptionOpt]: z.string().optional()
 })
 
 export const userSchema = z.object({
