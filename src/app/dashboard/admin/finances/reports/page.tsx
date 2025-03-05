@@ -28,6 +28,7 @@ import { TransactionTypePill } from '@components/tables/TransactionTypePill'
 import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 import { Button } from '@components/form/Button'
 import { Download } from '@components/icons/DashboardIcon'
+import { AlertToast } from '@components/AlertToast'
 const columns = [
   {
     header: 'Empleado',
@@ -51,7 +52,7 @@ const columns = [
   { header: 'Tipo', accessorKey: 'type', cell: TransactionTypePill }
 ]
 
-const ReportsPage = () => {
+const FinancesReportsPage = () => {
   const { finances } = useFinances()
   const [data, setData] = useState({})
   const [filter, setFilter] = useState('2025')
@@ -65,7 +66,7 @@ const ReportsPage = () => {
   const [monthlyDataEgreso, setMonthlyDataEgreso] = useState({})
   const [startDate, setStartDate] = useState('2025-01-01')
   const [endDate, setEndDate] = useState('2025-12-31')
-
+  const [dateError, setDateError] = useState(false)
   const { pdfRef, downloadPDF } = useHtml2Pdf({ filename: 'enercusi.pdf' })
   const options = {
     responsive: true,
@@ -313,6 +314,12 @@ const ReportsPage = () => {
         ]
       })
     }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      setDateError(true)
+    } else {
+      setDateError(false)
+    }
   }, [finances, startDate, endDate, type, typeFilter])
 
   if (!data?.labels || data?.labels.length === 0) return <p>cargando</p>
@@ -348,14 +355,17 @@ const ReportsPage = () => {
             type="date"
             value={startDate}
             onChange={(e) => {
-              const newStartDate = e.target.value
               const currentYear = new Date().getFullYear()
+              const newStartDate = e.target.value
               if (
                 newStartDate !== endDate &&
-                new Date(newStartDate).getFullYear() <= currentYear
+                new Date(newStartDate).getFullYear() <= currentYear &&
+                new Date(newStartDate) <= new Date(endDate)
               ) {
                 setStartDate(newStartDate)
+                setDateError(false)
               }
+              setDateError(true)
             }}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
@@ -363,13 +373,16 @@ const ReportsPage = () => {
             type="date"
             value={endDate}
             onChange={(e) => {
-              const currentYear = new Date().getFullYear()
               const newEndDate = e.target.value
+              const currentYear = new Date().getFullYear()
               if (
                 newEndDate >= startDate &&
                 new Date(newEndDate).getFullYear() <= currentYear
               ) {
                 setEndDate(newEndDate)
+                setDateError(false)
+              } else {
+                setDateError(true)
               }
             }}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -407,8 +420,13 @@ const ReportsPage = () => {
       ) : (
         <p>No hay transacciones</p>
       )}
+      {dateError && (
+        <AlertToast duration={10000} code="error">
+          La fecha de inicio debe ser menor a la de fin
+        </AlertToast>
+      )}
     </div>
   )
 }
 
-export default ReportsPage
+export default FinancesReportsPage

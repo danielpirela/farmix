@@ -14,7 +14,7 @@ export const AppleButton: React.FC<AppleButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className="   font-normal py-2 px-4 rounded-full transition duration-300 ease-in-out text-blue-500"
+      className="font-normal pb-2 rounded-full transition duration-300 active:scale-95 hover:scale-110 text-blue-500"
     >
       {children}
     </button>

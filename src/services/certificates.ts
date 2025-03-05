@@ -5,7 +5,7 @@ export const getCertificates = async (): Promise<CertificateResponse> => {
     try {
         const { data, error } = await supabase
             .from('certificates')
-            .select('*, employee:employees(phone, first_name, last_name)')
+            .select('*, employee:employees(*)')
 
             console.log(data)
 

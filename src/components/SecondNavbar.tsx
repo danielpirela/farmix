@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Logo } from './Logo'
 import { UserMenu } from './UserMenu'
 import { MenuIcon } from './icons/DashboardIcon'
+import { ToggleTheme } from './ToggleTheme'
 
 export function SecondNavbar({ onClickToggle }: { onClickToggle: () => void }) {
   return (
@@ -20,7 +21,10 @@ export function SecondNavbar({ onClickToggle }: { onClickToggle: () => void }) {
             <Logo />
           </Link>
         </div>
-        <UserMenu />
+        <div className="flex items-center justify-end">
+          <ToggleTheme isScrolled={false} />
+          <UserMenu />
+        </div>
       </div>
     </nav>
   )

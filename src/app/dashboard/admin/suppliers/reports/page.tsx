@@ -94,7 +94,7 @@ const SuppliersReportsPage = () => {
   if (inventoryError)
     return <div className="text-black">Error: {inventoryError.message}</div>
   return (
-    <div ref={ref} className="bg-white px-10 relative">
+    <div ref={ref} className="bg-white dark:bg-gray-800 px-10 relative">
       <div className="flex justify-center items-center max-w-md">
         <Button onClick={exportAsPDF} className="absolute top-0 right-0 z-50 ">
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />

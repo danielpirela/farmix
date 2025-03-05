@@ -1,3 +1,5 @@
+import { Employee } from './types'
+
 export interface Certificate {
   id: string // UUID
   employee_id: string // Referencia al empleado
@@ -9,6 +11,7 @@ export interface Certificate {
   issued_by?: string | null // ID del usuario que emite la constancia (puede ser nulo)
   created_at: string // Fecha de creación
   updated_at: string // Última actualización
+  employee: Employee // Objeto de empleado
 }
 
 export interface CertificateResponse {

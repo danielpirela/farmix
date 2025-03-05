@@ -17,6 +17,8 @@ import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { Details } from '@components/tables/Details'
 import { useComponentToPDF } from '@hooks/useImageToPdf'
 import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
+import UserImage from '@components/auth/UserImage'
+import { AppleButton } from '@components/form/AppleButton'
 
 const columns = [
   { header: 'Detalles', accessorKey: 'id', cell: Details },
@@ -30,6 +32,7 @@ const CertificatesPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
   const [isViewable, setIsViewable] = useState(false)
   const [certificate, setCertificate] = useState<Certificate | null>(null)
+  const [isInfoVisible, setIsInfoVisible] = useState(false)
 
   const onViewDetails = (data: Certificate) => {
     if (!data) return setIsViewable(false)
@@ -162,38 +165,59 @@ const CertificatesPage = () => {
       >
         {certificate && (
           <div
-            className="my-2 p-2 border text-black border-gray-300 rounded-lg shadow-lg "
+            className="my-2 p-2 border text-black dark:text-white border-gray-300 dark:border-gray-900 rounded-lg shadow-lg "
             ref={pdfRef}
           >
-            <p className="mb-1">
-              <strong>ID:</strong> {certificate.id}
-            </p>
-            <p className="mb-1">
-              <strong>ID del Empleado:</strong> {certificate.employee_id}
-            </p>
-            <p className="mb-1">
+            <div className="flex items-center justify-start gap-2 py-3">
+              <UserImage
+                src={certificate?.employee?.img}
+                name={certificate?.employee?.first_name}
+              />
+              <p className=" dark:text-white text-center">
+                {`${certificate?.employee?.first_name} ${certificate?.employee?.last_name}`}
+              </p>
+            </div>
+            {isInfoVisible && (
+              <div className="flex flex-col gap-2 py-3 animate-fade-down duration-300 delay-150">
+                <p className="dark:text-white">
+                  <strong>CI:</strong> {certificate?.employee?.id_document}
+                </p>
+                <p className="dark:text-white">
+                  <strong>Teléfono:</strong> {certificate?.employee?.phone}
+                </p>
+                <p className="dark:text-white">
+                  <strong>Email:</strong> {certificate?.employee?.email}
+                </p>
+              </div>
+            )}
+            <AppleButton onClick={() => setIsInfoVisible(!isInfoVisible)}>
+              {isInfoVisible ? 'Ver menos' : 'Ver más'}
+            </AppleButton>
+
+            <p className="mb-1 dark:text-white">
               <strong>Tipo de Certificado:</strong>{' '}
               {certificate.certificate_type}
             </p>
-            <p className="mb-1">
+
+            <p className="mb-1 dark:text-white">
               <strong>Fecha de Inicio:</strong> {certificate.start_date}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Fecha de Fin:</strong> {certificate.end_date}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Motivo:</strong> {certificate.reason}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Estado:</strong> {certificate.status}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Emitido por:</strong> {certificate.issued_by ?? 'N/A'}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Fecha de Creación:</strong> {certificate.created_at}
             </p>
-            <p className="mb-1">
+            <p className="mb-1 dark:text-white">
               <strong>Última Actualización:</strong> {certificate.updated_at}
             </p>
           </div>

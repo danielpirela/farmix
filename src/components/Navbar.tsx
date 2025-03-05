@@ -65,7 +65,7 @@ export function Navbar() {
               href={'/dashboard'}
               className="inline-flex items-center  pt-1 text-sm font-semibold text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
             >
-              Dashboard
+              Inicio
             </Link>
           </li>
           <li>

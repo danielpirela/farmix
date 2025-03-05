@@ -20,7 +20,7 @@ export const EditableCell = ({ getValue, row, column, table }: any) => {
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={onBlur}
-      className="max-w-28 hover:scale-105 transition-all duration-300 ease-in-out focus:ring-accent focus:border-1"
+      className="max-w-28 hover:scale-105 transition-all duration-300 ease-in-out focus:ring-accent focus:border-1 dark:bg-transparent"
     />
   )
 }
