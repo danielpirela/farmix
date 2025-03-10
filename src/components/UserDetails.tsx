@@ -7,7 +7,7 @@ interface Props {
   id: string | undefined | null
 }
 
-export function UserDetails({ name, email, id }: Props) {
+export function UserDetails({ name, email }: Props) {
   return (
     <div className="z-50  absolute right-9 top-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
       <div className="px-4 py-3" role="none">
@@ -22,24 +22,6 @@ export function UserDetails({ name, email, id }: Props) {
         </p>
       </div>
       <ul className="py-1" role="none">
-        <li>
-          <Link
-            href="/dashboard/employees"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 hover:text-accent"
-            role="menuitem"
-          >
-            Dashboard
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={`/profile/${id}`}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 hover:text-accent"
-            role="menuitem"
-          >
-            Settings
-          </Link>
-        </li>
         <li>
           <button
             className="block px-4 py-2 w-full text-start hover:text-accent text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 "

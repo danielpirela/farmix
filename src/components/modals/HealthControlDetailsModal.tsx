@@ -6,6 +6,7 @@ import { HealthControl } from '@models/healthControl.model'
 import { Animal } from '@models/animals.model'
 import { Employee } from '@models/types'
 import { AppleButton } from '@components/form/AppleButton'
+import { StatusEmployee } from '@components/tables/StatusEmployee'
 
 interface HealthControlDetailsModalProps {
   isOpen: boolean
@@ -63,11 +64,6 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
                 <p className="mb-1">
                   <strong>ID:</strong> {animal.code}
                 </p>
-                <AppleButton
-                  onClick={() => setShowAnimalDetails(!showAnimalDetails)}
-                >
-                  {showAnimalDetails ? 'Ocultar detalles' : 'Ver más detalles'}
-                </AppleButton>
                 {showAnimalDetails && (
                   <div>
                     <p className="mb-1">
@@ -76,11 +72,22 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
                     <p className="mb-1">
                       <strong>Edad:</strong>{' '}
                       {new Date().getFullYear() -
-                        new Date(animal.birth_date).getFullYear()}
+                        new Date(animal.birth_date).getFullYear()}{' '}
                       años
+                    </p>
+                    <p className="mb-1">
+                      <strong>Etapa de vida:</strong> {animal.life_stage}
+                    </p>
+                    <p className="mb-1">
+                      <strong>Estado:</strong> {animal.health_status}
                     </p>
                   </div>
                 )}
+                <AppleButton
+                  onClick={() => setShowAnimalDetails(!showAnimalDetails)}
+                >
+                  {showAnimalDetails ? 'Ocultar detalles' : 'Ver más detalles'}
+                </AppleButton>
               </div>
             )}
 
@@ -94,8 +101,19 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
                   {employee.last_name}
                 </p>
                 <p className="mb-1">
-                  <strong>ID:</strong> {employee.employee_id}
+                  <strong>Telefono:</strong> {employee.phone}
                 </p>
+                {showEmployeeDetails && (
+                  <div>
+                    <p className="mb-1">
+                      <strong>Puesto:</strong> Medico Veterinario
+                    </p>
+                    <p className="mb-1">
+                      <strong>Estado:</strong>{' '}
+                      <StatusEmployee>{employee.status}</StatusEmployee>
+                    </p>
+                  </div>
+                )}
                 <AppleButton
                   onClick={() => setShowEmployeeDetails(!showEmployeeDetails)}
                 >
@@ -103,16 +121,6 @@ const HealthControlDetailsModal: React.FC<HealthControlDetailsModalProps> = ({
                     ? 'Ocultar detalles'
                     : 'Ver más detalles'}
                 </AppleButton>
-                {showEmployeeDetails && (
-                  <div>
-                    <p className="mb-1">
-                      <strong>Puesto:</strong> Medico Veterinario
-                    </p>
-                    <p className="mb-1">
-                      <strong>Departamento:</strong> {employee.status}
-                    </p>
-                  </div>
-                )}
               </div>
             )}
           </div>

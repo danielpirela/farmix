@@ -47,11 +47,11 @@ export default function Home() {
             </p>
           </div>
           <div className="relative">
-            <div className="aspect-[16/9] rounded-lg overflow-hidden shadow-2xl">
+            <div className="aspect-[16/9]   rounded-lg overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=3540"
+                src="/images/889shots_so.png"
                 alt="Dashboard"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fill"
               />
             </div>
           </div>

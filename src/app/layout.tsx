@@ -28,6 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Farmix</title>
+        <meta name="description" content={'App for farmers and growers'} />
+        <link rel="icon" href="/images/logo.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-800`}
       >

@@ -22,7 +22,6 @@ import HealthControlDetailsModal from '@components/modals/HealthControlDetailsMo
 
 const columns = [
   { header: 'Acciones', accessorKey: 'actions', cell: Details }, // Asegúrate de tener un componente DeleteButton
-  { header: 'ID', accessorKey: 'id' },
   {
     header: 'Animal ID',
     accessorKey: 'animal_id',

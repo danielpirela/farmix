@@ -29,6 +29,7 @@ import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 import { Button } from '@components/form/Button'
 import { Download } from '@components/icons/DashboardIcon'
 import { AlertToast } from '@components/AlertToast'
+import { Dropdown } from '@components/DropDown'
 const columns = [
   {
     header: 'Empleado',
@@ -335,91 +336,103 @@ const FinancesReportsPage = () => {
         </Button>
       </div>
       <h1 className="text-black text-xl">Reportes de Gastos</h1>
-      <div className="max-w-lg justify-center items-center">
-        <div className="flex gap-4 mt-2">
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            id="type"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option value="Egreso" defaultValue={'Egreso'}>
-              Egreso
-            </option>
-            <option value="Ingreso">Ingreso</option>
-            <option value="Deuda">Deuda</option>
-          </select>
-        </div>
-        <div className="flex gap-4 mt-2">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => {
-              const currentYear = new Date().getFullYear()
-              const newStartDate = e.target.value
-              if (
-                newStartDate !== endDate &&
-                new Date(newStartDate).getFullYear() <= currentYear &&
-                new Date(newStartDate) <= new Date(endDate)
-              ) {
-                setStartDate(newStartDate)
-                setDateError(false)
-              }
-              setDateError(true)
-            }}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => {
-              const newEndDate = e.target.value
-              const currentYear = new Date().getFullYear()
-              if (
-                newEndDate >= startDate &&
-                new Date(newEndDate).getFullYear() <= currentYear
-              ) {
-                setEndDate(newEndDate)
-                setDateError(false)
-              } else {
+      <div className="justify-center items-center">
+        <Dropdown title="Finanzas con filtro">
+          <div className="flex gap-4 mt-2">
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              id="type"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="Egreso" defaultValue={'Egreso'}>
+                Egreso
+              </option>
+              <option value="Ingreso">Ingreso</option>
+              <option value="Deuda">Deuda</option>
+            </select>
+          </div>
+          <div className="flex gap-4 mt-2">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                const currentYear = new Date().getFullYear()
+                const newStartDate = e.target.value
+                if (
+                  newStartDate !== endDate &&
+                  new Date(newStartDate).getFullYear() <= currentYear &&
+                  new Date(newStartDate) <= new Date(endDate)
+                ) {
+                  setStartDate(newStartDate)
+                  setDateError(false)
+                }
                 setDateError(true)
-              }
-            }}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <Pie data={data} options={options} />
+              }}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                const newEndDate = e.target.value
+                const currentYear = new Date().getFullYear()
+                if (
+                  newEndDate >= startDate &&
+                  new Date(newEndDate).getFullYear() <= currentYear
+                ) {
+                  setEndDate(newEndDate)
+                  setDateError(false)
+                } else {
+                  setDateError(true)
+                }
+              }}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <Pie data={data} options={options} />
+        </Dropdown>
       </div>
 
       <div className="flex flex-col items-center justify-center min-w-full">
-        <h2 className="text-black text-lg">Ingresos</h2>
-        <Bar data={monthlyDataIngreso} options={monthlyOptions} />
-        <Bar data={yearlyDataIngreso} options={yearlyOptions} />
-        <h2 className="text-black text-lg">Egresos</h2>
-        <Bar data={monthlyDataEgreso} options={monthlyOptions} />
-        <Bar data={yearlyDataEgreso} options={yearlyOptions} />
+        <Dropdown title="Ingresos mensuales">
+          <Bar data={monthlyDataIngreso} options={monthlyOptions} />
+        </Dropdown>
+        <Dropdown title="Ingresos anuales">
+          <Bar data={yearlyDataIngreso} options={yearlyOptions} />
+        </Dropdown>
+        <Dropdown title="Egresos mensuales">
+          <Bar data={monthlyDataEgreso} options={monthlyOptions} />
+        </Dropdown>
+        <Dropdown title="Egresos anuales">
+          <Bar data={yearlyDataEgreso} options={yearlyOptions} />
+        </Dropdown>
       </div>
 
-      <select
-        value={typeFilter}
-        onChange={(e) => setTypeFilter(e.target.value)}
-        id="typefilter"
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option value="Deuda" defaultValue={'Egreso'}>
-          Cuentas por pagar
-        </option>
-        <option value="Credito">Cuentas por cobrar</option>
-      </select>
-      {finalFinances?.length > 0 ? (
-        <Table
-          data={finalFinances}
-          columns={columns}
-          filterAndSort={typeFilter}
-        />
-      ) : (
-        <p>No hay transacciones</p>
-      )}
+      <Dropdown title="Cuentas por pagar o cobrar">
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          id="typefilter"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-7"
+        >
+          <option value="Deuda" defaultValue={'Egreso'}>
+            Cuentas por pagar
+          </option>
+          <option value="Credito">Cuentas por cobrar</option>
+        </select>
+        {finalFinances?.length > 0 ? (
+          <div className="mt-2">
+            <Table
+              data={finalFinances}
+              columns={columns}
+              filterAndSort={typeFilter}
+            />
+          </div>
+        ) : (
+          <p>No hay transacciones</p>
+        )}
+      </Dropdown>
       {dateError && (
         <AlertToast duration={10000} code="error">
           La fecha de inicio debe ser menor a la de fin

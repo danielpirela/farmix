@@ -17,6 +17,7 @@ import { useMilkProduction } from '@hooks/useMilkProduction'
 import { Button } from '@components/form/Button'
 import { Download } from '@components/icons/DashboardIcon'
 import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { Dropdown } from '@components/DropDown'
 
 ChartJS.register(
   CategoryScale,
@@ -239,13 +240,25 @@ const ReportsPage = () => {
       <h1 className="text-black text-lg text-pretty">
         Reportes de Produccion de leche
       </h1>
-      <div ref={ref}>
-        <Bar data={data} options={options} />
-        <Bar data={monthlyData} options={monthlyOptions} />
-        <Bar data={yearlyData} options={yearlyOptions} />
-        <Bar data={dailyDataGeneral} options={dailyDataGeneral} />
-        <Bar data={monthlyDataGeneral} options={monthlyOptions} />
-        <Bar data={yearlyDataGeneral} options={yearlyOptions} />
+      <div ref={ref} className="mt-10">
+        <Dropdown title="Produccion de leche diaria">
+          <Bar data={data} options={options} />
+        </Dropdown>
+        <Dropdown title="Produccion de leche mensual">
+          <Bar data={monthlyData} options={monthlyOptions} />
+        </Dropdown>
+        <Dropdown title="Produccion de leche anual">
+          <Bar data={yearlyData} options={yearlyOptions} />
+        </Dropdown>
+        <Dropdown title="Produccion de leche general">
+          <Bar data={dailyDataGeneral} options={dailyDataGeneral} />
+        </Dropdown>
+        <Dropdown title="Produccion de leche mensual general">
+          <Bar data={monthlyDataGeneral} options={monthlyOptions} />
+        </Dropdown>
+        <Dropdown title="Produccion de leche anual general">
+          <Bar data={yearlyDataGeneral} options={yearlyOptions} />
+        </Dropdown>
       </div>
     </div>
   )
