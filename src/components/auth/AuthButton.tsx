@@ -31,7 +31,7 @@ export function AuthButton({ className, withImage }: Props) {
           className={`flex gap-2 group-hover:text-accent dark:group-hover:text-accent hover:fill-accent transition-all duration-300 ${withImage ? 'pl-2' : 'flex-col'}`}
         >
           {withImage && (
-            <UserImage src={'/images/image.png'} name={finalName} />
+            <UserImage src={session?.user?.image} name={finalName} />
           )}
           <button
             onClick={() => {
