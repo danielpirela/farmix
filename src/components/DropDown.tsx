@@ -10,12 +10,14 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="min-w-full mb-4">
+    <div className="min-w-full mb-4 ">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200"
+        className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-700"
       >
-        <span className="text-lg font-medium text-gray-800">{title}</span>
+        <span className="text-lg font-medium text-gray-800 dark:text-white">
+          {title}
+        </span>
         <ChevronDown
           className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
             isOpen ? 'transform rotate-180' : ''

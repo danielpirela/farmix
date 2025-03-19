@@ -7,6 +7,16 @@ export const VENEZUELA_PHONE_REGEX = /^(0412|0414|0416|0424)\d{7}$/
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 export const POSITIVE_NUMBERS_REGEX = /^[0-9]+$/
 
+export const CERTIFICATE_FORM_FIELD = {
+  employee_id: 'employee_id',
+  certificate_type: 'certificate_type',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  reason: 'reason',
+  status: 'status',
+  issued_by: 'issued_by'
+}
+
 export const TRASACTION_FORM_FIELDS = {
   transaction_date: 'transaction_date',
   type: 'type',
@@ -70,6 +80,24 @@ export const ANIMAL_FORM_FIELDS = {
   parents_id: 'parents_id'
 } as const
 
+export const certificateSchema = z.object({
+  [CERTIFICATE_FORM_FIELD.employee_id]: z.string().optional(),
+  [CERTIFICATE_FORM_FIELD.certificate_type]: z
+    .string()
+    .min(3, 'Ingrese el tipo de certificado')
+    .regex(
+      LETTERS_ONLY_REGEX,
+      'El tipo de certificado solo puede contener letras'
+    ),
+  [CERTIFICATE_FORM_FIELD.start_date]: z.string().date(),
+  [CERTIFICATE_FORM_FIELD.end_date]: z.string().date(),
+  [CERTIFICATE_FORM_FIELD.reason]: z
+    .string()
+    .min(3, 'Ingrese la razón')
+    .regex(ALPHANUMERIC_REGEX, 'La razón solo puede contener letras'),
+  [CERTIFICATE_FORM_FIELD.status]: z.string().min(3, 'Ingrese el estado'),
+  [CERTIFICATE_FORM_FIELD.issued_by]: z.string().min(3, 'Ingrese el emisor')
+})
 export const supplierSchema = z.object({
   [SUPPLIER_FORM_FIELDS.name]: z
     .string()

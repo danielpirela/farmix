@@ -7,7 +7,7 @@ import Table from '@components/tables/Table'
 import { useAnimals } from '@hooks/useAnimals'
 import { Animal } from '@models/animals.model'
 import { useState } from 'react'
-import { set, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AnimalForm, animalSchema } from '@utils/validations' // Asegúrate de tener un esquema de validación para los animales
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
@@ -26,11 +26,11 @@ import { EditableTypeAnimal } from '@components/tables/EditableTypeAnimal'
 import { EditableBreedCell } from '@components/tables/EditableBreedCell'
 import { EditableHealthStatusCell } from '@components/tables/EditableHealthStatusCell'
 import { Details } from '@components/tables/Details'
-import { useBirth } from '@hooks/useBirth'
 import { getBirthAnimals } from '@services/birth'
-import { useComponentToPDF } from '@hooks/useImageToPdf'
 import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 import { AnimalDetails } from '@components/modals/AnimalDetails'
+import { NotificationsContainer } from '@components/NotificationContainer'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
 
 export default function AnimalsPage() {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
@@ -39,10 +39,11 @@ export default function AnimalsPage() {
     mother: null,
     father: null
   })
+
   const [childrenData, setChildrenData] = useState([])
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-
+  const { notifications, addNotification } = useNotificationsContext()
   const { pdfRef, downloadPDF } = useHtml2Pdf({
     filename: 'Animales_reporte.pdf'
   })
@@ -105,11 +106,26 @@ export default function AnimalsPage() {
         birth_date,
         daily_milk_production: Number(milkCalculated),
         parents_id: [father_id, mother_id] as string[] | [],
-        child_id
+        child_id: child_id || null
       }
-      await createAnimalMutation.mutateAsync(newAnimal)
+      await createAnimalMutation.mutateAsync(newAnimal, {
+        onSuccess: (res) => {
+          if (res.animal || errors.length <= 0) {
+            addNotification('Animal creado correctamente', 'success', 30000)
+          } else {
+            addNotification('Error al crear el animal', 'error', 300000)
+          }
+        },
+        onError: (error) => {
+          console.error('Error al crear el animal:', error)
+          addNotification('Error al crear el animal', 'error', 30000)
+        }
+      })
     } catch (error) {
       console.error('Error al crear el animal:', error)
+      addNotification('Error al crear el animal', 'error', 3000)
+    } finally {
+      console.log('notifications', notifications)
     }
   }
 
@@ -130,8 +146,6 @@ export default function AnimalsPage() {
   }
 
   const handleViewDetails = async (data: Animal) => {
-    console.log(data)
-
     if (data.parents_id !== null) {
       const mother = finalAnimals.find(
         (animal) => animal.animal_id === data.parents_id[0]
@@ -147,9 +161,7 @@ export default function AnimalsPage() {
     setAnimal(data)
 
     if (parentsData.mother !== null) {
-      const child = await getBirthAnimals(parentsData.mother.animal_id)
-      console.log(child)
-
+      const child = await getBirthAnimals(parentsData?.mother?.animal_id)
       if (child === null) return
 
       setChildrenData(child)
@@ -179,7 +191,6 @@ export default function AnimalsPage() {
     formState: { errors }
   } = methods
 
-  console.log(errors)
   if (isAnimalsLoading) return <div className="text-black">Cargando...</div>
   if (animalsError)
     return <div className="text-black">Error: {animalsError.message}</div>
@@ -187,12 +198,12 @@ export default function AnimalsPage() {
   const finalAnimals = animals?.animals ?? []
 
   return (
-    <div className="relative">
-      <div className="flex justify-center items-center max-w-md">
+    <div className="relative" ref={pdfRef}>
+      {/*      <div className="flex justify-center items-center max-w-md">
         <Button onClick={downloadPDF} className="absolute top-0 right-0 z-50 ">
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
-      </div>
+      </div> */}
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
@@ -347,6 +358,8 @@ export default function AnimalsPage() {
           setShowDetails={setShowDetails}
         />
       </Modal>
+
+      <NotificationsContainer />
     </div>
   )
 }

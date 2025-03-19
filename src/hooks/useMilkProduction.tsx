@@ -32,7 +32,8 @@ export const useMilkProduction = () => {
       date: item.production_date,
       quantity: item.milk_quantity,
       animalId: item.animal_id,
-      name: item.animals?.name
+      name: item.animals?.name,
+      code: item.animals?.code
       // ... otros campos que necesites para la gráfica
     })) || []
 

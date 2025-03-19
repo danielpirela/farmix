@@ -11,16 +11,34 @@ export const AnimalDetails = ({
     animal?.health_status === 'Enfermo' ? 'text-red-200' : 'text-green-200'
 
   return (
-    <div className="text-black max-h-96 overflow-y-auto  p-4 rounded">
-      <strong>Nombre: {animal?.name}</strong>
-      <strong>Código: {animal?.code}</strong>
-      <strong>Raza: {animal?.breed}</strong>
-      <strong>Tipo: {animal?.type}</strong>
-      <strong>Estado de salud: {animal?.health_status}</strong>
-      <strong>Ubicación: {animal?.location}</strong>
-      <strong>Peso: {animal?.weight}</strong>
-      <strong>Fecha de nacimiento: {animal?.birth_date}</strong>
-      <strong>Etapa de vida: {animal?.life_stage}</strong>
+    <div className="text-black max-h-96 overflow-y-auto  p-4 rounded flex flex-col">
+      <p>
+        <strong>Nombre:</strong> {animal?.name}
+      </p>
+      <p>
+        <strong>Código:</strong> {animal?.code}
+      </p>
+      <p>
+        <strong>Raza:</strong> {animal?.breed}
+      </p>
+      <p>
+        <strong>Tipo:</strong> {animal?.type}
+      </p>
+      <p>
+        <strong>Estado de salud:</strong> {animal?.health_status}
+      </p>
+      <p>
+        <strong>Ubicación:</strong> {animal?.location}
+      </p>
+      <p>
+        <strong>Peso:</strong> {animal?.weight}
+      </p>
+      <p>
+        <strong>Fecha de nacimiento:</strong> {animal?.birth_date}
+      </p>
+      <p>
+        <strong>Etapa de vida:</strong> {animal?.life_stage}
+      </p>
       {parentsData.father !== null && parentsData.mother !== null ? (
         <>
           <p>

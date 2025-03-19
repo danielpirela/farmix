@@ -9,6 +9,7 @@ interface AlertToastProps {
   duration?: number
   href?: string
   message?: string
+  remove: () => void
 }
 
 export function AlertToast({
@@ -16,7 +17,8 @@ export function AlertToast({
   code = 'info',
   duration = 10000,
   href,
-  message
+  message,
+  remove
 }: AlertToastProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [isExiting, setIsExiting] = useState(false)
@@ -25,7 +27,7 @@ export function AlertToast({
     setIsVisible(true)
     const timeout = setTimeout(() => {
       setIsExiting(true)
-      setTimeout(() => setIsVisible(false), 300)
+      setTimeout(() => setIsVisible(false), 3000)
     }, duration)
 
     return () => clearTimeout(timeout)
@@ -42,7 +44,7 @@ export function AlertToast({
 
   return (
     <div
-      className={`fixed bottom-5 right-5 flex items-center p-4 mb-4 rounded-lg animate-fade-left animate-once animate-duration-300 animate-delay-100 dark:bg-gray-800 ${colorClasses[code]} ${isExiting ? 'translate-y-10 opacity-0' : 'translate-y-0 opacity-100'}`}
+      className={`fixed bottom-12 right-5 flex items-center p-4 mb-4 rounded-lg animate-fade-left animate-once animate-duration-300 animate-delay-100 dark:bg-gray-800 ${colorClasses[code]} ${isExiting ? 'translate-y-10 opacity-0' : 'translate-y-0 opacity-100'}`}
     >
       <svg
         className={`flex-shrink-0 w-4 h-4 ${colorClasses[code]}`}
@@ -64,6 +66,7 @@ export function AlertToast({
       </div>
       <button
         onClick={() => {
+          remove()
           setIsExiting(true)
           setTimeout(() => setIsVisible(false), 300)
         }}

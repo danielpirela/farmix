@@ -17,6 +17,8 @@ import { EditableCell } from '@components/tables/EditableCell'
 import { EditableStatusClient } from '@components/tables/EditableStatusClient'
 import { Details } from '@components/tables/Details'
 import ClientDetailsModal from '@components/modals/ClientDetailsModal'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
+import { NotificationsContainer } from '@components/NotificationContainer'
 
 const columns = [
   {
@@ -39,6 +41,7 @@ const columns = [
 ]
 
 const ClientsPage = () => {
+  const { addNotification } = useNotificationsContext()
   const [isFormModalOpen, setFormModalOpen] = useState(false)
   const [isDetailsModalOpen, setDetailsModalOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
@@ -84,7 +87,15 @@ const ClientsPage = () => {
 
     console.log(FinalClient)
     try {
-      await createClientMutation.mutateAsync(FinalClient)
+      await createClientMutation.mutateAsync(FinalClient, {
+        onSuccess: () => {
+          addNotification('Cliente creado correctamente', 'success', 3000)
+          setFormModalOpen(false) // Cierra el modal después de crear
+        },
+        onError: (error) => {
+          addNotification('No se pudo crear el cliente', 'error', 3000)
+        }
+      })
       setFormModalOpen(false) // Cierra el modal después de crear
     } catch (err) {
       console.error('Error al crear cliente', err)
@@ -111,7 +122,7 @@ const ClientsPage = () => {
     return <div className="text-black">Error: {clientsError.message}</div>
 
   return (
-    <>
+    <div className="relative">
       <ButtonAnimated
         title="Agregar Cliente"
         onClick={() => setFormModalOpen(true)}
@@ -176,7 +187,9 @@ const ClientsPage = () => {
         onClose={() => setDetailsModalOpen(false)}
         client={selectedClient}
       />
-    </>
+
+      <NotificationsContainer />
+    </div>
   )
 }
 

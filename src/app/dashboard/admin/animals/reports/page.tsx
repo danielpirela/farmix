@@ -48,6 +48,13 @@ const monthNames = {
 const ReportsPage = () => {
   const { milkProductionData } = useMilkProduction()
   const [data, setData] = useState({})
+
+  const [startDate, setStartDate] = useState('2025-01-01')
+  const [endDate, setEndDate] = useState('2025-12-31')
+  const [filter, setFilter] = useState(false)
+  const [dateError, setDateError] = useState(false)
+
+  const [dataWithFilter, setDataWithFilter] = useState({})
   const [monthlyData, setMonthlyData] = useState({})
   const [yearlyData, setYearlyData] = useState({})
   const [dailyDataGeneral, setDailyDataGeneral] = useState({})
@@ -107,14 +114,39 @@ const ReportsPage = () => {
   }
 
   useEffect(() => {
-    if (milkProductionData) {
-      console.log(milkProductionData)
-
+    if (Array.isArray(milkProductionData) && milkProductionData.length > 0) {
       // Procesar los datos para las estadísticas
-      const milkData = milkProductionData?.reduce((acc, animal) => {
+      const milkData = milkProductionData.reduce((acc, animal) => {
         acc[animal.name] = animal.quantity
         return acc
       }, {})
+
+      const milkDataWithFilter = milkProductionData.reduce(
+        (acc = {}, animal) => {
+          if (!animal.name || !animal.code) return acc
+          const key = `${animal.name}-${animal.code}`
+          console.log(
+            new Date(animal.date) >= new Date(startDate) &&
+              new Date(animal.date) <= new Date(endDate)
+          )
+
+          if (
+            new Date(animal.date) >= new Date(startDate) &&
+            new Date(animal.date) <= new Date(endDate)
+          ) {
+            acc[key] = (acc[key] || 0) + animal.quantity
+            return acc
+          }
+        },
+        {}
+      )
+
+      // Solo actualiza el estado si hay cambios
+      if (
+        JSON.stringify(dataWithFilter) !== JSON.stringify(milkDataWithFilter)
+      ) {
+        setDataWithFilter(milkDataWithFilter)
+      }
 
       const milkDailyData = milkProductionData?.reduce((acc, animal) => {
         acc[animal.date] = (acc[animal.date] || 0) + animal.quantity
@@ -133,6 +165,9 @@ const ReportsPage = () => {
         acc[year] = (acc[year] || 0) + animal.quantity // Asegurarse de que acc[month] sea un número
         return acc
       }, {})
+
+      const milkNames = Object.keys(milkDataWithFilter || {})
+      const milkWithFilter = Object.values(milkDataWithFilter || {})
 
       const namesDaily = Object.keys(milkDailyData)
       const milkDaily = Object.values(milkDailyData)
@@ -168,6 +203,17 @@ const ReportsPage = () => {
         ]
       })
 
+      setDataWithFilter({
+        labels: milkNames,
+        datasets: [
+          {
+            label: 'Producciones Diarias de Leche',
+            data: milkWithFilter,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+          }
+        ]
+      })
+
       // Configurar datos para la gráfica mensual
       setMonthlyData({
         labels: names,
@@ -179,7 +225,6 @@ const ReportsPage = () => {
           }
         ]
       })
-
       // Configurar datos para la gráfica anual
       setYearlyData({
         labels: names,
@@ -225,7 +270,7 @@ const ReportsPage = () => {
         ]
       })
     }
-  }, [])
+  }, [startDate, endDate])
 
   if (!data?.labels || data?.labels.length === 0)
     return <p className="text-black">cargando...</p>
@@ -237,10 +282,57 @@ const ReportsPage = () => {
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
       </div>
-      <h1 className="text-black text-lg text-pretty">
+      <h1 className="text-black text-lg text-pretty dark:text-white">
         Reportes de Produccion de leche
       </h1>
       <div ref={ref} className="mt-10">
+        <div className="justify-center items-center">
+          <Dropdown title="Produccion de leche con filtro">
+            <div className="flex gap-4 mt-2">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => {
+                  const currentYear = new Date().getFullYear()
+                  const newStartDate = e.target.value
+                  if (
+                    newStartDate !== endDate &&
+                    new Date(newStartDate).getFullYear() <= currentYear &&
+                    new Date(newStartDate) <= new Date(endDate)
+                  ) {
+                    setStartDate(newStartDate)
+                    setDateError(false)
+                  }
+                  setDateError(true)
+                }}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => {
+                  const newEndDate = e.target.value
+                  const currentYear = new Date().getFullYear()
+                  if (
+                    newEndDate >= startDate &&
+                    new Date(newEndDate).getFullYear() <= currentYear
+                  ) {
+                    setEndDate(newEndDate)
+                    setDateError(false)
+                  } else {
+                    setDateError(true)
+                  }
+                }}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+            </div>
+            {dataWithFilter !== undefined && dataWithFilter !== null ? (
+              <Bar data={dataWithFilter} options={options} />
+            ) : (
+              <p className="text-black">No hay datos en este periodo</p>
+            )}
+          </Dropdown>
+        </div>
         <Dropdown title="Produccion de leche diaria">
           <Bar data={data} options={options} />
         </Dropdown>

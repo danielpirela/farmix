@@ -8,28 +8,48 @@ import { Form } from '@components/form/Form'
 import { InputField } from '@components/form/InputFiled'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { supplierSchema } from '@utils/validations'
+import { certificateSchema } from '@utils/validations'
 import Table from '@components/tables/Table'
-import { Certificate } from '@models/certificate.model'
+import {
+  Certificate,
+  certificateStatusOptions,
+  cetidicatOptions
+} from '@models/certificate.model'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 
 import { Details } from '@components/tables/Details'
-import { useComponentToPDF } from '@hooks/useImageToPdf'
 import { useHtml2Pdf } from '@hooks/useHtml2Pdf'
 import UserImage from '@components/auth/UserImage'
 import { AppleButton } from '@components/form/AppleButton'
 
+import { useEmployee } from '@hooks/useEmployee'
+import { Select } from '@components/form/Select'
+import { Option } from '@components/form/Option'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
+import { NotificationsContainer } from '@components/NotificationContainer'
+
 const columns = [
   { header: 'Detalles', accessorKey: 'id', cell: Details },
   { header: 'Tipo', accessorKey: 'certificate_type' },
-  { header: 'Empleado', accessorKey: 'employee_id' },
+  {
+    header: 'Nombre',
+    accessorKey: 'employee',
+    cell: (info: {
+      row: {
+        original: { employee: { first_name: string; last_name: string } }
+      }
+    }) =>
+      `${info.row.original.employee.first_name} ${info.row.original.employee.last_name}`
+  },
   { header: 'Fecha de Inicio', accessorKey: 'start_date' },
   { header: 'Fecha de Fin', accessorKey: 'end_date' }
 ]
 
 const CertificatesPage = () => {
+  const { addNotification } = useNotificationsContext()
   const [isFormModalOpen, setFormModalOpen] = useState(false)
+  const { employees, isLoading } = useEmployee()
   const [isViewable, setIsViewable] = useState(false)
   const [certificate, setCertificate] = useState<Certificate | null>(null)
   const [isInfoVisible, setIsInfoVisible] = useState(false)
@@ -40,6 +60,7 @@ const CertificatesPage = () => {
     setCertificate(data)
     return
   }
+  console.log(employees)
 
   const {
     certificates,
@@ -49,11 +70,14 @@ const CertificatesPage = () => {
   } = useCertificates()
 
   const methods = useForm<Certificate>({
-    resolver: zodResolver(supplierSchema),
+    resolver: zodResolver(certificateSchema),
     defaultValues: {
       // Define los valores por defecto según tu modelo Certificate
       employee_id: '',
       certificate_type: '',
+      reason: '',
+      status: 'Pendiente',
+      issued_by: '',
       start_date: '',
       end_date: ''
       // Agrega otros campos según tu modelo
@@ -70,10 +94,19 @@ const CertificatesPage = () => {
     filename: 'Costancia.pdf'
   })
 
+  console.log(errors)
+
   const handleCreateCertificate: SubmitHandler<Certificate> = async (data) => {
     if (!data) return
     try {
-      await createCertificateMutation.mutateAsync(data)
+      await createCertificateMutation.mutateAsync(data, {
+        onSuccess: () => {
+          addNotification('Constancia creado exitosamente', 'success', 3000)
+        },
+        onError: (err) => {
+          addNotification('Error al crear Constancia', 'error', 3000)
+        }
+      })
       setFormModalOpen(false) // Cierra el modal después de crear
     } catch (err) {
       console.error('Error al crear certificado', err)
@@ -81,12 +114,13 @@ const CertificatesPage = () => {
   }
   console.log(certificates)
 
-  if (isCertificatesLoading)
+  if (isCertificatesLoading && isLoading)
     return <div className="text-black">Cargando...</div>
   if (certificatesError)
     return <div className="text-black">Error: {certificatesError.message}</div>
   if (certificates?.length === 0)
     return <div className="text-black">No hay certificados</div>
+
   return (
     <div className="relative">
       <div className="flex justify-center items-center max-w-md">
@@ -119,20 +153,67 @@ const CertificatesPage = () => {
           onSubmit={handleSubmit(handleCreateCertificate)}
           methods={methods}
         >
-          <InputField
+          <Select
             name="employee_id"
             register={register}
-            label="ID del Empleado"
+            label="Empleado"
             errors={errors}
-            type="text"
-          />
-          <InputField
+          >
+            {employees.map(({ employee_id, first_name, last_name }) => (
+              <Option
+                key={employee_id}
+                value={employee_id}
+                label={`${first_name} ${last_name}`}
+              />
+            ))}
+          </Select>
+
+          <Select
+            name="issued_by"
+            register={register}
+            label="Emitidor"
+            errors={errors}
+          >
+            {employees.map(({ employee_id, first_name, last_name }) => (
+              <Option
+                key={employee_id + crypto.randomUUID()}
+                value={employee_id}
+                label={`${first_name} ${last_name}`}
+              />
+            ))}
+          </Select>
+
+          <Select
             name="certificate_type"
             register={register}
             label="Tipo de Certificado"
             errors={errors}
+          >
+            {cetidicatOptions.map((option) => (
+              <Option key={option} value={option} label={option} />
+            ))}
+          </Select>
+
+          <Select
+            name="status"
+            register={register}
+            label="Estatus"
+            errors={errors}
+          >
+            {certificateStatusOptions.map((option) => (
+              <Option key={option} value={option} label={option} />
+            ))}
+          </Select>
+
+          <InputField
+            name="reason"
+            register={register}
+            label="Razon"
+            errors={errors}
             type="text"
+            className="min-h-24"
           />
+
           <InputField
             name="start_date"
             register={register}
@@ -223,6 +304,7 @@ const CertificatesPage = () => {
           </div>
         )}
       </Modal>
+      <NotificationsContainer />
     </div>
   )
 }

@@ -16,10 +16,11 @@ import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { useSuppliers } from '@hooks/useSuppliers'
 import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
 
 const InventoryPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false)
-
+  const { addNotification } = useNotificationsContext()
   const {
     inventory,
     inventoryError,
@@ -73,9 +74,16 @@ const InventoryPage = () => {
       unit
     }
     try {
-      await createInventoryMutation.mutateAsync(newInventory)
+      await createInventoryMutation.mutateAsync(newInventory, {
+        onSuccess: () => {
+          addNotification('Producto creado correctamente', 'success', 3000)
+        },
+        onError: () => {
+          addNotification('No se pudo crear el producto', 'error', 3000)
+        }
+      })
     } catch (error) {
-      console.error('Error al crear el inventario:', error)
+      addNotification('No se pudo crear el producto', 'error', 3000)
     }
   }
 

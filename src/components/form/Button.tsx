@@ -25,7 +25,7 @@ export function Button({
         type={type}
         disabled={disabled}
         onClick={onClick}
-        className="bg-accent text-white font-semibold p-2 rounded-lg mr-6 shadow-md hover:bg-accent-ligth hover:scale-105 transition-all duration-300 active:animate-jump animate-once "
+        className="bg-accent text-white font-semibold px-6 py-2 rounded-lg mr-6 shadow-md hover:bg-accent-ligth hover:scale-105 transition-all duration-300 active:animate-jump animate-once "
         {...props}
       >
         {loading && <LoadingIcon />}

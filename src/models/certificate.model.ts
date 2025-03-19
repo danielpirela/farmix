@@ -1,5 +1,18 @@
 import { Employee } from './types'
 
+export const cetidicatOptions = [
+  'Permiso',
+  'Vacaciones',
+  'Enfermedad',
+  'Trabajo',
+  'Otro'
+]
+
+export const certificateStatusOptions = [
+  'Pendiente',
+  'Aprobada',
+  'Denegada'
+]
 export interface Certificate {
   id: string // UUID
   employee_id: string // Referencia al empleado

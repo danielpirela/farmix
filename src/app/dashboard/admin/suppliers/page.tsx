@@ -13,8 +13,10 @@ import { supplierSchema } from '@utils/validations'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
 import { Download, PlusIcon } from '@components/icons/DashboardIcon'
 import { useComponentToPDF } from '@hooks/useImageToPdf'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
 
 const SuppliersPage = () => {
+  const { addNotification } = useNotificationsContext()
   const [isFormModalOpen, setFormModalOpen] = useState(false)
   const { exportAsPDF, ref } = useComponentToPDF({
     filename: 'Lista_proveedores.pdf'
@@ -67,7 +69,15 @@ const SuppliersPage = () => {
       supplied_products
     }
     try {
-      await createSupplierMutation.mutateAsync(newSupplier)
+      await createSupplierMutation.mutateAsync(newSupplier, {
+        onSuccess: () => {
+          addNotification('Proveedor creado exitosamente', 'success', 3000)
+          setFormModalOpen(false)
+        },
+        onError: (err) => {
+          addNotification('Error al crear proveedor', 'error', 3000)
+        }
+      })
     } catch (err) {
       console.error('Error al crear proveedor', err)
     }

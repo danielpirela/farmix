@@ -62,7 +62,7 @@ export function Navbar() {
           </li>
           <li>
             <Link
-              href={'/dashboard'}
+              href={'/dashboard/admin/animals'}
               className="inline-flex items-center  pt-1 text-sm font-semibold text-black border-b-2 border-transparent hover:border-accent hover:text-accent dark:text-white"
             >
               Inicio
@@ -87,10 +87,10 @@ export function Navbar() {
           <ul className="space-y-4">
             <li>
               <Link
-                href={'/dashboard'}
+                href={'/dashboard/admin/animals'}
                 className="block text-sm font-medium text-black dark:text-white hover:text-accent"
               >
-                Dashboard
+                Inicio
               </Link>
             </li>
             <li>

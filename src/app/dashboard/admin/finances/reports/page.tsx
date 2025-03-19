@@ -335,7 +335,7 @@ const FinancesReportsPage = () => {
           <Download className="fill-white w-4 h-4 md:w-6 md:h-6" />
         </Button>
       </div>
-      <h1 className="text-black text-xl">Reportes de Gastos</h1>
+      <h1 className="text-black text-xl dark:text-white">Reportes de Gastos</h1>
       <div className="justify-center items-center">
         <Dropdown title="Finanzas con filtro">
           <div className="flex gap-4 mt-2">

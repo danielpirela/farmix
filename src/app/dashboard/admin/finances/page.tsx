@@ -23,11 +23,13 @@ import { PlusIcon } from '@components/icons/DashboardIcon'
 import { useSession } from 'next-auth/react'
 import { useSuppliers } from '@hooks/useSuppliers'
 import { useClients } from '@hooks/useClients'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
+import { NotificationsContainer } from '@components/NotificationContainer'
 
 const FinancesPage = () => {
   const { data: session } = useSession()
   const id = session?.user?.id ?? null
-
+  const { addNotification } = useNotificationsContext()
   const [isFormModalOpen, setFormModalOpen] = useState(false)
   const [isDetailsModalOpen, setDetailsModalOpen] = useState(false)
 
@@ -93,7 +95,13 @@ const FinancesPage = () => {
       client_id: client,
       supplier_id: supplier
     }
-    await createTransactionMutation.mutateAsync(newTransaction)
+    await createTransactionMutation.mutateAsync(newTransaction, {
+      onSuccess: () => {
+        setFormModalOpen(false)
+        addNotification('Transacción creada exitosamente', 'success', 3000)
+      },
+      onError: (error) => console.error(error)
+    })
   }
 
   const handleUpdateTransaction = async (id: string) => {
@@ -138,7 +146,7 @@ const FinancesPage = () => {
   }
 
   return (
-    <>
+    <div className="relative">
       <ButtonAnimated
         onClick={() => setFormModalOpen(true)}
         className="fixed bottom-4 right-4"
@@ -262,7 +270,8 @@ const FinancesPage = () => {
           </Button>
         </Form>
       </Modal>
-    </>
+      <NotificationsContainer />
+    </div>
   )
 }
 

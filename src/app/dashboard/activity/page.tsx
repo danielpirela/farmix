@@ -73,8 +73,6 @@ export default function Page() {
   } = methods
 
   const onViewDetails = (data: Activity) => {
-    console.log(data)
-
     if (!data) return setDetailsModalOpen(false)
     setActivity(data)
     setDetailsModalOpen(true)

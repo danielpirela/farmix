@@ -9,16 +9,18 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { healthControlSchema } from '@utils/validations/healthControlSchema'
 import { HealthControl } from '@models/healthControl.model'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Table from '@components/tables/Table'
 import { ButtonAnimated } from '@components/form/ButtonAnimated'
-import { Download, PlusIcon } from '@components/icons/DashboardIcon'
+import { PlusIcon } from '@components/icons/DashboardIcon'
 import { useAnimals } from '@hooks/useAnimals'
 import { Select } from '@components/form/Select'
 import { Option } from '@components/form/Option'
 import { useEmployee } from '@hooks/useEmployee'
 import { Details } from '@components/tables/Details'
 import HealthControlDetailsModal from '@components/modals/HealthControlDetailsModal'
+import { useNotificationsContext } from '@components/context/NotificationsContext'
+import { NotificationsContainer } from '@components/NotificationContainer'
 
 const columns = [
   { header: 'Acciones', accessorKey: 'actions', cell: Details }, // Asegúrate de tener un componente DeleteButton
@@ -38,6 +40,7 @@ const columns = [
 ]
 
 const HealthControlPage = () => {
+  const { addNotification } = useNotificationsContext()
   const {
     healthControls,
     isHealthControlsLoading,
@@ -72,7 +75,12 @@ const HealthControlPage = () => {
   const handleCreateHealthControl: SubmitHandler<HealthControl> = async (
     data
   ) => {
-    await createHealthControlMutation.mutateAsync(data)
+    await createHealthControlMutation.mutateAsync(data, {
+      onSuccess: () => {
+        setFormModalOpen(false)
+        addNotification('Control de Salud creado exitosamente', 'success', 3000)
+      }
+    })
     setFormModalOpen(false)
   }
 
@@ -95,7 +103,7 @@ const HealthControlPage = () => {
   console.log(healthControls)
 
   return (
-    <>
+    <div className="relative">
       <ButtonAnimated
         title="Agregar Control de Salud"
         onClick={() => setFormModalOpen(true)}
@@ -186,7 +194,8 @@ const HealthControlPage = () => {
         animal={selectedHealthControl?.animals}
         employee={selectedHealthControl?.employees}
       />
-    </>
+      <NotificationsContainer />
+    </div>
   )
 }
 
